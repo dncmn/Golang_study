@@ -20,6 +20,11 @@
 		scp gameData.dat@192.168.1.27:/root/develop/dnf_realm
 	2.4、ubuntu下的vim中使用screen不显示窗口名称
 		blog.csdn.net/xocoder/article/details/9173845
+	2.5、删除分支
+			删除本地分支：（在主分支上）
+						git branch -d  branchName
+			删除远程分支:
+						git push origin --delete branchName
 
 3、pika数据数
 	1、对于有序集合zset来说,
