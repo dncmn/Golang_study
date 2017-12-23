@@ -1,5 +1,8 @@
 Map---学习
 	
+参考网站：
+	https://blog.golang.org/go-maps-in-action
+	https://golang.org/doc/faq#atomic_maps
 1、定义一个map
 	1.1、var demoMap1 = map[int32]string{key1:value1,.....}
 		定义一个map 类似如下结构 map[keyType]valueType
@@ -16,3 +19,91 @@ Map---学习
 			虽然不是什么知识点,但是仍然可以写出来,怀念一下。
 	1.5、 data:=make(map[int]bool)
 		  对于值类型是boolean类型的map,在for...range遍历之前可以使用类似 if data[key]{}的结构,不用使用for循环进行多余的判断。
+		  data := make(map[int]bool)
+		  data[1] = true
+		  data[2] = false
+		  for k, v := range data {
+			if v {
+				log.Printf("key= %d is exists,value=%v", k, v)
+				continue
+			}
+
+			log.Printf("key=%d is not exists", k)
+		}
+	1.6、map用到的一个用法就是map里面嵌套一个map
+		比如我用的一个 CritReward:=make(map[int32]map[int32]float32)
+		关卡id---->(暴击道具的id:暴击的比例)
+		每一个关卡,可能会出现多个道具出现暴击,所以会出现map套用map
+	1.7、map在并发使用的时候,不是安全的。因为它没有定义如果同时对他进行读和写会发生什么。
+		如果需要从并发的goroutines中对某个map进行读和写,那么这个多goroutine访问的过程一定会有
+		一种同步的机制来进行调节。一个常用的方法就是使用sync.RWMutex(在项目中,会对玩家进行加锁)
+		还有一个例子
+			var counter=struct{
+				sync.RWMutex
+				m map[string]int
+			}{m:make(map[string]int)}
+			
+			// to read from counter,take read lock
+				counter.RLock()
+				n:=counter.m["one"]
+				counter.RUnlock()
+				log.Println("one=",n)
+			
+			// to write to the counter,take the write lock
+				couonter.lock()
+				counter.m["manan"]++
+				couner.Unlock()
+	1.8、并发的小阅读
+		https://golang.org/doc/faq#atomic_maps
+		我们调用goroutine的结果是非常廉价的,它们在堆栈内占用内存很少只有几千字节。
+		
+Why are map operations not defined to be atomic?
+
+After long discussion it was decided that the typical use of maps did not require safe access from multiple goroutines, and in those cases where it did, the map was probably part of some larger data structure or computation that was already synchronized. Therefore requiring that all map operations grab a mutex would slow down most programs and add safety to few. This was not an easy decision, however, since it means uncontrolled map access can crash the program.
+
+The language does not preclude atomic map updates. When required, such as when hosting an untrusted program, the implementation could interlock map access. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
