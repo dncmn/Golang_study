@@ -1,0 +1,74 @@
+1、screen常用操作
+		screen -S screenName
+   恢复到之前的一个窗口
+   		screen -x screenName
+		screen -r screenName
+	离开目前的窗口
+		ctrl +a +d
+	在最近的两个窗口切换
+		ctrl +a+ ctrl + a
+2、others command
+	2.1、 set -o vi
+		使用两次“Esc"
+		/ commandName
+		从历史指令中查找最近使用过的命令
+	2.2、docker fetch 和docker pull的区别
+		fetch:更新代码,不会做merge
+		pull:更新代码,并且和本地合并
+	2.3、scp上传文件的命令(将代码上传到测试服务器)
+	scp  game root@192.168.1.27:/root/develop/dnf_realm
+	scp gameData.dat@192.168.1.27:/root/develop/dnf_realm
+
+3、pika数据数
+	1、对于有序集合zset来说,
+		zadd manan 10 1001
+		zadd manan 59 1002
+		zadd manan 89 1003
+		zadd manan 2 1004
+		
+		获取某一个元素的排名:zrank manan 1004（默认从0开始的） 
+		更新某一个元素的排名:zadd manan 49 1004
+		删除某一个元素的排名:zrem manan 1001
+		清空这个表:zremrangebyrank manan 0 -1(删除所有的元素,也就是从数据库中删除这个元素)
+	2、存储结构用hash的话
+		添加一个元素:hset manan 1001 500(也可以同时添加多个元素)
+		获取所有元素:hgetall manan
+		获取某一个元素: hget manan 1001
+		删除某一个元素: hdel manan 1001
+		删除所有的元素:直接delete
+4、基础类型转换的问题
+	var num1 float64 =0.58
+	var num2 float32=0.58
+	
+	log.Println(int64(num1))  
+	log.Println(int64(num2))
+5、ubuntu 截图工具
+	step-one: sudo apt-get install ksnapshot
+	step-two：然后绑定到任务栏(用着方便)
+		感受：和windows比起来,虽然没法直接copy然后发送,但是已经有了不少的进步了
+6、golang中new和make的区别
+
+golang中new和make的区别
+不同：
+	1、初始化对象不同
+		new:array和struct
+		make:map、channel、slice
+	2、返回值类型不同
+		new:返回一个指向参数的一个指针，并且初始化的那个值用zero value初始化
+		make:返回要给与参数类型一样的类型,并且初始化
+			slice:至少指定一个参数
+			map:没有必要制定,这个起始的大小是可以忽略的
+			channel:制定是否是缓冲通道。
+	
+slice:
+	大小指定了长度,切片的容量等于它的长度,第二个整数可能制定不同的容量,
+	这个值一定小于这个切片的长度。
+	make([]int,5)  length=5  cap=5
+	make([]int,0,5) length=0 cap=5
+map:
+	一个空的map被分配足够大的空间来容纳制定数量的元素，在这种情况下,分配一个启始这个大小的数字就可以忽略，
+channel:
+	make(channel int,8) 缓冲通道
+	make(channel int) 非缓冲通道
+
+		
