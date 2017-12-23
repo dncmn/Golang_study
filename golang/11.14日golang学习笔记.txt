@@ -1,0 +1,49 @@
+一、
+	1.1、int32和int64的区别
+		int64是8个字节,int32是4个字节
+	1.2、int、int32、int64的区别？？？？？？？？？？？？？？？？？？？
+		int会根据不同的操作系统转换成不同的类型
+二、golang中unsafe包的使用
+	2.0、在unsafe的所有情况中,结果必须指向原始的已经分配的对象
+	2.1、unsafe包的ArbitraryType类型就是int类型(?????)
+	2.2、unsafe.Pointer(&param)可以用来获取这个参数在内存中的地址
+	2.3、如果p指向了一个已分配的对象,则可以通过转换为uintptr，添加一个偏移量并转换回指针来获取该对象的地址
+	p = unsafe.Pointer(uintptr(p) + offset)
+	
+	对于结构体：
+		f:=unsafe.Pointer(&s.i)
+	等效于
+		g:=unsafe.Pointer(uintptr(unsafe.Pointer(&s))+unsafe.Offsetof(s.f))
+		
+	对于数组:
+		e:=unsafe.Pointer(&x[i])
+	等效于
+		e:=unsafe.Pointer(uintptr(unsafe.Pointer(&x[0]))+i*unsafe.SizeOf(x[0]))
+	
+		func Test_unsafe_struct(T *testing.T) {
+			type User struct {
+				Name string
+			}
+			user := new(User)
+			user.Name = "tom"
+			log.Println(unsafe.Pointer(&user.Name), "    ", unsafe.Pointer(&user))
+			log.Println(unsafe.Pointer(uintptr(unsafe.Pointer(&user)) + 												unsafe.Offsetof(user.Name)))
+		}
+
+		func Test_unsafe_array(T *testing.T) {
+			var data [2]int
+			data[0] = 1
+			data[1] = 2
+
+			log.Println(unsafe.Pointer(&data[1]))
+			log.Println(unsafe.Pointer(uintptr(unsafe.Pointer(&data[0])) + 													1*unsafe.Sizeof(data[0])))
+		}
+	2.4、类型指针有四种可用于其他类型的特殊操作
+		- 任何类型的指针值都可以转换为指针。
+		- 指针可以转换为任何类型的指针值。
+		- 一个uintptr可以被转换成一个指针。
+		- 一个指针可以转换成一个uintptr。
+		- A pointer value of any type can be converted to a Pointer.
+		- A Pointer can be converted to a pointer value of any type.
+		- A uintptr can be converted to a Pointer.
+		- A Pointer can be converted to a uintptr.
