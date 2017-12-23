@@ -1,3 +1,0 @@
-1、关闭nginx服务
-	sudo ./nginx -s stop
-	pkill -9 nginx (强行关闭)
