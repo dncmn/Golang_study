@@ -57,12 +57,11 @@ Map---学习
 		https://golang.org/doc/faq#atomic_maps
 		我们调用goroutine的结果是非常廉价的,它们在堆栈内占用内存很少只有几千字节。
 		
-Why are map operations not defined to be atomic?
+	Why are map operations not defined to be atomic?
 
-After long discussion it was decided that the typical use of maps did not require safe access from multiple goroutines, and in those cases where it did, the map was probably part of some larger data structure or computation that was already synchronized. Therefore requiring that all map operations grab a mutex would slow down most programs and add safety to few. This was not an easy decision, however, since it means uncontrolled map access can crash the program.
+		After long discussion it was decided that the typical use of maps did not require safe access from multiple goroutines, and in those 	cases where it did, the map was probably part of some larger data structure or computation that was already synchronized. Therefore 			requiring that all map operations grab a mutex would slow down most programs and add safety to few. This was not an easy decision, however, 	since it means uncontrolled map access can crash the program.
+		The language does not preclude atomic map updates. When required, such as when hosting an untrusted program, the implementation could interlock map access. 
 
-The language does not preclude atomic map updates. When required, such as when hosting an untrusted program, the implementation could interlock map access. 
-	
 	
 	
 	
