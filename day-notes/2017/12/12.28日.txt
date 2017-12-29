@@ -68,12 +68,15 @@ if tower.HardMode==constant.TowerModeHard{ // 困难模式
 					更改HistoryStar
 					更改该玩家在千层塔中的排名：（千层塔中的排名是根据雷电王座的历史最高星数来排序）
 					
-			 4、如果 OnceProgress%3==0,表示通过了第三个关,应该随机出三个不同星数的buff
+			 4、如果 OnceProgress%3==0,表示通过了第三个关,应该随机出三个不同星数的buff---这里是随机战力BUFF
 			 	length := len(csv.CTowerBuffMap) / 3
 				for i := 0; i < 3; i++ {
 				id := rng.IntRange(uint64(length*i+1), uint64(length*(i+1)))
 				player.Tower.Buff[int32(id)] = false
 			}
+			
+			5
+			
 		战斗失败：
 				千层塔战斗失败了，就得重置
 							比如：

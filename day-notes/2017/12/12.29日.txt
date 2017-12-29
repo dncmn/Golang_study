@@ -1,0 +1,63 @@
+12.29日
+	
+	
+
+bug:十连抽
+	一、因为是一个map保存，如果出现相同的奖励,则value上可能会出现值覆盖的情况。
+		如何解决这个值覆盖的问题。
+			我想到的就是改变数据结构，将这个数据保存到一个
+			map[index]*ItemInfo
+			
+			type ItemInfo struct{
+				ItemId int32
+				ItemCount int32
+			}
+	二、如何区分掉落的是整个卡牌还是道具
+		在dropItem表中,
+			完整的卡牌的itemType:1
+			道具的itemType:0
+
+
+
+
+1、将多个csv解析到同一个map中
+	item.csv和itemValue.csv
+	
+	
+千层塔扫荡：(单独某一层)
+
+
+扫荡之前：
+	扫荡之前：是根据
+
+
+扫荡之后：
+		当前游戏进程++（tower.OnceProgress++）
+		获取的对应的星数(根据传递过来的难度系数+1)
+		
+		如果是第3、6、9层,需要随机buff，直接从战斗结束那里copy过来一份就可以了
+		
+		掉落的item,可以是卡牌，也可以是别的小东西。
+			items, _ := mod.Instance.MergeDropPackItems(drops)
+			通过这个方法,将所有的礼物进行合并，
+			
+				(map[int32]int64, []int32)
+				前面的保存key:itemId,value:itemCount
+				后面的保存cardId
+			问题：如何区分在DropPack中哪儿个是卡牌
+
+扫荡只能出现在重置之后，并且都是之前打过的关卡
+
+
+问题：
+	重置之后，根据哪儿个条件来判断这一层中,哪儿些是可以扫荡的
+		这个应该是由客户端来判断的，根据Difficulties
+	
+	
+	
+	
+比如,第3层选择的“困难”模式,重置过后,第3层的“简单”、“一般”也会对应地显示扫荡标志
+	
+
+
+	
