@@ -1,0 +1,5 @@
+1、学习了new和make
+2、安装了ubuntu的截图工具
+	sudo apt-get install ksnapshot
+3、继续学习map
+4、对用到的一些第三方库,知道怎么用，比如要塞里面用到的zset, 

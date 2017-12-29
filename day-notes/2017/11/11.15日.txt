@@ -1,0 +1,72 @@
+总结：
+	一、写一个接口:就是一次奖励的(ok)
+	二、7.1修改竞技币。就是挑战胜利和挑战失败获取的竞技币不同(ok)
+	三、写一个接口:就是一次领取所有的积分奖励
+
+
+
+
+
+小更改:
+	对于数组的长度,在循环的时候,提到外面
+
+11.15日
+
+	1、模仿tower.StepReward然后添加竞技场积分奖励
+		arena_handler.go里面的已经该写过了
+		对竞技场添加了一个字段StepReward,隔天每日重置
+		
+		
+//取前十名
+//取五个玩家(包括自己)
+//---	高、高、高、自己、低(正常排名)
+
+
+特殊情况：
+
+		
+	玩家是第一名:  
+		前十名,包括自己
+	玩家是第二名:
+	玩家是第三名:
+	晚间是第四名:
+func(this *Arena)RanddomPlayer(player *data.TPlayer)[]*data.TArenaTopData{
+}
+
+pos := playerTopData.Position
+var fifthRange int32
+var ret []*data.TArenaTopData
+
+552
+
+结合文档和代码,总结的东西
+	5、竞技场位置奖励
+		
+	4、如果玩家排名在前三位
+		p:=ret[3].Position
+		
+		topData:=this.kv[pid].Position
+		pos:=topData.Postion
+	
+	3、如果玩家的排名是前四位,那么这个数组的前四个都是不变的,变化的就是比自己排名低的玩家的范围
+	2、排名是第五位的,前四名随机三个人出来,在[0,4)随机生成一个过滤的数字,其余的就是要添加进去的数据。
+	1、随机生成一个数字，然后添加到数组中，采用一个标志位保存数组中是否存在。若存在则是false。
+		data:=make([]int,0)
+		n:=rng.IntN(1,50)
+		ok:=true
+		for _,v:=range data{
+			if (v==n){
+				ok=false
+			}
+			
+			if ok{
+				data=append(data,v)
+			}
+		}
+		
+		
+	
+
+
+
+

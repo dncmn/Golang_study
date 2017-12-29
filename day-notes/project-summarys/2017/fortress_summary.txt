@@ -1,0 +1,150 @@
+##  要塞部分总结
+
+
+
+获取要塞怪物：
+	1、每次获取要塞怪物的时候,首先从mod.Fortress里面的monsters map[int32]*data.TFortressMonster中
+	   找到自己触发的怪物。
+	2、step-two:从工会成员分享的怪物中获取分享的怪物数据。
+	   在这里删除掉已经逃跑的怪物数据。
+	3、一个页面最多显示三个怪物,(这个是客户端做限制的)
+	   好处:这样做的好处是不用频繁的向服务器发送请求,减少网络带宽。
+	   缺点:就是可能一次分享的怪物太多,然后玩家可能也用不上这些数据。
+	4、在获取要塞怪物的时候,对玩家自身的halfCost和ＤoubleFeat做个赋值,还要功勋排名和伤害排名
+	5、对于每小时恢复一次攻击次数,
+		每次获取一次怪物,更新一下玩家的数据,
+			好处:这样可以避免定时执行,如果玩家数据过多,就会给服务器带来过多的负担
+			缺点:玩家不登录可能就不会更新(别的数据暂时还没有想到)
+			
+	问题：
+		1、GetFortress里面的最后一个self的作用(查看怪物的信息)
+			true:获取要塞的全部数据
+			false:获取要塞的部分数据
+		2、GetMonsters的最后一个参数好像没有用(删掉)
+	
+
+领取要塞的发现奖励和击杀奖励:和发现奖励(要塞里面领取发现奖励和击杀奖励)
+	在战斗结束的时候,会添加到发现者和击杀者的FindRewards和KillRewards
+	
+	难点：保存每一次战斗的发现奖励和击杀奖励 使用[]map[int32]int64来保存每一次战斗的数据,一次战斗一个map
+	因为发现奖励和击杀奖励不一定会同时存在的。所以采用一个map类型的切片也是比较合理的。
+	领取发现奖励和击杀奖励，就是从[]map[int32]int64中间找到并且删除
+	
+	删除选择的那个map:
+		如果是第一个,f.KillRewards=f.KillReards[index+1:] 
+		如果是最后一个,f.KillReards=f.KillRewards[0:index}
+		否则就是拼接
+			f.FindRewards = append(f.FindRewards[0:index], f.FindRewards[index+1:]...)
+			
+要塞重置:(每天五点自动重置)
+	1、清空排名表格的时候ClearRankList(type int32)
+			这里在定义常量的时候,直接把表的数量定义在表明的最后,因为默认是从0开始的,
+		所以,这个时候排名在表名的后面的数字,其实也就是表的数量,可以用它来判断传入的数字是否越界
+	2、cacheState的作用??????
+	3、清空fortressDaily、fortressData、fortressMonsters三张表数据
+		获取fortressDaily的数据,然后发送邮件
+		
+玩家进入要塞的时候,
+	会显示的怪物有
+		1、工会中其他怪物分享的怪物（这时候,判断这个玩家是否有工会）
+		2、自己触发的怪物()
+		3、自己触发但是还没有打死的那个怪物
+副本战斗结束的时候,
+	当副本结束战斗的时候,会根据"概率"和"自己的要塞里面是否有怪物" 来判断是否会触发怪物,
+		mod.Fortress.RandMonster(player,vigour) // player,体力值
+			这时候,判断是否需要随机一个怪物
+				判断条件：
+					con1:是否已经触发
+					con2:
+
+自己触发的怪物,打了一次没有打死,然后分享到工会里面
+	接着自己又打了一次,在战斗结束的时候,不会弹出"是否分享至工会"的提示(这个是前端做的)
+	
+要塞总结：
+	1、定时器,定时更改halfCost和doubleFeatReard
+	2、+集合,和goroutine结合,保存怪物的逃跑时间,并且删除怪物)
+	4、在遍历CInstrusionRewardMap的时候,k,v:=range csv.CInstrusionRewardMap 直接赋值,匹配到对应的数据,然后直接跳出循环。
+	5、在保存要塞怪物数据的时候，如果*FortressMonster 为nil,则表示删除数据,这样提高了代码耦合度。
+	6、在获取要塞功勋排名奖励和最大伤害排名奖励的时候,配置表有等级段这一列
+		
+		找到某一个区间的奖励。
+		借鉴的地方:
+			1、更合理的构建csv数据。 map[int32]map[int32]*data.TIntrusionRankReward   levelMax:(rank:*data.TIntrusionRankReward)
+			2、如何锁定某一个区间(1,2,3,5,10,14)
+				hitLvl := int32(0x7fffffff)
+				level := daily.LevelCache
+				for lvl := range csv.CIntrusionRankRewardMap {
+					if lvl >= level && lvl < hitLvl {
+						hitLvl = lvl
+					}
+				}
+
+	7.3、如果同一个玩家连续分享怪物,该怎么处理?????--------------------怪物被连续处理(结论:不懂规则,现在理解了)
+		结论:
+			理论上不会出现连续分享怪物这种情况出现,
+				在扫荡或者正常副本的时候,如果这个怪物没有被打死,就不会触发怪物。
+			如果刚分享出去,就被打死,那么这个怪物就会从这个monsters和labourMonsters里面删除。
+	
+
+##修改bug遇到的#########
+##修改bug遇到的#########
+
+1、如何判断这个攻击次数减半和功勋翻倍的活动是否开启
+	time????--------yes
+	mod.Fortress.UpdateEvent,对这两个值进行判断
+	mod.Fortress.GetEvent,获取这两个值
+	
+	对于更改这两个bool值,是定时触发的,用定时器来执行,更改所有玩家的值
+	在fortress_data.go里面有这两个bool值,在fortress_mod.go里面也有这个字段,
+	每次在获取怪物的时候(也就是进入要塞的时候)会添加这个判断
+	
+2、 fortress bug:
+
+	逻辑问题:
+		1、基础奖励根据玩家等级进行匹配
+		   额外奖励从配置表里进行全局匹配
+		2、levelCache没有初始化
+
+2、要塞分享怪物
+	monsters		map[int32] *data.TFortressMonster   key:finderId value:monster
+	
+	labourMonsters	map[int32]map[int32]struct{}	labourId  ----->(pid:struct{}{})
+	
+	
+	4.1、如果同时有多个工会成员分享怪物,这时候该怎么处理???--------------同时分享怪物(直接添加到map里面)
+		 如果分享怪物,怎么让分享的怪物不出现在自己的界面,(看加载怪物的逻辑)
+		 (自己的怪物没有被打死,但是在自己的界面里面还是可以看到别的玩家分享的怪物)
+		 
+		 思路:
+		 	同时分享,就会把信息添加到monsters和labour里面就可以了
+			
+			获取要塞怪物时,
+							显示自己触发的怪物
+							显示工会成员分享的怪物
+	4.2、如果分享的怪物在怪物逃跑的时间内,没有玩家打,该怎么处理????-------怪物没人打
+			goroutine
+			zset.SortedSet // 全服怪物逃跑时间的有序集合
+			
+			
+			begin:触发怪物的时间
+			end:怪物淘宝的时间
+			now:系统当前时间
+			
+			if end-now >0{
+				// 表示怪物还没有到逃跑时间
+			}else{
+				// 表示可以从escapteTime中删除了	
+			}
+			
+			
+			删除逃跑的怪物：
+				每次取出这个有序集合的第一个元素,判断是否到达逃跑时间
+				如果没有到达逃跑时间,就休眠到那个时间点,然后把它干掉。
+				对玩家的数据加锁,避免数据丢失(这里是重点,要重点看一下×××××××××××××××××××××××重点看一下)
+	
+
+
+		
+	
+	
+	

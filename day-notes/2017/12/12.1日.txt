@@ -1,0 +1,71 @@
+自己
+
+已经实现的目标：
+	
+
+	如果血量<0，mp,hp重新赋值为0
+	
+	
+	
+	
+BattleFieldRandhandler	
+	player.BattleField==nil  说明是第一次进来，直接随机一个新的对手出来。
+
+	战斗胜利，随机一个对手出来,
+	战斗失败,返回原先的
+	
+	
+if player.BattleField==nil{
+	初始化一个player.BattleField出来
+}else{ 进行额外的条件判断
+
+	if player.BattleFiled,CurrBattleWin{ // 表示当前战斗已经胜利了
+		// 根据对手的卡牌的血量
+	}
+
+	if !player.BattleField.CurrBattleWin{
+			当前战斗失败不用随机新的对手出来,直接返回对阵的信息
+			player.BattleField.SelfCardsInfo
+			player.BattleField.TaragetCatdsInfo
+			player.BattleField.Targer
+			player.BattleField.MaxId
+			player.BattleField.MaxChaperId
+			player.BattleField.CurrId
+			player.BattleField.CurrChapterId
+	}
+	
+}
+
+
+	根据战斗胜负判断是否要随机对手,这有一个问题，就是战斗胜利了，并且已经随机一个对手出来了，但是没有打,
+导致每次进去访问这个接口的时候,都会随机生成一个新的对手出来。所以这时候想到了重新再次添加一个判断方法
+	战斗胜利并且根据对手卡牌的血量是否>0来判断是否需要随机一个新的对手出来
+	
+	
+	对于宝箱领取的情况的判断：
+			在一个章节里面,通关时,如果存在宝箱没有领取,则无法进入下一章。
+			如果通过了第三个关卡和第六个关卡,没有领取宝箱,不影响进入下一个关卡。
+			
+		宝箱每次返回的时候,都是返回了整个box map[int32]bool
+	
+	正常情况下，如果通过所有关卡了，但是有的宝箱没有兴趣,所以int32(player.BattleField.Box) 1,2,3
+	
+	
+		这个boxNum只是用来判断当章节通关以后,如果有宝箱没有领取,就不随机新的对手。
+		boxNum:=int32(len(player.BattleField.Box))		boxNum in (0,1,2,3)
+		switch boxNum{
+			case boxNum=3:
+							表示已经通过了所有的关卡,这时候可以随机一个新的对手出来了。
+			default:
+							表示三个宝箱当中,有的宝箱存在没有领取的情况，没有任何操作
+							nothing to do
+							
+						
+		}
+		
+		考虑特殊情况：
+			case1:如果通过了所有的关卡,但是存在有的宝箱没有领取,也就是boxNum<3,
+				每次在访问这个"/battlefield/rand“这个接口的时候,不会随机新的对手信息
+	
+	
+	

@@ -1,0 +1,46 @@
+问题一、关卡战斗结束后,没有对应的暴击奖励(原因,表的序列id发生变化了(ok===================ok)
+问题二、随机对手岁不到，找下一个等级段(ok===================ok)
+问题三、就是重置的类型(开启之后,):(ok===================ok)
+		默认重置的类型是正常重置,1
+		章节回退开启之后,默认是章节回退
+		
+问题四、五点自动重置(ok===================ok)
+问题五、自动复活(ok====================ok)
+
+	手动复活：
+		血量值恢复到最大
+		怒气值
+		
+		
+		在玩家团队等级或者vip的等级达到条件以后。
+		
+		
+		vip 或者玩家的团队等级够了，但是战场没有开启
+		
+			mod.Item.Add()
+			
+			addTeamExp还有addVipExp
+			这两个都是在达到条件之后,然后更更改这个这个字段的默认值
+			
+			在初始化战场的时候this.ResetType=1(正常重置)
+			addTeamExp还有addVipExp达到条件之后,就是更改这个字段的默认值
+			
+			
+			
+			
+
+	MaxProcess       int32                            // 当前通关记录 (maxChapterId-1+maxId)
+	CurrentProcess   int32                            // 当前通关记录
+	CurrBattleWin    bool                             // 当前关卡的战斗结果
+	Embattle         *Embattle                        // 布阵
+	RetriveEmbattle  *Embattle                        // 点击复活时保存的阵容
+	PveCache         *PveStruct                       `json:"-"` // 当前关卡的pveCache
+	SelfCardsInfo    map[int32]*TBattleFieldCardsInfo // 自己的卡牌信息
+	TargetCardsInfo  map[int32]*TBattleFieldCardsInfo // 當前章節的对方的卡牌信息
+	TargetCards      []*TPVPPlayer                    // 當前章節的关卡对应敌方的数据
+	OneTime          *bitset.BitSet                   // 用来保存通过关卡时的首次奖励是否领取
+	ChapterOnetime   *bitset.BitSet                   // 保存章节的首次通章奖励
+	Box              map[int32]bool                   // 保存每个宝箱是否领取 --------key:-Id value:true  表示已经领取
+	DailyBuyTimes    int32                            // 战场复活的次数,默认是0,上限是 免费次数1 -与vip对应的购买次数
+	DailyFreeTRtrive bool                             // 当天首次免费的复活次数是否已经领取
+	ResetType        int32                            // 重置的类型 0:正常重置 1:章节重置

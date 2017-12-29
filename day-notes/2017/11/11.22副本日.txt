@@ -1,0 +1,61 @@
+
+func randSliceItem(slice []int32) int32 {
+	return slice[int(rng.IntN(uint64(len(slice))))]
+}
+
+
+	
+	
+	PvPStruct  PVP数据
+	
+	PvpStruct struct {
+		BattleType   int
+		Self         []*PvpCard
+		Target       []*PvpCard
+		SelfFPBuff   int32
+		TargetFPBuff int32
+		Seed         int32
+	}
+	
+	// PVE数据
+	PveStruct struct {
+		InstanceID   int32
+		BattleType   int
+		Self         []*PvpCard
+		MonsterGroup []int32
+		Monsters     []*PvpCardInfo
+		Target       []*PvpCard
+		//Manuals      []*PFightQueue
+		Manuals      string
+		StartGroup   int
+		AutoBattle   bool
+		SelfFPBuff   int32
+		TargetFPBuff int32
+		DefeatBuff   int32
+		Seed         int32
+		Extra        int32 `json:"-"` // color of fortress monster (quality)
+		Finder       int64 `json:"-"` // finder's PID of fortress monster
+	}
+	
+	
+	// 玩家PVP战斗数据(竞技场,远征)
+	TPVPPlayer struct {
+		Pid           int64
+		Head          int32  // 头像
+		Frame         int32  // 头像框
+		Uid           string `json:"-"`
+		Nick          string
+		TeamLevel     int32
+		VipLevel      int32
+		LabourId      int64                  `json:"-"` // 公会Id
+		Labour        string                 // 公会名称
+		LabourSkill   int32                  `json:"-"` // 公会技能类型
+		LabourSkillID int32                  `json:"-"` // 公会技能ID(廢棄:2016-10-31)
+		AllCards      map[int32]*TPlayerCard // embattle中的所有卡牌
+		GroupBuffs    []*ExtProp             `json:"-"` // 额外属性
+		TeamBuffs     []*ExtProp             `json:"-"` // 戰隊屬性
+		TargetBuffs   map[int][]*ExtProp     `json:"-"` // 定点额外属性
+		Embattle      *Embattle              // 布阵信息
+		FP            [4]int32               `json:"-"` // 阵容战力 0: heroFP 1: animalFP 2: animalPlusFP 3: HelpsFP
+		sync.RWMutex  `json:"-" msgpack:"-"`
+	}

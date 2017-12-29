@@ -1,0 +1,54 @@
+2017.11.19
+	1、excel转换成csv(老大自己写的一个工具类就是将csv文件转换成结构体)
+		
+	2、csv转换成结构体
+		利用了反射。。。。。
+		2.1、每次解析一个csv文件,就相应地得到一个csv4g的结构体。结构体的相关信息如下:
+			type Csv4g struct {
+			name       string         // 解析的文件名字
+			fields     []*FieldDefine // 被解析的结构体字段的信息
+			lines      [][]string     // csv中每一行的信息
+			lineNo     int            // csv中的行号,根据这个找到某一行的信息
+			LineLen    int            // 这个csv文件的总行数
+			lineOffset int            // 每一行的偏移量
+		}
+		
+		如果标签中含有特定信息了,(strings.Split("."))
+			`csv:"-"`
+			`csv:"custom,omitempty"`
+		2.2、对已经转换过的中间结构体进行解析,然后转换成目标结构体
+	3、就是看一下代码
+		3.1、竞技积分的代码
+		3.2、签到的代码
+			
+	
+	canSkip := false
+		if tagStr != "" {
+			tags := strings.Split(tagStr, ",")
+			for _, tag := range tags {
+				switch tag {
+				case "-":
+					continue Out
+				case "omitempty":
+					canSkip = true
+				default:
+					fieldName = tag
+				}
+			}
+		}
+	
+	
+	
+	
+func (r *Reader) ReadAll() (records [][]string, err error) {
+	for {
+		record, err := r.readRecord(nil)
+		if err == io.EOF {
+			return records, nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		records = append(records, record)
+	}
+}

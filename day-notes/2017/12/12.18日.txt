@@ -1,0 +1,39 @@
+1、日常任务里面,如何记录每日消耗的砖石数量
+	type Quest struct{
+		Quests map[int32]int32
+		DailyQuests map[int32]int32
+		FinishIds []int32
+	}
+	
+
+data:=make(map[int32]int32)
+data[1]=2
+delete(data,1) delete(mapName,aimedKey)
+	
+在OverDayToReset里面,
+	首先,清空昨天昨天的日常任务
+	接着,根据玩家的等级然后加载当天的日常任务
+	(当玩家的等级发生改变时,会重新加载任务表)
+	
+	领取任务的活跃积分,每次完成一个任务,就会获取对应的活页积分奖励。
+	应该建立一个字段来保存这个ActivePoints，
+		判断是否符合领取条件
+		判断是否符合需求
+	保存这四个值
+		1、bitset.Bitset
+		2、map[int32]bool
+		
+		
+		
+领取活跃度积分奖励
+	1、为什么不去判断这个奖励是否已经领取?
+		结论:忘了添加是否已经领取奖励的判断
+	2、最后从player.Quests.FinishIds获取id,然是对于日常任务,根本没有添加进去。
+		结论:删除了DailyQuests这个字段,及其使用的地方。
+
+一键领取任务
+	1、对于一键领取任务,这里的“一键领取任务”的玩家的vip等级需要从配置表读取。
+		结论:有疑问,找策划。(策划从新配表)
+		 Excel/SystemUnlock.xlsx 
+ 		 Excel/Vip.xlsx  
+		

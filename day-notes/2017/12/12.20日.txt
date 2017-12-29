@@ -1,0 +1,57 @@
+1、
+	currentProcess =-17
+	maxProcess = 0
+	
+	
+	vip的等级是12级别,但是团队等级是0
+	
+	
+	玩家的vip等级或者团队等级达到以后,就会初始化一个player.BattleField
+	这个时候：
+			player.BattleField.MaxProcess=0
+			player.BattleField.CurrentProcess=1
+	如果这时候进行章节重置的话,就会出现
+			player.BattleField.MaxProcess=0
+			player.BattleField.CurrentProcess=-17
+			
+	结论:在章节重置的时候,添加一个判断
+	
+2、竞技积分奖励
+	error:新的账号进去就是一千
+	结论:竞技积分和竞技币不是同一个概念,前端的理解问题
+3、击杀奖励和发现奖励走的都是掉落表
+
+		奖励类型	钻石	要塞币			boxs	BoxKeys
+		发现奖励	10		0			1|4		2|3
+		击杀奖励	10		100			1|4		2|3
+		
+	
+	奖励的钻石根据怪物的品质获取，然后结合一定的概率计算
+	奖励的要塞积分从配置表里面读取IntrusionKillReward.csv
+	
+4、
+	4.1、要塞结束战斗
+	4.2、docker简介
+
+
+	
+	
+奖励分了好几份：
+	宝箱和钥匙
+	钻石和要塞币
+	
+策划说,同时只能出现两个宝箱或者宝箱钥匙
+要塞结束以后,(这里是看需求)
+向客户端发送的
+	自己的宝箱和钥匙(mod.Item.Add还有基础奖励)
+	如果发现者和击杀者不是同一个人,
+		击杀这的奖励直接保存到数据库
+		
+		
+4、理解
+	什么时候,需要通过mod.Item.Add发送(比如:item配置表的的道具)
+	什么时候,在handler方法的最后发
+
+	
+	
+	

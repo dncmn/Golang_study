@@ -1,0 +1,44 @@
+for i, p := range constant.ShopSpecialsProb {
+				if point <= sum {
+					if i == 0 {
+						break
+					}
+					specials = (i-1)*2 + 1
+					break
+				}
+				sum += p
+			}			
+1、跳过关卡
+2、章节重置
+
+
+章节重置
+	bfc 0/1    0:正常重置 1:章节回退
+	bf  value （ value:指的值调到制定关卡）
+	
+	
+	
+历史遗留问题：
+	1、就是重置类型的判断
+		在章节回退开启之前,默认的重置方式就是“正常重置”
+		章节回退开启只有,默认重置方式就是"章节回退"
+	2、
+
+
+/battlefield/getChapterReward
+
+	MsgId:1806
+	param:id（已经通章的章节id）
+	result:
+	// 领取通章奖励
+	type P_ACK_BATTLE_FIELD_CHAPTER_REWARD struct {
+		NetCode NetCode
+		Reward  *bitset.BitSet
+	}
+
+
+复活的时候：
+	一：每日自动复活（）
+	二：玩家的战力怎么算(最上角的战力是最强阵容的战力)
+	
+	三：重置（初始化自己的卡牌信息）

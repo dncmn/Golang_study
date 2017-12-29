@@ -1,0 +1,91 @@
+逻辑错了
+		宝箱只有对应的前三个关卡过了以后,才可以领取对应的奖励
+		
+		通过一个关卡，
+			通过关卡奖励
+			首次通过奖励
+		三个宝箱都领取以后
+			宝箱奖励
+			通章奖励
+
+
+道具刷新
+货币刷新
+
+
+问题一：
+	1、每日商店里面,免费刷新次数可以从哪儿个表读取数据
+	2、道具刷新,指的是什么(免费刷新用完之后,就是货币刷新,当所有的机会用完之后,那个商店就没有再次刷新的机会,保存这时候的货物销售状态)
+	3、出售商品的状态。
+		3.1、打折(这个是随机的)
+		3.2、激活宿命(当正在出售的碎片英雄与已有英雄可激活宿命时)
+		3.3、可合击(当正在出售的碎片英雄与已有英雄可激活合击时，显示可合击标识)
+		3.4、收集中(当正在出售的材料为已有英雄可用时（装备、英雄突破），显示收集中标识)
+		3.5、售完(当出售的物品已被购买后，则该物品显示售完标识)
+
+
+
+if player.BattleField.MaxId > constant.BattleFieldMaxLevelsSingleChapter { // 通过了这个章节
+			player.BattleField.MaxId = 1
+			player.BattleField.MaxChapterId += 1
+
+		}
+
+
+重置  /battlefield/reset  
+     paramName:type
+	 0:正常重置
+	 1：章节回退
+	 
+	 	NetCode     1804
+		ResetResult bool // 服务器对这次响应的结果
+	 
+	 
+关卡扫荡 /battlefield/levelSweep
+章节扫荡 /battlefield/ChapterSweep
+
+
+NetCode       NetCode
+	CurrChapterId int32 // 当前章节id
+	CurrLevelId   int32 // 当前关卡id
+	MaxChapterId  int32 // 历史最高章节id
+	MaxLevelId    int32 // 历史最高关卡id
+}
+
+1805
+
+
+开启宝箱
+/battlefield/box
+	param:
+		chapterId  宝箱对应的章节id
+		levelId	   宝箱对应的配置表里面的关卡id
+		
+	result:1803
+	
+	NetCode NetCode
+	Box     map[int32]bool  key:宝箱对应的章节id*100+关卡id 。
+		
+
+// 复活
+/battlefield/revive
+
+response code:1802
+response struct:
+	NetCode  NetCode
+	Embattle *Embattle //第一次有卡牌死亡时候的阵容
+	Fp       int32 // 提升之后的战力
+	
+	
+	
+领取宝箱
+	case1:可以打过三个关卡领取一个宝箱
+	case2:可以打过所有关卡领取宝箱、
+	
+	boxIndex
+	
+	如何制定这个参数
+	如何转换这个参数
+	
+	
+	需要不需要发参数

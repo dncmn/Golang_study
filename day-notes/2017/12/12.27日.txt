@@ -1,0 +1,45 @@
+12.27日
+
+bug fix:
+	1、战场超时后主力英雄没有阵亡。
+		原因:如果战斗失败了,所有的卡牌的mp和hp全部置为0
+	2、在要塞结束的时候
+new feach:
+	计算卡牌的合击技战力
+
+
+	//xlog.Debugf("new  card  was activated SKillSuper:player.Id=%s,   card.Id=%d,ActivateSuperSkill=%v", player.User.Uid, card.Id, player.Cards[cardID].ActivateSuperSkill)
+
+//xlog.Debugf("old  card  was activated SKillSuper:player.Id=%s,   card.Id=%d,ActivateSuperSkill=%v", player.User.Uid, card.Id, player.Cards[card.Id].ActivateSuperSkill)
+
+//arr := make([]int, 0)
+	//
+	//for _, v := range player.Cards {
+	//	arr = append(arr, int(v.Id))
+	//}
+	//
+	//sort.Ints(arr)
+	//
+	//for _, v := range arr {
+	//	//xlog.Debugf("player.Id=%s,   card.Id==========================%d", player.User.Uid, v)
+	//}
+
+
+每天五点重置
+1、dailyRest和OverDayToReset
+	方法的位置:
+		在crond_mod.go里面,dailyReset表示每天五点重置
+		在play_data.go里面,OverDayToReset
+	方法的调用关系:
+		OverDayToReset:OverDayToReset会被DailyRest直接调用,通过ipc_handler
+		dailyReset:dailyRest在crond_mod被定时执行。
+   
+重置所有玩家的数据,重置登录玩家的数据
+ 也就是判断哪儿些用户需要隔日重置的，如果一个用户长时间没有登录的话,那就不用重置了
+ 
+2、ipc
+	ipc：内部通信的一种方式
+	用户登录的时候:mod.Ipc.Do:就是从内部消息队列ipcQ中取出来数据,然后遍历,依次调用,代用对应的方法。
+	
+问题：
+	1、为什么会在用户注销的时候调用mod.Ipc.Do(player)这个方法

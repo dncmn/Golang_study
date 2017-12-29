@@ -1,0 +1,152 @@
+卡牌战力--封装好的
+	更改战力值的时候,这个添加的战力值只是一天有效,当天过去以后，战力值失效
+	
+	已经添加了战力,返回更新过的战力值，生命，攻击，交给buff来计算
+	
+	然后就是
+		每天五点自动恢复。
+			
+
+
+都每天五点的时候,如何自动恢复玩家的体力。和
+
+
+问题：
+	计算经过战力BUFF之后的战力
+	
+	经过战力BUFF之后的战力
+	
+	在产生pve数据的时候，把这个BUFF添加进去
+	
+	
+	这个战力fp该如何计算???
+	
+		
+
+
+
+
+FightAp:攻击
+FightHp:生命
+
+
+
+每天五点，自动恢复所有的死亡玩家
+		生命值最大
+		怒气值减半
+
+
+保存胜利后,玩家的阵容信息
+
+	这个值就是在不停地变化中
+	
+	每次开始战斗的时候,都会形成一套阵容
+玩家的阵容是在开始战斗的时候产生的,这时候会赋值给player.BattleField.Embattle。
+
+在结束战斗的时候,可以根据战斗的胜负
+
+
+如果第一个关卡胜利了，这时候的阵容保存下来
+如果第一个关卡失败了，就复活上一个阵容
+
+
+	
+
+这个阵容,
+	Embattle{
+		TeamA []int32
+		TeamB []int32
+		TeamC []int32
+		Helps []int32
+	}
+	
+type TBattleField struct{
+	Embattle *data.Embattle // 保存当前玩家的阵容信息
+}	
+
+case1:失败之后，可能又多了一个卡牌，然后再战斗，再失败，这时候保存的这个阵容(和阵容没有关系)
+case2:首次进入以后,如果战斗失败,就是复活这时候的阵容
+				战斗失败,可能没有复活,然后继续战斗，
+				
+
+
+？？？？？？？？？？？？？第一次卡牌死了以后保存一次和每次死亡保存一次的区别？？？？？？？？？？？？？？？？
+？？？？？？？？？？？？？第一次卡牌死了以后保存一次和每次死亡保存一次的区别？？？？？？？？？？？？？？？？
+？？？？？？？？？？？？？第一次卡牌死了以后保存一次和每次死亡保存一次的区别？？？？？？？？？？？？？？？？
+？？？？？？？？？？？？？第一次卡牌死了以后保存一次和每次死亡保存一次的区别？？？？？？？？？？？？？？？？
+？？？？？？？？？？？？？第一次卡牌死了以后保存一次和每次死亡保存一次的区别？？？？？？？？？？？？？？？？	
+不开窍啊
+		开始战斗的时候,添加一个判断,判断所有卡牌是否存在血量小于0的情况
+		结束战斗的时候,再添加一个判断,如果结束战斗的时候,上阵阵容中有卡牌血量<0,则保存这一套阵容
+
+
+战斗结束之后：
+		检测pveResult.Self的hp是否存在小于0的情况(==========================这个是每次都要检测)
+		如何判断这个是第一次死亡
+
+	
+
+
+目的：更换设备,复活功能依然可以使用
+
+a上有卡牌死亡，但是可以继续战斗，点击复活可以使用
+换了另外一套设备,点击复活依然可以使用
+
+
+
+每次战斗结束的时候,添加一个判断,检测player.BattleField.Embattle.TeamA
+看是否存在血量小于0,并且RetriveEmbattle为nil，保存这一套阵容
+
+RetriveEmbattle  -----------------------第一次存在卡牌血量<0的阵容
+FirstSaveRetrive ------------------------是否添加
+
+
+
+
+battlefieldFinishFightHandler--------------------------------------------
+
+	for _, card := range pveResult.Self {
+
+		if card.Hp <= 0 {
+			player.BattleField.RetriveEmbattle = player.BattleField.Embattle // 复活之后这个阵容就会被清空
+		}
+	}
+
+
+	for i:=int32(0);i<int32(len(pveResult.Self));i++{
+		card:=pveSesult.Self[i]
+		if v.Hp<0{
+			RetriveEmbattle=player.BattleField.Embattle
+			break
+		}
+	}
+
+
+	for i:=0;i<len(player.BattleField.Embattle.TeamA);i++{
+		// 检测血量是否小于零
+		if 
+		player.RetriveEmbattle.RetriveEmbattle=player.BattleField.Embattle
+		break
+	}
+battlefieldRetriveHandler-------------------------------------------------
+
+	var result *Embattle
+	result=player.BattleField.RetriveEmbattle
+	return resutl
+	
+	在这里,复活成功一次
+	player.BattleField.FirstSaveRetrive=false
+	player.BattleField.RetriveEmbattle=nil
+	
+			
+				
+				
+				
+计算复活之后的战力
+如何复活
+		玩家所有的卡牌都会进行改变：
+			血量最大,生命值达到最大
+复活结果
+		生命值最大*对应百分比
+		进攻百分比提升到最大
+		

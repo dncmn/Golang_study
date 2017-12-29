@@ -1,0 +1,112 @@
+
+
+
+
+战斗失败后,保存玩家的怒气值也就是保存玩家的mp
+在复活的时候：(王明)
+	1、BattlefiedBuff.xlsx里面的生命增长比例我是否用的到?
+	2、卡牌的hp,mp,maxHp与玩家战力的关系
+	
+
+1、如何处理TPVPPlayer问题
+
+	1、这个TPVPPlayer是如何产生的--(根据player.BattleField.TargetCards[len(player.BattleField.TargetCards)])
+		在batttlefieldRandHandler这个方法里面,每次随机一个新的对手的时候,都会产生一个新的TPVPPlayer的数据
+	然后保存到这player.BattleField.TargetCards这个数组里面。
+		假设一场战斗都还没有进行，此时这个数组只有一个元素
+		如果战斗失败,还是之前的tpvpplayer，只要不随机对手,就不会添加tpvpplayer
+	
+2、再次看一下,随机对手和开始和结束战斗的流程
+3、相关概念
+	3.1
+		额外属性
+		战队属性
+		定点额外属性
+	3.2
+		卡牌战力
+		卡牌血量
+		卡牌初始能量
+		
+产生pve数据
+	genPveData()(pve *Data.PveStruct){
+	
+		
+	}
+	manan**8066766
+	在复活的时候,会立马显示这个经过战力BUFF之后的战力
+	而不是在产生pve的时候,把数据进行提升
+	
+	
+	点击复活之后
+		生命值回满,然后攻击力提升了百分之多少。
+		这个和在产生pve数据的时候的结果是一致的。
+		
+		可以仿照工会技能buff写一个从battlefieldbuff表获取
+		
+		复活之后，战力buff在开始战斗生成pve时直接进行就按
+		调用这个封装好的方法,然后追加到缓冲列表中
+		
+		方法的使用情况：(直接调用,这个buyTime的话，根据购买次数进行判断)
+		现在的问题是,如何获取缓冲之后的战力。
+		
+
+开始战斗：
+	battlefieldStartFightHandler
+	check-condition:
+		check-1:check if open battlefield 
+		check-2:check embattle  error
+		check-3:check genPve error
+	
+		step-one:布阵---------------------mod.Battle.Embattle(player,p)
+		step-tow:产生pve -----------------mod.BattleField.GenPvp(player,currChapterId,currId,pid)
+		step-three:player.Inmsg(data.AckBattleFieldStartFight(pve,embattle,reqURL))
+		
+结束战斗:
+	battlefieldFinishFightHandler
+	
+问题：
+	player.BattleField.TargetCards
+	player.BattleField.Targets
+	这两个有什么区别？？？？
+
+
+
+
+self
+target
+seed
+battlefieldType
+	
+	
+	
+	
+通过某一个章节的标志不是这一章九个关卡全部通关，而是是三个宝箱已经全部领取
+
+
+一次随机一个对手
+	如果战场为nil,随机一个新的对手,表明是第一次进入战场
+	战场不为空：
+			如果某一个关卡的战斗失败,不会随机新的对手
+			如果某一个关卡的战斗成功,并且已经随机了一个新的对手,这个时候,不会随机新的对手。
+			(这里写在了战斗结束的时候)宝箱的领取，如果通过这一个章节的所有关卡以后,存在宝箱没有领取,不会随机新的对手。
+			我这边也根据当前   key:=章节id*100+关卡id value:bool 是否领取
+			
+			还有扫荡的时候
+				关卡扫荡：
+						一个关卡一个关卡的扫荡,扫荡类似于战斗胜利。
+				一建扫荡：
+						一个章节所有关卡进行扫荡
+			章节重置的时候
+				正常重置：历史最高章节的第一关
+				章节重置:历史最高章节的前一个章节
+			
+
+一个随机一个章节的对手
+	优势，不用再次随机对手。
+	
+	
+开启战斗的逻辑
+	
+	
+	
+	

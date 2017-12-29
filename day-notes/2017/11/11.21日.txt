@@ -1,0 +1,25 @@
+
+
+Battlefield   战场表  关卡奖励 宝箱奖励
+BattlefieldChapter    战场章节表    章节奖励
+BattlefieldBuff    战场BUFF表  复活次数对应增加BUFF
+VIP   远征次数参数修改为战场复活次数购买上限
+
+复活：
+	自动复活:
+			每天早上五点自动进行复活。战力值减半,并且没有战力BUFF
+	砖石复活:
+			1.这个是有次数限制的,购买次数和玩家vip的等级对应,
+			2.每一次购买,都会消耗50个砖石
+
+扫荡
+addValue=10
+奖励的金币
+
+//// 获取比赛奖励的基数
+basicMoney := csv.CMetaMap[constant.AreanaMoenyBasic].GetInt64()
+factorKey  := constant.ArenaMoneyForth
+factor := csv.CMetaMap[factorKey].GetFloat64()
+addCoin := float64(basicMoney) * factor
+// 新增玩家的金币
+mod.Item.Add(player, constant.ItemCurrencyArenaValue, int64(addCoin), reqURL)

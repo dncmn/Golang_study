@@ -1,0 +1,129 @@
+
+
+
+
+一、更新血量信息
+二、根据比赛结果随机一个新的对手
+	
+
+
+
+
+
+
+
+key:=当前章节Id*100+当前关卡id
+
+battlefieldFinishFightHandler
+		战斗胜利：
+			获取的奖励：
+				关卡奖励-------------------------（如果比赛获取了胜利）-----key:=当前章节Id*100+当前关卡id
+				章节奖励(通过这个章节以后-----------判断是否超过了BattleFieldMaxLevelsSingleChapter)
+				首胜奖励(根据是否是第一次获取胜利-----bitset)
+	
+			可能要改变的:
+				关卡id+1(判断是否通关)
+				章节id(根据是否通过这一个章节,如果通过了这一个章节,则currId=1,否则currId+=1)
+				历史最高关卡记录(根据是否通过这一个关卡,如果通关则历史最高关卡记录加一)
+					正常情况下,maxChapterId=1,maxId=0
+					打过一关以后,就是maxChapterId=1,maxId=1
+				历史最高章节记录(根据是否过这一个章节,如果通关则历史最高章节记录加一)
+			需要做的：
+				
+				保存卡片的血量信息
+				再次随机一个对手信息
+		战斗失败
+			保存血量信息
+
+
+通过之后,当前章节id和关卡id都会改变
+	// currChapterId+=1 // 章节id+1
+	currId=1 // 关卡重新置为1
+	
+	通过章节之后的正常情况
+	
+	if currChapterId*100+currId>maxChapterId*100+maxId{ // 表示破纪录了，    else的情况：表示通过章节,但是没有破纪录---对最高关卡和章节信息没有改变
+		maxId=0
+		maxChapterId+=1
+	}
+	
+		
+	
+
+	通关以后,
+		判断是否更新最高关卡信息
+		
+	
+	
+	通关以后，
+		第一个关卡没有开始打
+			maxChapterId=currChapterId
+			maxId=0
+		第一个关卡打不过去
+			maxChapterId=currChapterId
+			maxId=0
+	
+	"MaxId": 0,     
+	"MaxChapterId": 1,
+	"CurrChapterId": 1,
+	"CurrId": 
+	
+	
+	
+通过一个关卡之后
+
+	
+
+	currId+=1  当前关卡id+1
+	
+	第一章通关以后，
+			当前关卡和章节信息是 2-1
+			最高关卡和章节信息是 1-9
+			
+			如果maxID>9{
+				maxChapterId+=1
+				maxId=0
+			}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

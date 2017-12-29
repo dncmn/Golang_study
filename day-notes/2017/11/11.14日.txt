@@ -1,0 +1,68 @@
+1、判断这个奖励是否已经被领取了
+ func(this *BitSet)Test()//判断某一位的奖励是否被领取
+ 设置某一个bit位的值
+ 	func(b *BitSet)Set(i uint)------设置成1
+	func(b *BitSet)SetTo(i uint,value bool) *BitSet--------设置成指定的值
+	
+	
+	判断这个奖励是否已经被领取了
+	将奖励的id和num都返回
+	
+
+##获取奖励的id
+seqid, err := conv.Str2Int32(p.Get("seqid")) //---？？？？？
+	if err != nil {
+		player.InMsg(protocol.NewGameError(protocol.E_WRONG_PARAM, reqURL))
+		return
+	}
+##判断奖励是否已经被领取???????
+if misc.GetBit64(player.Arena.Reward.Bit, uint(seqid)) {
+		player.InMsg(protocol.NewGameError(protocol.E_EVENT_SEVEN_REPEAT, reqURL)) //活动奖品已经领取
+		return
+	}
+	
+##对奖励进行设置。。。。
+	#判断player的积分
+		nowCoin:=player.Arena.AddValue
+	##判断player的团队等级
+		从csv文件获取数据、
+	####对这次奖励进行设置
+		/*  因为这个配置文件里面的设置 */
+		mod.Item.Add(player,rewardId,rewardCount,reqUrl)
+		mod.Item.Add(player,rewardId,rewardCount,reqUrl)
+		mod.Item.Add(player,rewardId,rewardCount,reqUrl)
+		mod.Item.Add(player,rewardId,rewardCount,reqUrl)
+		mod.Item.Add(player,rewardId,rewardCount,reqUrl)
+	
+
+遗留问题：
+		
+	1.2.2、怎么有一个mod.Quest.Update()//方法,更改主线任务
+
+	四、type  CQuest struct{
+		 PreId int32 前置任务id
+		 NextId int32 后置任务id
+		 NeedLevel int32 需要的等级   ??????????????????
+		 Type  int32  主线1日常2
+		 FinishId int32 完成条件的种类
+		 FinishVale int32 完整条件的数值
+		 。。。。。。
+		 。。。。。。
+	}
+	
+
+已经解决的问题：
+一、BitSet(ok----------ok)
+		1.1、也就是可以理解成这个奖励是否已经领取 //判断这个奖励是否已经被领取了(arena_handler.go---StartFight)
+			方法：添加一个字段,初始化都是0,然后通过消息号来校验,然后更改奖励,设置这个标志位	
+		1.2、扫荡的时候：
+				1.2.1(ok----------ok)
+					check if target position lower//查看被扫荡的排名是否比自己高(arena_handler.go---Sweeep)
+						如果是注释:为什么不是比较 target.Position和p url.Values传递过来的pos
+						如果是第十名不能挑战第一名:
+							那就是让target.Postion<self.Position
+	
+	五、Top50的时候：(ok----------ok)
+		已经通过temp:=this.List[:50]获取到了top50的数据,为什么新建立了一个数组
+		,然后有根据this.kv[temp[i].Pid]  通过pid重新找到这个玩家的数据,然后加进去了。
+		可以有的解释：为了防止并发吧

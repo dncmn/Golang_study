@@ -1,0 +1,48 @@
+从map[int32]bool中读取数据,
+k,ok:=data[mapKey]
+
+if !ok{
+	log.Printf("mapKey=%d is not exist")
+	return
+}
+
+log.Printf("mapKey=%d ----->value=%d",mapKey,v)
+
+
+type TQuest struct{
+	Quests map[int32]int32
+	DailyQuests map[int32]int32
+	FinishedQuests []int32
+}
+
+Quest这个字段保存了所有的任务,type用来区分主线任务和日常任务,日常任务会在第二天被删除
+
+
+
+
+二研项目
+cm_data和cm.exe一起放在windows环境里面,然后执行
+
+每日任务里面
+	1、消耗500砖石获取一次奖励
+	
+	player.Quest.DailyQuest（map[int32]int32） key:序列id value 对应数量  
+	如果有获取的砖石增加,就是利用mod.Quest.UpdateNum(player,constant.CurrencyDiamond，count)
+
+
+
+
+
+battlefield_bug
+	1、
+	
+	
+	
+	
+how to save retriveEmbattle?
+	
+	
+case1:
+	玩家首次进入战场:
+		战斗开始的时候,判断是否存在血量小于零的情况。
+		战斗结束后,判断这次阵容

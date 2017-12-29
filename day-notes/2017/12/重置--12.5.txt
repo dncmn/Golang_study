@@ -1,0 +1,106 @@
+
+对手的卡牌信息 					[]*TPVPPlayer
+自己所有的卡牌信息都回复到初始状态      
+清空自己的残阵信息				 SelfCardsInfo
+清空对手的残阵信息				 TargetCardsInfo
+宝箱领取					     Box
+战场复活购买次数 			      DailyBuyTimes	
+当天复活次数   				   DailyRetriveTime 0/1
+当天首次复活次数是否已经领取       FirstRetrive
+
+
+难点：
+	1、初始化自己的卡牌信息-------------------------------------------------调用复活逻辑就可以了。
+	2、在随机对手的时候判断是否开启每一个关卡的扫荡 CurrIdCanSweep
+
+
+	默认是正常重置，开始章节重置需要判断条件，这个已经添加了判断
+	默认是正常重置，开始章节重置需要判断条件，这个已经添加了判断
+	默认是正常重置，开始章节重置需要判断条件，这个已经添加了判断
+	默认是正常重置，开始章节重置需要判断条件，这个已经添加了判断
+
+
+重置：
+	正常重置：历史最高章节的那一章
+	章节重置：历史最高章节的前一章
+	
+
+	
+	
+问题一；
+	重置，都是所有卡牌都回复到初始状态
+	
+	在重置的时候：
+		默认是正常重置，也就是回复到历史最高章节，这个时候所有的卡牌都回复到初始状态
+	在复活的时候：
+		有一个是被动复活，也就是每天早上五点自动复活，血量100%，战斗力50%。进行两次操作
+		
+问题二：
+	如果点击多次，这个怎么处理。
+错误操作：
+	resetType:=make([]int32,0)
+	新建立一个数组用来保存当天的选择，正常是0，章节是1.
+	在需要重置的时候，选择这个数组的最后一个元素
+正确操作：
+	var resetType int32=0 // 
+	
+	
+MaxId            int32                            // 最高关卡记录的关卡id
+	MaxChapterId     int32                            // 最高关卡记录的章节Id
+	CurrId           int32                            // 当前关卡id
+	CurrChapterId    int32                            // 当前章节id
+	FirstSaveRetrive bool                             // 是否已经保存战场中,首次失败的阵容 ------  复活一次,设置为true,
+	CurrBattleWin    bool                             // 当前关卡的战斗结果
+	Embattle         *Embattle                        // 布阵
+	RetriveEmbattle  *Embattle                        // 点击复活时保存的阵容
+	PveCache         *PveStruct                       `json:"-"` // 当前关卡的pveCache
+	SelfCardsInfo    map[int32]*TBattleFieldCardsInfo // 自己的卡牌信息
+	TargetCardsInfo  map[int32]*TBattleFieldCardsInfo // 當前章節的对方的卡牌信息
+	TargetCards      []*TPVPPlayer                    // 當前章節的关卡对应敌方的数据
+	OneTime          *bitset.BitSet                   // 用来保存通过关卡时的首次奖励是否领取
+	Box              map[int32]bool                   // 保存每个宝箱是否领取 ---------每次过一个章节,都会重置
+	DailyBuyTimes    int32                            // 战场复活的次数,默认是0,上限是 免费次数1 -与vip对应的购买次数
+	DailyRetriveTime int32                            // 当天复活次数---页面显示的0次和1次
+	DailyFreeTRtrive bool                             // 当天首次免费的复活次数是否已经领取
+	ResetType        int32                            // 重置的类型
+	
+	
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

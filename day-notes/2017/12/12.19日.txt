@@ -1,0 +1,41 @@
+1、昨天完成的任务还没有清除（昨天已经领取的日常任务,今天还在)
+	结论:player.Quests.FinishIds=make([]int32,0)
+	
+2、战场章节重置出现问题
+	如何处理player.BattleField.ResetType
+	结论:就是player.BattleField.ResetType在重置过之后,没有清空
+		
+		正常重置：1
+		章节回退:2
+	
+		resetType默认改成0
+		
+		在章节回退开启之前
+		如果用户选择没有选择,就根据player.BattleField.ResetDefaultType来进行判断
+		或者
+			player.BattleField.ResetType=player.BattleField.ResetDefaultType  
+			
+			
+		在章节回退开启之后,
+			看看resetType是否为0,为0表示用户没有选择,默认就是章节回退
+			如果用户选择了resetType=1,则进行正常重置
+			,但是重置过后这个值就要设置成0,方便下次判断
+			
+			每次重置以后,seretType赋值为0
+3、问题
+	任务系统里面，如何记录已经通过的指定副本数或者消耗的钻石数
+		
+		消耗钻石的地方
+					购买金币
+					购买体力
+					购买商店物品
+					刷新商店
+					签到补签
+					
+					worldboss_handler.go
+					mail_handler.go
+			
+
+mod.Quest.UpdateNum(player, constant.QuestConsumeDiamond, needDiamond, 0, reqURL)
+
+func (_ *QuestMod) UpdateNum(player *data.TPlayer, questType, value int32, finishId int32, reqURL string)

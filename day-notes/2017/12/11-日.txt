@@ -1,0 +1,26 @@
+签到：
+	1、判断当天是否已经签到
+	if 	player.TCheckIn.VipTbl.Test(day)(){
+		// 已经领取了奖励
+	}
+	
+	2、每次签到判断是不是vip双倍  player.VIP>=targetVip
+	3、vip等级不足时，领取一倍(vip等级不足领取一倍,vip等级上升以后,然后可以补领)
+	4、是不是补签
+		player.CheckIn.Done:表示当天是否已经签到
+			如果true表示已经签到过了
+			在这里怎么区分,重复签到和补签
+						根据时间间隔来判断
+	5、补签和重复奖励(如何区分)
+			补签：player.CheckIn.Done
+			vip补签:p.Get("vip")---手动领取？？？？
+			
+			
+			
+			
+			
+问题：
+	1、如何区分,补签和正常的vip双倍领取奖励？
+
+	
+	

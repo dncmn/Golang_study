@@ -1,0 +1,176 @@
+tower.HardProgress的一个小思考
+
+	这个问题依然存在=========================这个问题依然存在
+	这个问题依然存在=========================这个问题依然存在
+	这个问题依然存在=========================这个问题依然存在
+	这个问题依然存在=========================这个问题依然存在
+千层塔重置的时候,HardProgress会不会清零???
+			  HardProgress和HistoryProgress都不会清零
+			  OnceProgress会清零
+			  
+				old		new
+HardProgress	6				
+OnceProgress	9		0
+
+
+if tower.OnceProgress<tower.HardProgress{
+	// do nothing
+}
+
+if tower.HardMode==constant.TowerModeHard{ // 困难模式
+	tower.HardProgress++
+	if tower.HardProgress!=tower.OnceProgress{
+		tower.HardProgress--
+	}
+}
+
+
+千层塔BUFF
+	因为csv中的三星、六星、九星都是在一起的。
+	所以，如果在OneProgress%3==0{代笔3、6/9层,这时候应该随机出buff,然后给客户端显示}
+	length:=int32(len(csv.CTowerBuffmap))/3
+	id := rng.IntRange(uint64(length*i+1), uint64(length*(i+1)))
+千层塔的BUFF怎么计算
+	新建一个CommonProp      []*ExtProp
+	// 额外战斗属性提升
+	ExtProp struct {
+		FromID    int   // 来源ID
+		IsPercent bool  // 属性是否为百分比提升
+		Type      int32 // 属性类型 0 为无
+		Value     int64 // 属性提升数值
+	}
+
+千层塔结束战斗
+	在结束战斗的时候:
+		战斗胜利：更改相关的记录消息
+			1、basic info
+				HistoryProgress	   :千层塔历史最高进度
+				OnceProgress	   :千层塔的当前游戏难度。
+				HardProgress	   :困难难度的进度。千层塔的难度必须是三星，而且是连续的。
+				tower.Difficulties :用来保存每一层的难度值[0,1,2]
+			2、tower.WinBattle(levelId,tower.HardMode)这个方法来保存每一个层数的难度
+					这个方法里面，就是用了很巧妙的方法将难度系数(对应的星数)
+					if hardMode == constant.TowerModeDefault {
+						hardMode = constant.TowerModeEasy
+					}
+					l := len(t.Difficulties)
+					// id starts with 1   当玩家刚刚开始的时候,这个for循环走了两次,有都是走一次
+					for need := id - int32(l); need >= 0; need-- {
+						t.Difficulties = append(t.Difficulties, 0)
+					}
+					
+					// 上面的for循环是将已经胜利的那一层的难度系数置为0,下面这个用来设置"简单"、“一般”、“困难”对应的难度系数
+					if hardMode > t.Difficulties[id] {
+						t.Difficulties[id] = hardMode
+					}
+			 3、towerStartChanged:
+					用于改变当 OnceGetStar > HistoryStar:表示当前星数超过了历史最高星数。
+					更改HistoryStar
+					更改该玩家在千层塔中的排名：（千层塔中的排名是根据雷电王座的历史最高星数来排序）
+					
+			 4、如果 OnceProgress%3==0,表示通过了第三个关,应该随机出三个不同星数的buff
+			 	length := len(csv.CTowerBuffMap) / 3
+				for i := 0; i < 3; i++ {
+				id := rng.IntRange(uint64(length*i+1), uint64(length*(i+1)))
+				player.Tower.Buff[int32(id)] = false
+			}
+		战斗失败：
+				千层塔战斗失败了，就得重置
+							比如：
+								清空pveCache
+								DropPacks
+								OnceProgress
+						
+
+千层塔重置：
+	每天只有三次重置机会，第一次免费，第二次100钻石，第三次200钻石
+	第一次不能进行重置
+	
+	
+	重置的时候
+				    不变				变化
+				HistoryProgress 	OnceGetStar
+				HardProgress		ConsumeStar
+									根据重置次数,消耗对应的钻石
+	
+	重置要点击两次，
+		第一次是是否
+		
+		第二次:
+			页面提示："每天几点免费重置"、“消耗100钻石“、”消耗200“钻石
+			这时候可以选择”重新开始“、”退出“
+			
+				点击”退出“之后，会从千层塔退出来
+				点击”重新开始“
+						会弹出来”确定“、”取消“
+							点击”确定“，会正常重置
+							点击取消，会返回上一层选择页面
+
+	
+问题：
+
+	1、在towerBuffCancelHandler中
+		if player.Tower.OnceProgress%3 != 1 || player.Tower.BuffCancel {
+			player.InMsg(protocol.NewGameError(protocol.E_NOTENOUGH_TEAMLIMIT, reqURL))
+			return
+		}
+		可改可不改的:返回的错误类型是“团队等级不足”,感觉返回"非法参数异常要好的多"
+	2、在千层塔开始战斗的时候,定义了一个经营难度的关卡,目前是只有“简单”、“一般”、“困难”,
+		在声明的时候:
+					选择instanceId的switch中多了一个“精英”
+					在tower_const.go里面定义了一个“TowerModeElite“
+
+
+
+简单
+	2017-12-28T14:29:45.099+0800	DEBUG	handler/tower_handler.go:467	before:id=40,  instanceID=414001
+	2017-12-28T14:29:45.099+0800	DEBUG	handler/tower_handler.go:477	player.Tower.HardMode=0 ,instanceId=414001
+	2017-12-28T14:29:45.099+0800	DEBUG	instance/instance_mod.go:27	player.Id=mn06   CInstantceData.Id=414001,  CInstanceData.StepCount=1
+	
+一般	
+	2017-12-28T14:30:43.881+0800	DEBUG	handler/tower_handler.go:467	before:id=41,  instanceID=414101
+	2017-12-28T14:30:43.881+0800	DEBUG	handler/tower_handler.go:477	player.Tower.HardMode=1 ,instanceId=414102
+	2017-12-28T14:30:43.881+0800	DEBUG	instance/instance_mod.go:27	player.Id=mn06   CInstantceData.Id=414102,  CInstanceData.StepCount=1
+	
+困难
+	2017-12-28T14:31:50.595+0800	DEBUG	handler/tower_handler.go:467	before:id=42,  instanceID=414201
+	2017-12-28T14:31:50.595+0800	DEBUG	handler/tower_handler.go:477	player.Tower.HardMode=2 ,instanceId=414203
+	2017-12-28T14:31:50.595+0800	DEBUG	instance/instance_mod.go:27	player.Id=mn06   CInstantceData.Id=414203,  CInstanceData.StepCount=1
+
+
+
+
+	// take money
+		if tower.FeeResetTimes == constant.TowerResetTimesFee {
+			e := mod.Item.CheckEnough(player, constant.ItemCurrencyDiamond, constant.TowerResetFee1st)
+			if e != nil {
+				player.InMsg(protocol.NewGameError(e, reqURL))
+				return
+			}
+			mod.Item.Del(player, constant.ItemCurrencyDiamond, constant.TowerResetFee1st, reqURL)
+			mod.Quest.UpdateNum(player, constant.QuestConsumeDiamond, int32(constant.TowerResetFee1st), 0, reqURL)
+		} else {
+			e := mod.Item.CheckEnough(player, constant.ItemCurrencyDiamond, constant.TowerResetFee2nd)
+			if e != nil {
+				player.InMsg(protocol.NewGameError(e, reqURL))
+				return
+			}
+			mod.Item.Del(player, constant.ItemCurrencyDiamond, constant.TowerResetFee2nd, reqURL)
+			mod.Quest.UpdateNum(player, constant.QuestConsumeDiamond, int32(constant.TowerResetFee2nd), 0, reqURL)
+		}
+
+// 千层塔重置消耗钻石数量
+var (
+	TowerResetCost []int64 = []int64{TowerResetFee1st, TowerResetFee2nd}
+)
+
+
+
+
+
+
+
+
+
+
+				

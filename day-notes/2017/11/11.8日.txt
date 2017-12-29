@@ -1,0 +1,38 @@
+1、用火狐浏览器实现了翻墙（ok）
+2、安装微信，谷歌浏览器（ok）
+3、proxychains +基本命令（慢慢熟悉）
+2、genymotion下载安装---安装过了
+	安装参考网址:http://www.cnblogs.com/imqsl/p/6531613.html
+3、熟悉项目一:九袋兽人(熟悉业务)----熟悉怪了
+
+
+qps
+
+var qps chan struct{}  不带缓存的通道类型
+在root_handler.go中的line_no:115
+
+
+IPC:用来做内部消息的
+QPS:拥塞控制,就是当介绍向游戏服务器发送http请求时,对于很多请求的处理,避免对消息处理不完
+
+IPC和普通的Handle处理的request的区别
+	服务器处理的优先级:优先IPC消息的处理.
+		就像举得例子一样,A给B发消息,发送到B的邮箱中,B可能不在线,没法及时处理,只能等到B在线以后才可以处理.
+		Handle处理的request就是好像与客户端进行交互.而IPC消息则是直接通过服务器发送不经过前端.
+		
+对于游戏服务器:(各种request请求)
+	1、将request请求与handleFunc(请求处理函数)全部封装到一个map[string]handleFunc
+	2、对于所有的request的处理函数格式化.
+		param1:代表玩家的数据
+		param2:代表请求的url
+		param3:代表请求的参数
+	3、所有的请求都会经过Root方法,进行信息的校验，这个方法就是所有请求的入口
+	
+	
+
+用到的那个web框架介绍的有一点就是
+	当接收到请求的时候,如果这时候发出停止的信号,它不会再接收新的请求,
+	但是会把所有in-flight的request处理掉(在创建gracefulServer的时候看到的).
+	gracefulServer包含了一个WaitGroup,它代表着服务器正在处理的请求的数量
+	对于gracefulServer,当它接收到一个关闭信号时,它不会接收新的请求,
+	但是它会一直等到所有in-flight的请求处理完才关闭.
