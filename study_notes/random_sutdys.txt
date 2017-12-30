@@ -82,6 +82,11 @@
 						git branch -d  branchName
 			删除远程分支:
 						git push origin --delete branchName
+	5、从github库下载代码，并且可以git pull和git push
+	
+	one:git clone git@github.com:dncmn/golang_study.git
+	two:git config user.name "dnmcn"
+	three:git config user.email "971917697@qq.com"
 	
 	
 	
