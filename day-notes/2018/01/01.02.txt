@@ -1,0 +1,136 @@
+一、千层塔扫荡
+	三星扫荡、一键扫荡
+1、逻辑
+	1.1、普通战斗:一场战斗之后的奖励
+	1.2、没三层一个buff
+	1.3、开启神秘宝箱
+			
+兽人：一键扫荡
+	正常奖励
+	宝箱奖励(单独)
+	选择加成
+	
+
+
+
+扫荡之后---开启宝箱
+	case1:全开一次   结束购买
+	case2:全开一次、全开两次、结束购买
+	对于一键扫荡或者三星扫荡之后的领取宝箱问题
+	全开一次：
+		获取的宝箱中，根据购买次数，计算出“全开一次”需要消耗的钻石数量
+		单独点击某个宝箱：全开一次，就是这个宝箱下下次消耗的次数，其余宝箱下次消耗钻石的数量
+	全开两次：
+		和全开一次的道理是相同的
+		
+		SystemUnLockRefresh.csv里面，
+		第一次刷新是免费的，后面的九次根据刷新次数判断消耗不同的钻石数量。
+		10、20、30、50、80、120、160、200
+	
+need param:
+	times:全开一次或者两次
+	mode:	0:全买	1:单买
+	if　mode==0{
+		id: 开启的宝箱id
+	}else{
+	}
+	
+SweepDiamondBox map[int32]int32 // box购买次数-------在扫荡的时候,用来保存每个宝箱的可购买次数， key:boxId  value:buyCount
+SweepFreeBox    map[int32]bool  // 可购买的免费宝箱 TowerID->canBuy
+
+check condition:
+	1、是否开启战场
+	2、这些宝箱是否已经领取
+	
+	
+	
+	
+	
+
+
+
+	
+二、排行榜
+
+
+bug fix:
+	千层塔第三层到第四层一键扫荡的时候，没有出现购买buff的页面。
+	结论：重新写了领取buff的方法
+
+
+
+
+疑问：
+	1、千层塔的层数是3,是否需要把3提出来，提到常量里面。(请示以后说了不用)
+	2、先三星扫荡、后一键扫荡。--（策划否定了）
+	3、一键扫荡或者三星扫荡之后,会开启所有的宝箱，
+		这时候会出现一个“取消购买”的提示,也会向服务器发送请求？？
+		因为服务器要保存每一层宝箱有没有领取的状态，如果没有领取，当客户端更换另外一个设备,也会显示相同的一个页面。。。
+		
+
+
+
+
+扫荡：(三星扫荡和全部扫荡)
+1、根据id判断是否在同一层
+	tower1.OnceProgress/3==tower2.OnceProgress  || tower1.OnceProgress==tower2.OnceProgress%3-1
+	
+2、扫荡的逻辑
+	2.1、千层塔的每一层
+		每一层都是三星、OnceProgress++就好
+	2.2、每三层一个添加的buff
+		三星扫荡：
+				每次添加一个buff,都是都要消耗九颗星。扫荡至HardProgress的那一层
+		全部扫荡：
+				这个星数是需要进行计算的，每一层至少是3星，最多是9星。
+				如何计算购买的buff
+				tower.Difficulties:用来记录这一层的难度
+				0：简单
+				1：一般
+				2：困难
+				
+				扫荡的时候,当前星数是否需要添加，这个在获取奖励的时候已经添加过了
+				
+
+			扫荡开始的地方：
+				第一层：
+					
+				某一层：
+				
+							
+				for floor:=tower.OnceProgress;i<=tower.TotalProgress;i++{
+				
+					tower.OnceGetStar +==tower.Difficulites[floor]
+							
+					if floor%3==0{ // 需要购买buff了
+						从第一层开始，星数至少是3星的
+						3   6   9
+						switch tower.OnceGetStar{
+							case tower.OnceGetStar<6:
+								// 这里是能购买三星的buff
+							case tower.OnceGetStar<9:
+								// 这里是买六星的buff
+							case tower.OnceGetStar>9:
+								// 这里是购买九星的buff
+							default:
+								// 这里直接报错吧
+						}
+						
+					}
+				}
+				
+	2.3、对于好运宝箱
+		每次购买一个buff之后,会自动弹出一个购买界面。
+		如果是三星或者一键扫荡之后,会一起弹出来
+		在SweepBoxHandler里面
+		
+		
+		
+	
+	
+	
+一键领取所有宝箱
+	1、每三层一个的好运宝箱(最后统一开启的宝箱)---SweepBoxHandler	
+	
+	
+	
