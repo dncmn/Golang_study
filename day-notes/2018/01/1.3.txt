@@ -1,0 +1,94 @@
+保存一月三号的工作记录
+
+
+https://plugins.jetbrains.com/plugin/10315-gitmoji
+
+1、战场排行榜
+	原因：在当前进程大于玩家的最高进程时,没有将这个数据保存到更新到数据库中
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:75	before:cardId=1005, cardOldLevel=31, times=1
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:78	exp.Id=31,   exp.Exp=4400,  ok=true
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:81	needExp=========================4400
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:82	needExp=========================4400
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:83	needExp=========================4400
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:84	needExp=========================4400
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:89	after:csv.CLevelMap[80].Id=80,lvlLimit=80,expItemList=[2001 2002 2003 2004]
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:107	leftExp=============================================-42
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:108	leftExp=============================================-42
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:109	leftExp=============================================-42
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:110	leftExp=============================================-42
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2001, exp=30,needCount=-1,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:121	itemID=2001, exp=30,needCount=-1,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:122	itemID=2001, exp=30,needCount=-1,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2002, exp=150,needCount=0,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:121	itemID=2002, exp=150,needCount=0,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:122	itemID=2002, exp=150,needCount=0,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2003, exp=750,needCount=0,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:121	itemID=2003, exp=750,needCount=0,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:122	itemID=2003, exp=750,needCount=0,count=0
+2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2004, exp=3000,needCount=0,count=4999982
+2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:121	itemID=2004, exp=3000,needCount=0,count=4999982
+2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:122	itemID=2004, exp=3000,needCount=0,count=4999982
+2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:135	else:====  itemID=2004=, leftExp=-42, itemMap[2004]=0, allExp=0
+2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:140	道具不足............................道具不足
+
+
+
+
+2、战场gm
+	bug:在使用gm工作更改玩家的关卡信息时,没有给前端返回实时的关卡数据,
+	改正：复用了rand接口的协议。
+4、卡牌升级的bug
+	4.1、
+		bug描述:
+			”升一级”：会出现，等级没有上去，只是经验值发生了变化。
+			"升五级：出现升了卡牌等级有时候升了四级，有时候升了五级。
+			然后升了几次以后，及时道具存在仍然会提示道具数量不足
+
+
+bug fix:
+	1、千层塔购买宝箱出现服务器错误。
+		描述：在一键扫荡之后，然后对于宝箱进行全开一次操作，接着对于某一个宝箱进行连续开八次操作，在进行第九次的时候会出现服务器错误。
+		原因：数组角标越界。
+
+
+想到的问题：
+
+今日任务：
+	1、扫荡宝箱
+		case1：全开n次
+		case2:单独开启某个宝箱
+SweepDiamondBox map[int32]int32  // box购买次数-------在扫荡的时候,用来保存每个宝箱的可购买次数， key:towerIds value:buyCount
+SweepFreeBox map[int32]bool  // 记录免费开启宝箱   key:towerId value:true  true:表示可以免费开启
+
+扫荡宝箱: tower.SweepFreeBox  map[int32]bool  key:可开启宝箱的千层塔id   value:true
+	全开n次：
+		一次：
+		两次：
+		
+		程序区分：全开一次和全开多次
+		
+			对于全开多次的请求：
+			就是区分第一次和后面的。
+			对于全开多次的宝箱，遍历tower.SweepFreeBox,
+			如果值为true，则直接发送奖励。
+			如果值为false,表示这个宝箱已经被单独领取过，
+			这时候就要进行判断，
+				如果宝箱的购买次数超过了(定量购买的次数20次),就会选择下一个宝箱
+
+	单独领取某一个宝箱：
+
+			tower.SweepDaimondBox[towerId]+=1
+			tower.SweepFreeBox[boxId]=false  // false表示免费次数已经用完
+			免费领取：不扣钻石，只需要改变两个值
+			付费领取：需要口钻石(根据购买次数,消耗一定量的钻石),也需要改变这两个值
+		
+千层塔战斗失败：
+	战斗失败后，会弹出购买雷电秘宝的界面，此时不用向客户端发送任何请求。
+千层塔战斗成功后：
+	会重新创建一个新的一层数据
+购买雷电秘宝：
+	就是在千层塔战斗失败的时候,会弹出一个购买“雷电秘宝“的界面
+	
+		
+2、排行榜
+

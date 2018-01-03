@@ -1,0 +1,6 @@
+1、go-kit(微服务基础架构框架)
+	https://github.com/go-kit/kit
+2、open-tracing(用来跟踪调用链)
+	https://github.com/opentracing/opentracing-go
+3、grpc(内部通讯方式)
+	https://github.com/grpc/grpc-go
