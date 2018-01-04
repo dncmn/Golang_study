@@ -1,57 +1,23 @@
 保存一月三号的工作记录
 
 
-https://plugins.jetbrains.com/plugin/10315-gitmoji
+
 
 1、战场排行榜
 	原因：在当前进程大于玩家的最高进程时,没有将这个数据保存到更新到数据库中
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:75	before:cardId=1005, cardOldLevel=31, times=1
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:78	exp.Id=31,   exp.Exp=4400,  ok=true
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:81	needExp=========================4400
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:82	needExp=========================4400
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:83	needExp=========================4400
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:84	needExp=========================4400
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:89	after:csv.CLevelMap[80].Id=80,lvlLimit=80,expItemList=[2001 2002 2003 2004]
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:107	leftExp=============================================-42
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:108	leftExp=============================================-42
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:109	leftExp=============================================-42
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:110	leftExp=============================================-42
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2001, exp=30,needCount=-1,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:121	itemID=2001, exp=30,needCount=-1,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:122	itemID=2001, exp=30,needCount=-1,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2002, exp=150,needCount=0,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:121	itemID=2002, exp=150,needCount=0,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:122	itemID=2002, exp=150,needCount=0,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2003, exp=750,needCount=0,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:121	itemID=2003, exp=750,needCount=0,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:122	itemID=2003, exp=750,needCount=0,count=0
-2018-01-03T20:24:09.238+0800	DEBUG	handler/card_handler.go:120	itemID=2004, exp=3000,needCount=0,count=4999982
-2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:121	itemID=2004, exp=3000,needCount=0,count=4999982
-2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:122	itemID=2004, exp=3000,needCount=0,count=4999982
-2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:135	else:====  itemID=2004=, leftExp=-42, itemMap[2004]=0, allExp=0
-2018-01-03T20:24:09.239+0800	DEBUG	handler/card_handler.go:140	道具不足............................道具不足
-
 
 
 
 2、战场gm
 	bug:在使用gm工作更改玩家的关卡信息时,没有给前端返回实时的关卡数据,
 	改正：复用了rand接口的协议。
-4、卡牌升级的bug
-	4.1、
-		bug描述:
-			”升一级”：会出现，等级没有上去，只是经验值发生了变化。
-			"升五级：出现升了卡牌等级有时候升了四级，有时候升了五级。
-			然后升了几次以后，及时道具存在仍然会提示道具数量不足
+
 
 
 bug fix:
 	1、千层塔购买宝箱出现服务器错误。
 		描述：在一键扫荡之后，然后对于宝箱进行全开一次操作，接着对于某一个宝箱进行连续开八次操作，在进行第九次的时候会出现服务器错误。
 		原因：数组角标越界。
-
-
-想到的问题：
 
 今日任务：
 	1、扫荡宝箱

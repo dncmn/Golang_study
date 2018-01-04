@@ -125,6 +125,8 @@ count=HardProcess-currentProcess(三星扫荡通过的最高层数-玩家当前�
 SweepDiamondBox map[int32]int32  // box购买次数-------在扫荡的时候,用来保存每个宝箱的可购买次数， key:towerIds value:buyCount
 SweepFreeBox map[int32]bool  // 记录免费开启宝箱   key:towerId value:true  true:表示可以免费开启
 
+	
+			
 扫荡宝箱: tower.SweepFreeBox  map[int32]bool  key:可开启宝箱的千层塔id   value:true
 	全开n次：
 		一次：
@@ -146,8 +148,13 @@ SweepFreeBox map[int32]bool  // 记录免费开启宝箱   key:towerId value:tru
 			tower.SweepFreeBox[boxId]=false  // false表示免费次数已经用完
 			免费领取：不扣钻石，只需要改变两个值
 			付费领取：需要口钻石(根据购买次数,消耗一定量的钻石),也需要改变这两个值
-			
-			
+		
+千层塔战斗失败：
+	战斗失败后，会弹出购买雷电秘宝的界面，此时不用向客户端发送任何请求。
+千层塔战斗成功后：
+	会重新创建一个新的一层数据
+购买雷电秘宝：
+	就是在千层塔战斗失败的时候,会弹出一个购买“雷电秘宝“的界面
 			
 			
 			

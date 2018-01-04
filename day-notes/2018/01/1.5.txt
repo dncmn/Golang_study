@@ -1,0 +1,7 @@
+疑问：
+	1、卡牌升星之后如何计算战力的?
+	2、Tplayer中的TeamBuffs还有GroupBuffs是如何赋值的
+	3、数据是如何定时保存到数据库的
+bug fix:
+	1、战场布阵错误
+	2、千层塔购买buff没有影响到战力里面CommonProp
