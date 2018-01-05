@@ -1,0 +1,15 @@
+# create at 2018.01.15
+## learnging protobuf
+
+一、包下载地址
+	1、在github上下载需要的包,下载过之后，然后根据需要更改相应地包名
+	2、搜索方式  例如: grpc github
+
+二、参考的网址
+	bing.com 搜索protobuf
+	1、了解protobuf
+		http://blog.csdn.net/caisini_vc/article/details/5599468
+	2、protobuf使用指南
+		http://www.cnblogs.com/dkblog/archive/2012/03/27/2419010.html
+	3、官网学习网址
+		https://developers.google.com/protocol-buffers/
