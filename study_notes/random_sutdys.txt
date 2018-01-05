@@ -1,3 +1,5 @@
+https://github.com/google
+
 1、screen常用操作
 		screen -S screenName
    恢复到之前的一个窗口
@@ -84,7 +86,9 @@
 						git push origin --delete branchName
 8、快速查询redis帮助文档的网址
 	http://doc.redisfans.com/index.html
-9、golang中的fmt格式化布尔类型
+9、Ubuntu的tar.gz包安装和解压
+	参考网址：
+		http://blog.csdn.net/mmllkkjj/article/details/6768294
 	
 	
 	

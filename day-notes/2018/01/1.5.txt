@@ -1,7 +1,85 @@
-疑问：
-	1、卡牌升星之后如何计算战力的?
-	2、Tplayer中的TeamBuffs还有GroupBuffs是如何赋值的
-	3、数据是如何定时保存到数据库的
-bug fix:
-	1、战场布阵错误
-	2、千层塔购买buff没有影响到战力里面CommonProp
+一、疑问：(平时产生疑问的地方)
+	已解决：
+		1、卡牌升星之后如何计算战力的?
+			这里有bug:这个buff没有影响到战力，只是被保存下来和发送给客户端。
+			需要改
+
+		  结论： 已经解决。。。。。。。。
+		3、数据是如何定时保存到数据库的
+		  结论：根据玩家访问api的时间，每访问一次，上次保存的时间和当前是时间的差值和60s进行比较，超过了就保存玩家数据。
+	未解决：
+		1、Tplayer中的TeamBuffs还有GroupBuffs是如何赋值的。
+		2、竞技场排行榜和其它排行榜怎么为什么是分开写的。
+	
+二、bug fix:(当天修复的bug记录)
+	已解决：
+		1、千层塔购买buff没有影响到战力里面CommonProp
+			考虑的问题：
+				添加到战力里面
+				减去buff对应的战力 （buff是当天有效，每天都要重置,所以，在重置的时候还要再减去相应地buff）
+			结果：
+				添加buff:在Tower里面多了一个字段CommonProp *data.ExProp 用来保存购买的战力buff
+				删除buff:重置的时候清空buff
+				更改了GenPveData，多了一个[]*ExtPro字段，在购买buff的下一次战斗，就会把这个购买的Buff添加进去,等到千层塔重置的时候，这个字段就会清空。
+		2、战场购买buff
+		  添加BUFF：提升的战力由客户端来计算。服务器只需要保存这个购买的buff之后,然后保存下来就可以，等到下次开始战斗了，然后再把这个战力buff计算进去就可以了
+		  删除BUFF:战场每日重置的时候，清空这个ExtraBuffs就可以了
+		 3、战场章节扫荡
+		 	如果闯到第二章第一个关卡，则最高关卡记录是10，用以前的方法得到的判断条件不对
+			更改了方法
+				将获取当前进度和历史最高进度的 获取章节id和关卡id都写到一个方法里面了。
+	未解决：
+		1、战场布阵错误
+
+三、需要看的(由“疑问”联想到的知识点)
+	1、定时保存用户数据:
+		没有定时保存，在root_handler里面，用户每次访问这个请求，大致就会比较上次保存的时间有没有超过60s,如果超过了就会保存玩家的数据
+		qps  qps:=make([]struct{},num) num:从配置文件里面读取
+	2、排行榜
+	
+		获取排行榜信息
+			竞技场：
+			非竞技场：
+			在获取信息的时候，
+					从数据库获取
+					从缓冲中获取(如果有更改排行榜的直接从数据库获取，然后更新缓存)
+			
+		清空排行榜
+			因为是有序集合zset，所以可以直接删除
+			
+		
+	
+		type modRank structa{
+			cache			map[int32]*data.TRankData 		key:rankTypeId value:topN-data
+			cacheStatus 	map[int32]bool					key:rankTypeId value:是否已过期
+			topIDs			map[int32]map[int64]int32       key:rankTypeId value:   key:pid  value:position
+			sync.RWMutex
+			
+		}
+		
+		下面这个方法是根据pid来获取某个玩家的排名信息，然后判断是否从缓存里面回去。
+			// not expired, maybe hit cache
+			if !thisMod.cacheState[typ] {
+				pos, ok := thisMod.topIDs[typ][pid]
+				if ok {
+					// cache hit, return directly
+					dat = thisMod.cache[typ][pos]
+					return dat, pos
+				}
+			}
+		
+		
+	3、签到系统。
+	
+四、总结
+	1、在使用redis.Bytes这个方法的时候，对于这个error的处理。
+		这时候可以查看这个方法的源代码在处理啊这个错误，可以仿照别的方法写的，利用swich....case进行处理。
+		for example:
+		switch err{
+			case nil:  					// 表示没有错误。
+			case redis.ErrNil:			// 表示出现了内部定义的错误。
+			default:
+				xlog.Errorf("Failed to get rank info from db, err: %s", err.Error())
+					return nil, err
+		}
+	  

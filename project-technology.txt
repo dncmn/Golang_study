@@ -2,5 +2,9 @@
 	https://github.com/go-kit/kit
 2、open-tracing(用来跟踪调用链)
 	https://github.com/opentracing/opentracing-go
-3、grpc(内部通讯方式)
+3、grpc(内部通讯方式)---在项目里面如何体现的
 	https://github.com/grpc/grpc-go
+	grpc使用案例:http://www.cnblogs.com/YaoDD/p/5504881.html
+	对于grpc包的话可以直接去github上下载：搜google
+4、protobuf语言指南
+	http://www.cnblogs.com/dkblog/archive/2012/03/27/2419010.html
