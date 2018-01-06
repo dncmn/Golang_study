@@ -1,17 +1,151 @@
 # create at 2018.01.15
 ## learnging grpc
 
-
+https://grpc.io/docs/guides/concepts.html#synchronous-vs-asynchronous
 一、包下载地址
 	1、在github上下载需要的包,下载过之后，然后根据需要更改相应地包名
 	2、搜索方式  例如: grpc github
 二、参考的网址
 	1、官网学习网址
-		https://grpc.io/docs/tutorials/basic/go.html
-		https://grpc.io/docs/quickstart/go.html
-		https://github.com/grpc/grpc-go
+		https://grpc.io/docs/
 	2、使用小例子
 		http://www.cnblogs.com/YaoDD/p/5504881.html
+	3、建立高可用的gRPC
+	https://medium.com/@shijuvar/building-high-performance-apis-in-go-using-grpc-and-protocol-buffers-2eda5b80771b
+		
+		
+
+照着官网进行学习。
+2016.1.6
+
+
+一、学习的目的
+	1、在.proto文件里面定义一个服务。
+	2、使用protocol buff编译器来生成客户端和服务器的代码
+	3、使用go gRPC的api来为我们的服务写一个简单的客户端和服务器端代码
+	4、gRPC的使用流程
+		gRPC是基于Protocol Buffer的，在使用gRPC的时候,一般是按照下面的步骤进行操作的：
+			4.1、定义proto3协议
+			4.2、生成RPC代码
+			4.3、实现服务端
+			4.4、实现客户端
+		客户端通过gRPC Stub(本地的存根)来调用RPC服务的。
+		客户端和服务端是通过信道(channel)来实现的。
+	
+
+对于grpc和protocol buff的学习，最简单的方法就是跟着官网进行学习。
+	如果遇到了那些包没法下载,比如grpc,可以从github上现在相应的包。可能需要改一下包的名字。
+	有些包可能需要编译，比如 protc-gen-go，这个包我直接在shell里面使用，然后根据系统提示安装了别的包，
+	结果我在更改grpc添加新的测试方法的时候,一直提示方法类型错误。这时候应该把包编译一下就好。然后将对应的二进制文件添加到/usr/bin里面
+	
+	 go get -u google.golang.org/grpc
+	 这个包直接从我的github库上下载就好，然后放在$GOPATH/src下面就好
+	 
+	 在下载protocol buff的时候，下载适合自己机器的版本。
+	 第一步： ./configure
+	 第二部： sudo make && sudo make install 
+	最后一步：产生新的pb.db文件
+	
+	protoc -I helloworld/ helloworld/helloworld.proto --go_out=plugins=grpc:helloworld
+	
+二、笔记
+2.0、gRPC是通过将数据编码成protocal buffer来实现传输的。
+2.1、gRPC允许你四种类型的服务方法。
+	参考网址：https://www.tuicool.com/articles/BRBB3mr
+	单项RPC、服务端流式RPC、客户端流式RPC、双向流式RPC
+	2.1.1、一元RPC:客户端向服务器发送一条请求并且获取响应，就像正常的函数调用一样。
+		类似于：rpc SayHello(HelloRequest) returns (HelloResponse){}
+	2.1.2、服务器流RPC：客户端向服务器发送一条请求，但是从服务区获取一系列的消息作为响应,客户端此时不停地从消息流里面读取数据，直到没有数据。
+		类似于： rpc LotsOfReplies(HelloRequest)returns (stream HelloResponse){}
+	2.1.3、客户端流RPC:客户端向服务器发送一系列数据(首先客户端将要发送给服务器的信息写入流里面,然后发送给服务器)。
+	一旦客户端完成了向流中写入数据，客户端就会等待服务器读取流数据并给一个反馈。
+		类似与： rpc LotsOfGreetings(stream HelloRequest) returns (HelloResponse){}
+	2.1.4、双向流RPC：客户端和服务器使用读写流来发送一连串的消息。这两个流操作是相互独立，互不影响的。
+	因此客户端和服务器可以按照自己喜欢的方式进行读写：例如，服务器可以等待所有客户端把请求消息发送完后，再对接收到的消息进行响应。
+	也可以选择性得读一条消息，给一个响应。或者其它的读写的集合。在每一条读写流中消息的顺序是被保存下来的。
+		类似于：rpc BidiHello(stream HelloRequest) returns (stream HelloResponse){}
+2.2、使用API接口
+	从定义在.proto文件中的服务开始。grpc提供了protocol buff编译器来产生客户端和服务器端的代码。
+grpc用户通常在客户端调用这些api然后在服务器那边来实现。
+	服务器：服务器实现了在服务里面声明的方法并且运行一个gRPC服务来处理客户端的调用。gRPC解码接收到的请求
+，然后执行服务方法，最后编码服务响应。（对接收到的请求解码，经过服务器处理过之后，然后将这个数据编码，然后返回给客户端）
+	客户端：客户端有一个叫做“存根”的本地对象,这个对象实现了服务里面声明的方法。客户端可以在本地对象上调用这些方法，将调用的参数包装在适当的协议缓冲区消息类型中 - gRPC将请求发送到服务器并返回服务器的协议缓冲区响应。
+2.3、同步还是异步的问题。
+	
+同步rpc调用阻塞，直到从服务器发送地响应到达客户端与RPC所期望的过程调用的抽象最接近
+网络本质上是异步的，在很多情况下能够启动RPC服务而不阻塞当前线程是有用的。
+
+
+
+
+
+疑问：
+1、rpc调用是同步的还是异步的
+	gRPC的异步依托于CompletionQueue完成队列（消息队列）来实现。
+	在异步客户端中，通过gRPC stub的异步方法调用，获取ClientAsyncResponseReader的实例。
+	在异步客户端中，ClientAsyncResponseReader的Finish方法向CompletionQueue注册了响应消息处理器和响应消息体的存储容器。
+	当服务器响应消息到来时，响应消息体被填充到注册的容器中，而响应消息处理器则被push到CompletionQueue中。
+从CompletionQueue中获取到响应消息处理器，对响应消息进行处理	
+	
+	
+	2、调用api接口时,说的客户端的存根是什么意思？
+		客户端也实现了服务里面声明的方法这个到底几个意思
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		
 
 	

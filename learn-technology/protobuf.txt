@@ -13,3 +13,12 @@
 		http://www.cnblogs.com/dkblog/archive/2012/03/27/2419010.html
 	3、官网学习网址
 		https://developers.google.com/protocol-buffers/
+		
+三、笔记
+3.1、在学历恶化结构体数据上，protocol buff比xml有很多又是
+	simpler、faster、are less ambjiguous、
+	generage data access classes that are easier to use programmatically
+	
+	xml的优势：
+		xml是人们可以阅读的。
+		xml是基于标记语言构建模型的更好的选择。

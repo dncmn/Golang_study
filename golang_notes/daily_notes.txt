@@ -1,0 +1,75 @@
+## from create at 2018.1.6日
+## 用来记录我每天学习到的,了解到的goalng随手笔记
+
+
+2018.1.6
+参考文章：https://www.jianshu.com/p/29543b642485
+	1、注释
+		如果想在每个文件的头部添加注释,则需要在版权和包注释(解释这个包的作用)之间添加一个空行。
+	添加注释的方式，就是/* */ 或者 "//"（这种要与说明文字有一个空格）。
+		注意:注释应该是一个完整的句子,注释的第一个单词应该是要注释的指示符(也就是对应的包名或者方法名)，以便在godoc中容易查找; 注释应该以"."结尾；
+	2、字符串大小写
+		错误字符串不应该大写，应写成:fmt.Errof("failed to write data.")而不是fmt.Errof("Failed to write data")
+	理由：这些字符串可能和其他字符串相连接，组合后的字符串如果中间有大写字母开头的单词很突兀，除非这些首字母大写单词是固定使用的单词(这点看着无关紧要,我看了fmt_test.go里面有一个就是大写的)
+		缩写词必须一致:如果大写就是都是大写，小写的话，那么都是小写。比如URL、HTTP、ID等
+		常量的声明：一般形式是MaxLength,而不是以下划线分割MAX_LENGTH或者MAXLENGTH
+	也就是说，Go语言一般使用MixedCaps或者mixedCaps的命名方式区分包含多个单词的名称。
+	3、一些名称
+		包名：包名应该用单数形式，比如fmt,util而不是fmts、utils
+		方法接受者的名称：对于Receiver的名称应该缩写,一般使用一个或者两个字符作为Receiver的名称
+	func(f foo)SayHello(param1 type1,....)(res1 type1....){
+		// 这是定义一个方法的常规形式			
+	}
+		如果方法中没有使用receiver，还可以省略receiver name，这样就可以更加清晰的表明这个方法中没有使用它。
+		type User struct{
+		Name string
+		Age int
+		}
+		func(this *User)SayHello(){
+			fmt.Printf("hello %s\n",this.Name)
+		}
+
+		func(_ *User)SayGoodBye(){
+			fmt.Printf("bye bye.....")
+		}
+
+		func Test_omit_receiver_name(T *testing.T){
+			user:=&User{
+				Name:"tom",
+				Age:19,
+			}
+			user.SayHello()
+			user.SayGoodBye()
+		}
+	总结：SayGooBye方法的receiver,这个方法的接受者没有用法的宿主(这个方法所属的结构体),所以可以用"_"代替，如果省略了，看着有点不好看。
+	4、空字符串的检查
+		判断一个字符串是否为空应该使用 
+			var s string
+			s==""
+		而不是
+			len(s)==0
+	疑问：这两种方式，不知道如何比较，但是感觉都是可以用到的。
+		对于飞控slice/map/channel的判断。
+			直接用长度比较就好。
+			var s []int
+			lif len(s)>0{
+				// 表示这个切片不为空
+			}
+	5、对于bool类型的变量，可以直接用它来作为判断条件,而不是使用它和true/false来比较
+	6、复制切片，直接使用内建的copy函数就可以了
+		func copy(dst, src []Type) int // 返回复制元素的个数
+	7、不要在for中使用多此一举的true
+		不要这样：for true{}  
+		应该这样： for {}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
