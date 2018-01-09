@@ -1,0 +1,111 @@
+## create at 2018.1.9
+## ffsjon
+
+
+一、相关网页地址
+	1、github地址：
+		https://github.com/pquerna/ffjson
+	2、API参考网址：
+		https://godoc.org/github.com/pquerna/ffjson/ffjson
+	3、简介网址(需要翻墙)
+		https://journal.paul.querna.org/articles/2014/03/31/ffjson-faster-json-in-go/
+二、学习笔记
+
+1、定义
+	ffjson为了go结构产生静态的MarshalJSON 和UnmarshalJSON函数。这些函数降低了运行时反射序列化数据的依赖，通常情况下会快二到三倍。
+如果ffjson不理解所涉及的类型，则会回退到encoding/json，这意味着它是一个安全的替换.
+	使用ffjson达到的最终效果就是在json序列化的时候，速度将会更快，并且没有额外代码的改变。
+2、使用jjson的优势
+    Unmarshal Support: Since v0.9, ffjson supports Unmarshaling of structures.
+    Drop in Replacement: Because ffjson implements the interfaces already defined by encoding/json the performance enhancements are transparent to users of your structures.
+    Supports all types: ffjson has native support for most of Go's types -- for any type it doesn't support with fast paths, it falls back to using encoding/json. This means all structures should work out of the box. If they don't, open a issue!
+    ffjson: skip: If you have a structure you want ffjson to ignore, add ffjson: skip to the doc string for this structure.
+    Extensive Tests: ffjson contains an extensive test suite including fuzz'ing against the JSON parser.
+3、尽量不使用ffjson的场合
+    Interface struct members. Since it isn't possible to know the type of these types before runtime, ffjson has to use the reflect based coder.
+    Structs with custom marshal/unmarshal.
+    Map with a complex value. Simple types like map[string]int is fine though.
+    Inline struct definitions type A struct{B struct{ X int} } are handled by the encoder, but currently has fallback in the decoder.
+    Slices of slices / slices of maps are currently falling back when generating the decoder.
+	
+	
+	
+	
+	
+	
+	
+小阅读：
+	1、为什么在go里面,json会这么慢。	
+	所有完成序列化的工作都会产生静态代码来处理数据。另外一个方面，Go的“encoding/json”使用runtime reflection来
+迭代一个结构的成员，判断他们的类型。二进制串行器为每一个字段确切的类型产生静态代码，这个速度是更快的。在编码 encoding/ json的CPU分析中，很容易看到在反射中花费了大量的时间
+	encoding / json采用的基于反射的方法对快速迭代是非常有用的。 但是，我经常发现自己正在构建能够序列化数百万个具有相同结构类型的对象的程序。
+对于这种情况，采取一个更脆弱的代码生成方法的权衡价值2倍或更多的加速。 缺点是使用基于代码生成的序列化程序时，如果结构发生变化，则需要重新生成代码。
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

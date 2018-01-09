@@ -3,6 +3,17 @@ https://yeasy.gitbooks.io/docker_practice/content/
 学习docker(台湾)
 https://peihsinsu.gitbooks.io/docker-note-book/content/dockerfile-env-vs-arg.html
 
+
+了解：
+	1、docker微服务
+	
+
+笔记
+
+
+*********************************
+*********************************
+earily notes
 删除docker
 https://www.cnblogs.com/q4486233/p/6482711.html
 
