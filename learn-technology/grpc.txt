@@ -17,8 +17,24 @@ https://grpc.io/docs/guides/concepts.html#synchronous-vs-asynchronous
 		protoc -I . --go_out=plugins=grpc:. ./hello.proto
 		protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 
+
+传输协议和格式：
+	一、HTTP+JSON
+	二、GRPC
+	
+	grpc的性能大约是http+json的2~3倍
+
+grpc的适用场景：
+	针对小部分对接口时延和并发量要求极高的场景可以考虑适用grpc
+grpc缺点：
+	本身不利于调试,且会在一定程序上增加方法和服务的耦合性。
+	
+所以，
+
 照着官网进行学习。
 2016.1.6
+
+
 
 
 一、学习的目的
