@@ -1,0 +1,63 @@
+syntax ="proto3" ;// 指定版本
+package helloWorld; // 指定包名
+
+// 定义服务
+
+service WeekDo{
+	rpc PlayGames(WeekDoRequest) returns (WeekDoReply){} // 这里的分号,可有可无
+	rpc WatchMoves(WeekDoRequest) returns (WeekDoReply){}; // 这里添加分号,和上面的做个区分
+}
+
+// 定义请求结构
+message WeekDoRequest{
+	string sports_name =1;
+	int32 sports_age =2;
+	repeated string sports_kinds=3;
+	string _test_case_1 =4;
+	string  test_case_demo_2 =5;
+}
+
+// 定义响应结构
+message WeekDoReply{
+	repeated string activity_names=1;
+}
+
+// 定义枚举类型
+enum SportsName{
+	CHINESE_BASKETBALL =0;
+	JAPAN_FOOTBALL=1;
+	CHINESE_HAHA=2;
+}
+
+
+// 测试--枚举类型
+// 将同一个数值,赋值给不同的常量
+enum EnumAllowingAlias{
+	option allow_alias = true; // 为了将相同的enum value 赋值给不同的枚举常量
+	UNKNOWN = 0;
+	STARTED = 1;
+	RUNNING = 1; // 这里程序会出错，说这个枚举值和之前有的重复了。为了避免这样需要在
+}				 //  定义枚举字段的第一行添加一行代码
+
+
+
+// 测试message的嵌套--也就是Go中结构体的使用
+message Bar{}
+
+message Baz{
+	Bar foo =1;
+}
+
+message Bab{
+	map<string,Bar>foo =1; // foo   map [string]Bar
+}
+
+message Profile{
+	oneof avatar{
+		string image_url =1;
+		bytes image_data=2;
+	}
+}
+
+
+
