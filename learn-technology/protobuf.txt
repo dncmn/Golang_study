@@ -1,6 +1,9 @@
 # create at 2018.01.15
 ## learnging protobuf
 
+在.proto文件执行编译
+protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
+
 一、包下载地址
 	1、在github上下载需要的包,下载过之后，然后根据需要更改相应地包名
 	2、搜索方式  例如: grpc github
@@ -13,7 +16,18 @@
 		http://www.cnblogs.com/dkblog/archive/2012/03/27/2419010.html
 	3、官网学习网址
 		https://developers.google.com/protocol-buffers/
-		
+	4、protobuf内置的(已经定义的message)
+		https://developers.google.com/protocol-buffers/docs/reference/google.protobuf	
+	5、Protobuf 在编码的时候的问题--------------------------一定要看
+		https://developers.google.com/protocol-buffers/docs/reference/go-generated
+	6、Go版本.proto生成.pb.go参考网站
+		https://developers.google.com/protocol-buffers/docs/reference/go-generated
+	
+	
+	
+option go_package = "tomcat" // rename package name
+option allow_alias= true // enum constants have same enum values
+	
 三、笔记
 3.1、在学历恶化结构体数据上，protocol buff比xml有很多又是
 	simpler、faster、are less ambjiguous、
@@ -22,3 +36,360 @@
 	xml的优势：
 		xml是人们可以阅读的。
 		xml是基于标记语言构建模型的更好的选择。
+		
+		
+四、Protobuf语法
+	注意:
+		gPRC推荐使用proto3
+		proto3不支持proto2中的required和optional声明
+1、Message定义
+	一个message类型定义描述了一个请求或对应的消息格式，可以包含多种类型字段。例如：
+	定义一个搜索请求的消息格式,每个请求包含查询字符串、页码、每页数目
+	message SearchRequest{
+		string query =1;		  // 查询字符串
+		int32 page_num -2;		  // 页码
+		int32 result_per_page=3;  // 每页条数
+	}
+	proto定义的消息字段后面,使用 // 添加注释
+	
+2、字符安类型声明的格式
+	所有字段需要把字段类型前置。例如
+		protobuf:string query =1  
+		go: var query string
+	除了基本的标量类型,还有符合类型,如枚举、其它message类型等
+3、标识符Tags
+	消息的定义中，每个字段都有一个唯一的数值型标识符。这些标识符用于标识字段在消息中的二进制格式，使用中的类型不应该随意改动。
+	需要注意的是，[1-15]内的标识在编码时只占用一个字节，包含标识符和字段类型。[16-2047]之间的标识符占用2个字节。
+	建议为频繁出现的消息元素使用[1-15]间的标识符。如果考虑到以后可能或扩展频繁元素，可以预留一些标识符。
+
+	最小的标识符可以从1开始，最大到229 - 1，或536,870,911。
+	不可以使用[19000－19999]之间的标识符， Protobuf协议实现中预留了这些标识符。在.proto文件中使用这些预留标识号，编译时就会报错。
+4、字符规则
+	repeated :标识字符安可以重复任意次,类似数组，切片
+	proto3不支持proto2中的required和optional声明
+5、注释风格
+	向.proto文件中添加注释,支持C风格双斜线"//"单行注释
+6、保留字符安与标识符
+	可以使用reserved关键字指定保留字段和保留标识符
+	注意：不能在一个reserved声明中混合字符安名和标识符
+	message Foo{
+		reserved 2,15,9 to 11;
+		reserved "foo","bar";
+	}
+7、.proto文件编译结果
+		当使用protocol buffer编辑器运行.proto文件时,编辑器将生成所选语言的代码，用于使用在.proto文件中
+	定义的消息类型、服务接口约定等。不同语言生成的代码格式不同：
+	go：生成一个.pb.go文件,每个消息类型对应一个结构体
+8、数据类型
+	
+	下面的是简化半,只有go版本的,其他语言版本的话,可以参考	https://segmentfault.com/a/1190000007917576
+	.proto 		 	Go 	
+	double 		 	float64 	
+	float 			float32 	
+	int32 			int32 	
+	int64 			int64 	
+	uint32 		 	uint32 	
+	uint64 			uint64 
+	sint32 		 	int32 	
+	sint64 			int64 	
+	fixed32 	 	uint32 	
+	fixed64 	 	uint64 	
+	sfixed32 		int32 
+	sfixed64 		int64 	
+	bool 		 	bool 	
+	string 		 	string 	
+	bytes 		 	[]byte 	
+9、默认值
+	字符串类型默认为空字符串
+	字节类型默认为空字节
+	布尔类型默认为false
+	数值类型默认为0值
+	enums类型默认为第一个定义的枚举值,必须是0
+
+	go语言默认值的具体行为参考
+	https://developers.google.com/protocol-buffers/docs/reference/go-generated
+10、使用其他的message
+	message支持嵌套使用，一个message可以作为另外一个message的字段类型。例如
+	message SearchResponse {  // 表示这个Result是一个内嵌的切片,SearchMessage表示一结构体。
+		repeated Result results=1
+	}
+
+	message Result{
+		string url=1;
+		string title=2;
+		repeated string snippets=3;
+	}
+11、导入定义
+	可以使用import语句导入使用其他描述文件中声明的类型。
+	例如：
+		import "other.proto";  // 这样子写了,可能就是这两个文件在同一个文件目录下面。
+12、Message嵌套
+	message SearchResponse{
+		message Result{
+			string url =1;
+			strint title=2;
+			repeated string snippets=3;
+		}
+
+		repeated Result results=1;
+	}
+	内部声明的message类型名称只可在内部直接使用，在外部引用需要前置父级message名称,如Parent.Type：
+
+	message SomeOtherMessage {
+		SearchResponse.Result result = 1;
+	}
+二、basic type
+1、map类型
+	proto3支持mapa类型声明；定义形式如下：
+			map<keyType,valueType>map_fild=N;
+	注意：
+		1.1、keyType和valueType：可以是内置类型,也可以是自定义的message类型。
+		1.2、字段不支持repeated属性。
+		1.3、不能依赖map类型的字符安排序
+2、包
+	在.proto文件中使用package声明包名,避免命名冲突。
+	syntax ="proto3"
+	package "hello"  // 这里的“hello”就是声明的包名
+	message Open{}
+	
+	如果在其他消息中需要使用，使用“包名+消息名”的方式来使用类型,如：
+	message Foo{
+		foo.Open open=1;
+	}
+	注意：
+	Go 中：默认使用package名作为包名，除非指定了option go_package选项
+3、定义服务
+	如果想要将消息类型用在RPC(远程方法调用)系统中，可以在.proto文件中定义一个RPC服务接口，protocol buffer编译器会根据所选择的不同语言生成服务接口代码。例如，想要定义一个RPC服务并具有一个方法，该方法接收SearchRequest并返回一个SearchResponse，此时可以在.proto文件中进行如下定义：
+
+	service SearchService {
+		rpc Search (SearchRequest) returns (SearchResponse) {}
+	}
+
+	生成的接口代码作为客户端与服务端的约定，服务端必须实现定义的所有接口方法，客户端直接调用同名方法向服务端发起请求。比较蛋疼的是即便业务上不需要参数也必须指定一个请求消息，一般会定义一个空message。
+三、Protobuf的基本规范
+1、描述文件以“.proto”作为文件后缀,除结构定义外的语句以分号结尾
+	1.1、结构定义包括：meaage、service、enum
+	1.2、rpc方法定义结尾的分号可有可无
+2、Message
+	Message命名采用驼峰命名方式,字段全部采用小写字母,并且以下划线分割表示
+	type SongServerRequest{
+		required string song_name =1;
+	}
+	
+3、Enum类型
+	3.1、Enums类型名采用驼峰命名方式,字段命名采用大写字母加下划线分隔表示。
+		enum Foo{
+			E_ITEM_LIMIT =1;
+			E_CARD_LIMIT =2;
+		}
+
+		在.proto中定义的枚举类型,在服务器端可以直接调用。
+	3.2、如果在枚举类型里面将某一个值赋值给不同的枚举常量，
+		可以在定义枚举字段的时候使用 别名。例如：
+		enum  EnumAllowingAlias{
+			option allow_alias = true;// 加这一行代码的目的就是告诉protobuf 编译器，有一个数值赋值给了不同的常量。
+			UNKNOWN =0;				 // 如果没有这一行代码,程序就会报错,类似于"uses the same enum value"
+			STARTED =1;
+			RUNNING =1;
+		}
+	3.3、enmu constants的限制
+		Enumerator contants 在32位证书的范围内。因为enum values 使用variant encoding在线上，负值的效率比较低，因此不建议使用负数。
+		
+4、Service和rpc方法名同意采用驼峰式命名
+	message对应golang的struct,编译生成go代码后,字段会转换为驼峰式。
+	
+	service EasyToDo{
+		rpc SayHello(EasyToDoRequest) returns （ EasyToDoReply ）{}
+		rpc DoGame(EashToDoRequest) returns (EasyToDoReply){}
+	}
+	
+五、Go Reference
+	
+	package example.high_score;
+	option go_package = "hs";
+
+1、包
+	如果一个.proto文件包含了包声明，那么产生的代码里面将会用.proto文件里面的包名作为Go 的package name,程序会首先将"."转化为"_"。
+		比如：在.proto文件里面声明的包名是 example.high_score,那么在Go中产生的包的名字就是 example_high_score。
+		注意：在这里也可以重写默认的包名,通过使用option go_package = "new package name",如下所示。
+		package example.high_score;
+		option go_package = "hs";  // 没有这一行代码,产生的包的名字就是 examle_high_score,如果加上,那么新生成的包名就是hs。
+	如果在.proto文件里面没有包声明,那么新生成的代码将会使用文件名(去掉拓展名)作为新的Go的包名。和上面的一样,程序会首先将"."转化为"_"。
+		例如:一个.proto文件名是high.scorte.proto。这样新产生的包名就是 high_score
+2、字段。
+	protobuff 编辑器将会为定义在message中的每一个字段生成Go中的一个结构体字段。这个字段的原始值取决于她是否是单一的，重复的map或者是是其中的一个值。
+	2.1、在message中,如果某个字段以下划线开头比如 _my_field_name,那么第一个下划线会被"X"替换掉,剩下的正常显示，驼峰法显示。XMyFieldName
+	2.2、如果某个字段包含下划线，那么下划线会被去掉，下划线的下一个字母会被大写。例如 foo_bar_baz_2 生成代码以后谁是FooBarBaz_2
+		注意：如果下滑线的下一个字符是数字，那么下划线不会被去掉
+3、别的message可以作为其它message中的某一个字段(说白了就是一个结构体中的匿名字段)
+	.proto文件中
+		message Bar{}
+		message Baz{
+			Bar foo = 1
+		}
+	对应的.pb.go生成的代码中是如下显示	
+	 type Baz struct {
+         Foo *Bar `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	 }
+	 
+4、Map fields
+	.proto文件中
+		message Bab{
+			map<string,Bar> foo =1
+		}
+	对应的.pb.go生成的代码中是如下显示	
+	type Bab struct {
+      Foo map[string]*Bar `protobuf:"bytes,1,rep,name=foo" json:"foo,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+    }
+
+5、oneOf fields
+	下面的仅仅是一部分，篇幅太长。需要参考网址：
+	https://developers.google.com/protocol-buffers/docs/reference/go-generated
+	
+	For a oneof field, the protobuf compiler generates a single field with an interface type isMessageName_MyField. It also generates a struct for each of the 	singular fields within the oneof. These all implement this isMessageName_MyField interface.
+
+	For this message with a oneof field:
+
+	package account;
+	message Profile {
+	  oneof avatar {
+		string image_url = 1;
+		bytes image_data = 2;
+	  }
+	}
+
+	the compiler generates the structs:
+
+	type Profile struct {
+			// Types that are valid to be assigned to Avatar:
+			//      *Profile_ImageUrl
+			//      *Profile_ImageData
+			Avatar isProfile_Avatar `protobuf_oneof:"avatar"`
+	}
+
+	type Profile_ImageUrl struct {
+			ImageUrl string
+	}
+	type Profile_ImageData struct {
+			ImageData []byte
+	}
+6、Enumerations
+	Given an enumeration like:
+
+	message SearchRequest {
+	  enum Corpus {
+		UNIVERSAL = 0;
+		WEB = 1;
+		IMAGES = 2;
+		LOCAL = 3;
+		NEWS = 4;
+		PRODUCTS = 5;
+		VIDEO = 6;
+	  }
+	  Corpus corpus = 1;
+	  ...
+	}
+
+	the protocol buffer compiler generates a type and a series of constants with that type.
+
+	For enums within a message (like the one above), the type name begins with the message name:
+
+	type SearchRequest_Corpus int32
+
+	For a package-level enum:
+
+	enum Foo {
+	  DEFAULT_BAR = 0;
+	  BAR_BELLS = 1;
+	  BAR_B_CUE = 2;
+	}
+
+	the Go type name is unmodified from the proto enum name:
+
+	type Foo int32
+
+	This type has a String() method that returns the name of a given value.
+
+	The protocol buffer compiler generates a constant for each value in the enum. For enums within a message, the constants begin with the enclosing message's name:
+
+	const (
+			SearchRequest_UNIVERSAL SearchRequest_Corpus = 0
+			SearchRequest_WEB       SearchRequest_Corpus = 1
+			SearchRequest_IMAGES    SearchRequest_Corpus = 2
+			SearchRequest_LOCAL     SearchRequest_Corpus = 3
+			SearchRequest_NEWS      SearchRequest_Corpus = 4
+			SearchRequest_PRODUCTS  SearchRequest_Corpus = 5
+			SearchRequest_VIDEO     SearchRequest_Corpus = 6
+	)
+
+	For a package-level enum, the constants begin with the enum name instead:
+
+	const (
+			Foo_DEFAULT_BAR Foo = 0
+			Foo_BAR_BELLS   Foo = 1
+			Foo_BAR_B_CUE   Foo = 2
+	)
+
+	The protobuf compiler also generates a map from integer values to the string names and a map from the names to the values:
+
+	var Foo_name = map[int32]string{
+			0: "DEFAULT_BAR",
+			1: "BAR_BELLS",
+			2: "BAR_B_CUE",
+	}
+	var Foo_value = map[string]int32{
+			"DEFAULT_BAR": 0,
+			"BAR_BELLS":   1,
+			"BAR_B_CUE":   2,
+	}
+
+	Note that the .proto language allows multiple enum symbols to have the same numeric value. Symbols with the same numeric value are synonyms. These are represented in Go in exactly the same way, with multiple names corresponding to the same numeric value. The reverse mapping contains a single entry for the numeric value to the name which appears first in the .proto file. 
+
+
+疑问：
+	1、在.proto中定义的枚举类型,在服务器端直接调用的时候,看着名字太长了
+	2、在定义服务的时候，可以定义很多行为，但是如果不同行为需要不同参数的时候，
+		这时候是不是就需要重新定义***Request和 ***Reply方法
+	3、在定义枚举的时候，必须定义一个常量来作为枚举字段的第一个元素，理由是：
+		参考网址：https://developers.google.com/protocol-buffers/docs/proto3#scalar
+		1、这里必须有一个零值,以至于我们可以用0作为数字类型的默认值
+		2、零值应该作为第一个元素。因为与proto2的语法兼容。在proto2里面,第一个元素总是默认值。
+	4、在.protobuf中  option到底是什么东西？
+		
+		找到的蛛丝马迹：(这个网址,可以看到option被定义成了一个message)
+			https://github.com/google/protobuf/blob/master/src/google/protobuf/type.proto
+	
+			
+	
+			4.1、在重新定义包的时候可以用到。更改由.proto产生的默认包名 option go_package =="new package name"
+			4.2、在定义枚举类型的时候,也可以用到option，来将同一个enum value赋值给不同的 enum constants。 option allow_alias = true;
+
+	
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
