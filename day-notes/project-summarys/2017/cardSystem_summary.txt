@@ -171,8 +171,20 @@ FosterSuit			map[int32]map[int32]int32       key: 培养的战力等级   value:
 	FosterLimit 	map[int32][]int32 		key: 阶段id  value:  每一个阶段，这几个培养属性的最大值。
 /card/fosterapply
 
+五、卡牌突破
 
-	
+		装备突破、道具突破
+		check condition:
+			1、cardId:玩家是否存在这张卡牌
+			2、step:	1～4：装备突破，5~6:首饰突破
+			3、突破时的捅破材料(包含金币)是否充足
+			道具都是在背包里面，所以从背包里面查看突破时,这个道具是否充足
+	疑问：如何计算和获取，某个卡牌的品质id???
+				cardType*1000+ equipPosition +level
+
+
+	总结，卡牌的装备和装饰突破，就是读取csv，判断某个卡牌突破的时候，是否满足突破的条件，突破的材料是否充足。	
+
 	  
 	
 	

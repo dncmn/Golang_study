@@ -1,6 +1,29 @@
 # create at 2018.01.15
 ## learnging protobuf
 
+
+protocol buffers定义---(来自官网)
+	protocol buffers是灵活的、高效、自动的机制来序列化结构化数据。和xml类似,但是币xml更加小巧、快速、简便。
+	您可以定义一次数据的结构，然后使用专门生成的源代码轻松地将结构化数据写入各种数据流，或使用各种语言读取结构化数据。
+	甚至可以更新旧的数据结构，而不会中断部署的“旧”格式的程序。
+
+protocol buffers:是一种用于序列化结构化数据的一种语言中立，平台中立的可扩展机制。
+
+同 XML 相比， Protobuf 的主要优点在于性能高。
+它以高效的二进制方式存储，比XML小3到10倍快20到100倍。
+Protocol Buffer定义了 sint32类型,这种类型采用zigzag编码
+
+zigzag编码的特点:Zigzag编码用无符号数来表示有符号数字，正数和负数交错。
+
+使用zigzag编码,绝对值小的数字,无论这是给你付都可以采用
+较少的byte来表示，充分利用的Varint这种技术。其他的数据类型，比如字符串等则采用类似数据库中的 varchar 的表示方法，即用一个 varint 表示长度，然后将其余部分紧跟在这个长度部分之后即可。
+
+protobuf消息的内容小,适用于网络传输
+
+对于二进制编码，经常需要用对数据进行压缩以节省空间,varint可以压缩较小的正数,但是对于负数来说variant反而很浪费空间。
+这个时候,zigzag编码可以处理负数,使负数也可以使用variant编码压缩。
+protobuff 就是使用这两种方式结合的方式来压缩的。
+
 在.proto文件执行编译
 protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 
@@ -22,11 +45,14 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 		https://developers.google.com/protocol-buffers/docs/reference/go-generated
 	6、Go版本.proto生成.pb.go参考网站
 		https://developers.google.com/protocol-buffers/docs/reference/go-generated
+	7、protocol buffers中文版的翻译
+		https://www.gitbook.com/book/skyao/learning-proto3/details
 	
 	
+	在.proto包中用到的	
+		option go_package = "tomcat" // rename package name
+		option allow_alias= true // enum constants have same enum values
 	
-option go_package = "tomcat" // rename package name
-option allow_alias= true // enum constants have same enum values
 	
 三、笔记
 3.1、在学历恶化结构体数据上，protocol buff比xml有很多又是
@@ -177,6 +203,8 @@ option allow_alias= true // enum constants have same enum values
 	}
 	
 3、Enum类型
+
+	protobuf编译器为枚举类型里面的每一个常量里面生成一个常量值
 	3.1、Enums类型名采用驼峰命名方式,字段命名采用大写字母加下划线分隔表示。
 		enum Foo{
 			E_ITEM_LIMIT =1;
@@ -194,6 +222,49 @@ option allow_alias= true // enum constants have same enum values
 		}
 	3.3、enmu constants的限制
 		Enumerator contants 在32位证书的范围内。因为enum values 使用variant encoding在线上，负值的效率比较低，因此不建议使用负数。
+	3.4、
+		3.4.1、对于包级别的枚举,常量通常以枚举名称开始。
+				在.protoc文件中
+					enum Foo {
+					  DEFAULT_BAR = 0;
+					  BAR_BELLS = 1;
+					  BAR_B_CUE = 2;
+					}
+				在.pg.go文件中
+				const (
+					Foo_DEFAULT_BAR Foo = 0
+					Foo_BAR_BELLS   Foo = 1
+					Foo_BAR_B_CUE   Foo = 2
+				)
+		3.4.2、对于message里面的枚举,常量以一个封闭的消息名开始。
+			在.proto文件中
+			message SearchRequest {
+			  enum Corpus {
+				UNIVERSAL = 0;
+				WEB = 1;
+				IMAGES = 2;
+				LOCAL = 3;
+				NEWS = 4;
+				PRODUCTS = 5;
+				VIDEO = 6;
+			  }
+			  Corpus corpus = 1;
+			  ...
+			}
+			
+			在.pb.go文件中
+			const (
+				SearchRequest_UNIVERSAL SearchRequest_Corpus = 0
+				SearchRequest_WEB       SearchRequest_Corpus = 1
+				SearchRequest_IMAGES    SearchRequest_Corpus = 2
+				SearchRequest_LOCAL     SearchRequest_Corpus = 3
+				SearchRequest_NEWS      SearchRequest_Corpus = 4
+				SearchRequest_PRODUCTS  SearchRequest_Corpus = 5
+				SearchRequest_VIDEO     SearchRequest_Corpus = 6
+			)
+
+		
+		
 		
 4、Service和rpc方法名同意采用驼峰式命名
 	message对应golang的struct,编译生成go代码后,字段会转换为驼峰式。
@@ -243,6 +314,14 @@ option allow_alias= true // enum constants have same enum values
     }
 
 5、oneOf fields
+
+
+
+对于一个oneof字段,protobuf编译器产生了一个接口里面，
+	然后为oneof字段里面的每一个字段产生一个单独的结构体，这些接口体都是通过实现一个空的方法来实现这个接口。
+	然后在包含oneof的字段里面,声明一个接口变量。具体参看下面的例子。
+
+
 	下面的仅仅是一部分，篇幅太长。需要参考网址：
 	https://developers.google.com/protocol-buffers/docs/reference/go-generated
 	
@@ -364,26 +443,69 @@ option allow_alias= true // enum constants have same enum values
 			4.1、在重新定义包的时候可以用到。更改由.proto产生的默认包名 option go_package =="new package name"
 			4.2、在定义枚举类型的时候,也可以用到option，来将同一个enum value赋值给不同的 enum constants。 option allow_alias = true;
 
+六、拓展
+6.1、Varint与ZigZag编码
+	阅读网址：
+		blog.163.com/zh_opera/blog/static/593927062014814104653620  
+	二进制编码中,很多有符号正数就是使用了Varint编码和ZigZag编码,例如Protobuf
+
+Varint编码
+	每个字节，我们只使用低7位，最高的一位作为一个标志位：
+		1：下一个byte也是该数字的一部分
+		0：下一个byte不是该数字的一部分
+	这种编码的好处在于，对于小的数值，可以用更少的字节去表示,不过相应的,对于大数就要使用更多的字节去存储。
+	在统计学上,一般消息中的数字以小数为主,所以用它可以省空间。
 	
-		
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	varint编码每个字节前1位表示下一个字节是否也是该数字的一部分，后7位表示实际的值，最后，先低位后高位。
+	对于int类型来说，varint编码最少占用1个字节，最多占用5个字节。
+	eg：
+		整数1的表示，仅需一个字节：0000 0001
+		整数300的表示，需要两个字节：1010 1100 0000 0010
+ZigZag编码
+	为了配置Varint来使用的编码,因为对于负数,最高位是1,那就是相当于一个很大的整数,如果用varint,那么就很浪费空间。
+	ZigZag编码的原理:就是按照绝对值大小来重新解析二进制。
+	Signed Original	Encoded As
+		0 	0
+		-1 	1
+		1 	2
+		-2 	3
+		2 	4
+		-3 	5
+		… 	…
+		2147483647 	4294967294
+		-2147483648 	4294967295
+为什么-1 和 1 的绝对值都是1，先编码-1呢？其实是因为如果先编码负数，那么可以很方便的使用位运算去快速编码
+    Zigzag(n) = (n << 1) ^ (n >> 31), n为sint32时   -------------------------   1.1
+    Zigzag(n) = (n << 1) ^ (n >> 63), n为sint64时   -------------------------   1.2
+我们从表中可以看出，对于n是负数，编码后的值是2*|n|-1；对于正数，编码后的值是2*n。
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 
