@@ -5,7 +5,10 @@
 	1、github网址
 		https://github.com/src-d/go-git
 	2、类似官网
-		https://gokit.io/
+		2.1、
+			https://gokit.io/
+		2.2、
+			https://gokit.io/examples/stringsvc.html#requests-and-responses
 	3、go-kit结合grpc 和protobuf的一个小例子
 		http://www.ru-rocker.com/2017/02/24/micro-services-using-go-kit-grpc-endpoint/
 	4、介绍go kit的一个网址
@@ -25,3 +28,168 @@ git@github.com:ru-rocker/gokit-playground.git
 
 根据这个进行到了第五步了
 http://www.ru-rocker.com/2017/02/24/micro-services-using-go-kit-grpc-endpoint/
+四、随手笔记
+	go-kit通过对端点的抽象,提供了许多功能。
+	
+
+
+go-kit  grpc
+
+
+step1:定义服务-----Define Service
+
+ 	// ErrEmptyError is returned when input string is empty 
+	var ErrEmptyError=errors.New("Request wrong")
+	
+	// define service interface
+	type Service interface{
+		Uppercase(context.Context,string)(string,error)
+		Count(context.Context,string)int
+	}
+	
+	// Implement  service with empty struct
+	type StringService struct{}
+	
+	func(_ StringService)Uppercase(_ context.Context,s string)(string,error){
+		if s==""{
+			return "",ErrRequestError
+		}
+		return strings.ToUpper(s),nil
+	}
+	
+	func(_ StringService)Count(_ context.Context, s string)int{
+		return len(s)
+	}
+
+step2:请求和响应-----Requests and Response
+	在go-kit中，消息的主要模式就是rpc，因此,在接口(step1中定义的方法)里面中的每一个方法，
+都将会被建模然后作为一个远程的函数调用。对于每一个方法,我们定义一个request and response struct,
+用来独立捕获所有的输入和输出参数。
+	type uppercaseRequest struct {
+		S string `json:"s"`
+	}
+
+	type uppercaseResponse struct {
+		V   string `json:"v"`
+		Err string `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
+	}
+
+	type countRequest struct {
+		S string `json:"s"`
+	}
+
+	type countResponse struct {
+		V int `json:"v"`
+	}
+step3:创建端点-----Endpoints
+	go kit 通过Endpoints的抽象来提供它的大部分的功能。
+	一个端点代表一个单独的rpc，也就是Service接口里面的一个单独的方法。
+	这个端点和step1中的没有太大的区别，需要注意的是用Endpoints struct来实现Service结构体。
+这个机制是在创建grpc客户端的时候所需要的。
+	func makeUppercaseEndpoint(svc StringService) endpoint.Endpoint {
+		return func(ctx context.Context, request interface{}) (interface{}, error) {
+			req := request.(uppercaseRequest)
+			v, err := svc.Uppercase(ctx, req.S)
+			if err != nil {
+				return uppercaseResponse{v, err.Error()}, nil
+			}
+			return uppercaseResponse{v, ""}, nil
+		}
+	}
+
+	func makeCountEndpoint(svc StringService) endpoint.Endpoint {
+		return func(ctx context.Context, request interface{}) (interface{}, error) {
+			req := request.(countRequest)
+			v := svc.Count(ctx, req.S)
+			return countResponse{v}, nil
+		}
+	}
+step:4:编码和解码(请求、响应)---Model Request and Response
+
+	通常情况下,我们需要对请求和响应进项编码和解码。
+	func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request uppercaseRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return nil, err
+	}
+		return request, nil
+	}
+
+	func decodeCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
+		var request countRequest
+		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+			return nil, err
+		}
+		return request, nil
+	}
+
+	func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+		return json.NewEncoder(w).Encode(response)
+	}
+step5:(Transports)
+	需要将服务暴露给外界,以便它们调用。可供选择的方式有thrift、定制化的json over http。
+	svc := stringService{}
+
+	uppercaseHandler := httptransport.NewServer(
+		makeUppercaseEndpoint(svc),
+		decodeUppercaseRequest,
+		encodeResponse,
+	)
+
+	countHandler := httptransport.NewServer(
+		makeCountEndpoint(svc),
+		decodeCountRequest,
+		encodeResponse,
+	)
+
+	http.Handle("/uppercase", uppercaseHandler)
+	http.Handle("/count", countHandler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
