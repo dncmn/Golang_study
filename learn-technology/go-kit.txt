@@ -1,0 +1,27 @@
+## create at 2018.1.16
+## go-git
+
+一、学习网址
+	1、github网址
+		https://github.com/src-d/go-git
+	2、类似官网
+		https://gokit.io/
+	3、go-kit结合grpc 和protobuf的一个小例子
+		http://www.ru-rocker.com/2017/02/24/micro-services-using-go-kit-grpc-endpoint/
+	4、介绍go kit的一个网址
+		http://peter.bourgon.org/go-kit/
+	5、系列介绍的一个网址,不是太详细
+		https://cylof22.gitbooks.io/microservices-in-go-using-go-kit/content/twelve-factor-application-and-microservice.html
+二、学习笔记
+	微服务面向可重用性,对于构建需要高度弹性和可扩展性的大型应用程序非常有用,它不适用于小型吧部门级应用程序或小用户群你的应用程序。
+
+
+
+三、学习疑问
+
+git@github.com:ru-rocker/gokit-playground.git
+
+
+
+根据这个进行到了第五步了
+http://www.ru-rocker.com/2017/02/24/micro-services-using-go-kit-grpc-endpoint/

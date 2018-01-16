@@ -2,6 +2,9 @@
 ## learnging protobuf
 
 
+新发现的一个介绍protobuf的网站
+	https://auth0.com/blog/beating-json-performance-with-protobuf/
+
 protocol buffers定义---(来自官网)
 	protocol buffers是灵活的、高效、自动的机制来序列化结构化数据。和xml类似,但是币xml更加小巧、快速、简便。
 	您可以定义一次数据的结构，然后使用专门生成的源代码轻松地将结构化数据写入各种数据流，或使用各种语言读取结构化数据。
@@ -442,6 +445,24 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 	
 			4.1、在重新定义包的时候可以用到。更改由.proto产生的默认包名 option go_package =="new package name"
 			4.2、在定义枚举类型的时候,也可以用到option，来将同一个enum value赋值给不同的 enum constants。 option allow_alias = true;
+	5、protobuf序列化原理
+	参考网址：
+		http://blog.csdn.net/Chengzi_comm/article/details/53199278
+	修饰符 字段类型 字段名 = 域号;
+	在序列化时，protobuf按照TLV的格式序列化每一个字段，T即Tag，也叫Key；V是该字段对应的值value；L是Value的长度，
+如果一个字段是整形，这个L部分会省略。序列化后的Value是按原样保存到字符串或者文件中，Key按照一定的转换条件保存起来，序列化后的结果就是 KeyValueKeyValue…。
+Key的序列化格式是按照message中字段后面的域号与字段类型来转换。转换公式如下：
+	(field_number << 3) | wire_type
+	上面的field_number就是域号， wire_type与字段的类型有关，
+	wire_type与类型的对应关系表 
+	wire_type 	meaning 			type
+	0 			Vaint 				int32、int64、uint32、uint64、sint32、sint64、bool、enum
+	1 			64-bit 				fixed、sfixed64、double
+	2 			Length-delimi 		string、bytes、embedded、messages、packed repeated fields
+	3 			Start group 		Groups(deprecated)
+	4 			End group 			Groups(deprecated)
+	5 			32-bit 				fixed32、sfixed32、float
+	
 
 六、拓展
 6.1、Varint与ZigZag编码
