@@ -1,7 +1,81 @@
 
 
 
+bug fix:
+1、如果进行常重置或者章节重置，该怎么随机
+	根据玩家当前的当前游戏进程id
+2、战场在初始化的时候,
 
-如果进行正常重置或者章节重置，该怎么随机
 
-	1、根据玩家当前的当前游戏进程id
+2018-01-18T19:12:00.397+0800	DEBUG	data/battleField_data.go:43	before:this.CurrentProcess=12, this.MaxProcess=11,this.ResetType=0,this.ResetDefaultType=1
+2018-01-18T19:12:00.397+0800	DEBUG	data/battleField_data.go:44	before:this.CurrentProcess=12, this.MaxProcess=11,this.ResetType=0,this.ResetDefaultType=1
+2018-01-18T19:12:00.397+0800	DEBUG	data/battleField_data.go:45	before:this.CurrentProcess=12, this.MaxProcess=11,this.ResetType=0,this.ResetDefaultType=1
+2018-01-18T19:12:00.397+0800	DEBUG	data/battleField_data.go:148	after:this.CurrentProcess=3, this.MaxProcess=11,this.ResetType=0,this.ResetDefaultType=1
+2018-01-18T19:12:00.397+0800	DEBUG	data/battleField_data.go:149	after:this.CurrentProcess=3, this.MaxProcess=11,this.ResetType=0,this.ResetDefaultType=1
+2018-01-18T19:12:00.397+0800	DEBUG	data/battleField_data.go:150	after:this.CurrentProcess=3, this.MaxProcess=11,this.ResetType=0,this.ResetDefaultType=1
+
+
+
+
+
+
+
+
+switch this.ResetType {
+	case constant.BattleFieldNormalReset: // 正常重置
+
+		switch {
+		case this.MaxProcess == 0 || this.MaxProcess/constant.BattleFieldMaxLevelsSingleChapter == 0:
+			resetTag = 1
+		case this.MaxProcess%constant.BattleFieldMaxLevelsSingleChapter == 0:
+			resetTag = this.MaxProcess + 1
+		default: // 其它章节
+			resetTag = (this.MaxProcess/constant.BattleFieldMaxLevelsSingleChapter)*constant.BattleFieldMaxLevelsSingleChapter + 1
+		}
+	case constant.BattleFieldChapterReset: // 章节重置
+
+		switch {
+		case this.MaxProcess == 0 || this.MaxProcess/constant.BattleFieldMaxLevelsSingleChapter == 0:
+			resetTag = 1
+		case this.MaxProcess%constant.BattleFieldMaxLevelsSingleChapter == 0:
+			resetTag = this.MaxProcess - constant.BattleFieldMaxLevelsSingleChapter + 1
+		default:
+			resetTag = ((this.MaxProcess/constant.BattleFieldMaxLevelsSingleChapter)-1)*constant.BattleFieldMaxLevelsSingleChapter + constant.BattleFieldInitLevleId
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				
+				
+				
+				
