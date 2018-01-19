@@ -1,0 +1,63 @@
+##1.19.txt
+
+一、bug fix 
+	1、正常的章节重置,比如到第二章第一关,进行正常重置,但是效果却是章节重置
+		结果：昨天改的不彻底有一处判断还没有改。代码分析,没什么问题
+		vipCondition :=csv.Data.CVip[p.Vip].BattlefieldChapterReset!=0
+		role_handler.go  line 222
+	
+			teamCondition := mod.Player.CheckLock(p, constant.SystemBattleFieldChapterReset)
+			vipCondition :=csv.Data.CVip[p.Vip].BattlefieldChapterReset!=0
+
+			p.BattleField.ResetDefaultType=constant.BattleFieldChapterReset
+
+			if !teamCondition && !vipCondition{
+				p.BattleField.ResetDefaultType = constant.BattleFieldNormalReset
+			}
+	2、每天五点自动自动恢复的时候,体力为0,能量没有成0.5倍
+		玩家复活的时候,要不要更新一下这个
+		
+		付费复活：
+			体力恢复到最大值,能量为最大值的最大值的一半
+			做法：在Init之后,再进行初始化
+		
+		更改了retriveHandler里面最后对能量赋值的方法,将500转化为pvpCard.Mp/2
+		
+		对于自动复活,没有buff
+		在battleField_data.go里面中的AutoRevival中添加一行代码
+		card.Hp=card.MaxHp
+	
+	自动重置的顺序 
+		
+	3、上阵卡牌血量和能量没有继续到下一场战场打完一个关卡并胜利，
+			下一场布阵界面显示卡牌血量、能量与上一场战斗结束时相同
+		    ，但进入下一场战斗时血量满能量空。问题出在genPveData这个方法里面
+	
+
+二、疑问
+	player.BattleField.SelfCardsInfo的作用？
+		到底是用来做什么的
+		type BattleFieldCard struct{
+			cardId 
+			Hp
+			Mp
+			MaxHp
+		}
+		
+		
+		
+玩家第一次进入的时候,数据为空。
+
+
+复活的时候,将玩家第一次的有死亡卡牌的信息保存下来。
+
+	自动复活：
+	付费复活：
+				体力最大,能量为50%
+
+
+
+		
+		
+		
+
