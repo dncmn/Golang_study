@@ -1,5 +1,16 @@
 https://github.com/google
 
+
+goland的过期时的注册服务器 参考网址
+	http://mamicode.com/info-detail-2138069.html
+ubuntu下golang环境配置参考
+	1、在/etc/profile 或者 ~./bashrc中的末尾添加几行代码
+	export GOROOT=$HOME/go
+	export GOBIN=$GOROOT/bin
+	export PATH=$GOROOT/bin:$PATH
+	export GOPATH=$HOME/workspace/Go
+	
+
 1、screen常用操作
 		screen -S screenName
    恢复到之前的一个窗口
