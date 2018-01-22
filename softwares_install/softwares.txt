@@ -1,0 +1,20 @@
+1、nqq---ubuntu上的notepad++
+	sudo add-apt-repository ppa:notepadqq-team/notepadqq
+	sudo apt-get update
+	sudo apt-get install notepadqq
+	
+	http://notepadqq.altervista.org/wp/download/
+2、synergy--不同显示器公用一个鼠标
+	要求：synergy版本要一致、要在同一个局域网内。
+	是通过这个局域网来进行操作的
+	http://blog.csdn.net/eightwhells/article/details/49474339
+3、如何从代码库下载代码---git库
+	将自己本地的 .ssh/id_rsa.pub通过网页导入到代码库中,和github是同样一个性质的
+4、oh-my-zsh---代码提示的好像
+	1.22日：今天大概装了一下，不知道成功没
+	Ubuntu下的命令：
+		sudo wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+	
+	
+	
+	
