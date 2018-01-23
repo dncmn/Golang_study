@@ -1,14 +1,46 @@
 # create at 2018.01.15
 ## learnging protobuf
 
+随手笔记：
+	1、protobuf的下载、安装、配置
+	2、protobuf的基本语法(package/message/enum/service)
+	3、protobuf的优点、message/service的命名规范
+	4、定义package的时候的注意事项--包括重命名包名
+	5、enum的定义(全局、message内部---导致引用的方式、由此产生的代码也不同)、第一个enum value是0、多个enum constant常量对应同一个enum value
+	6、protobuf速度更快的原因和编码有关
+		Varint编码ZigZag编码
+		Varint编码：适合对小的整数进行编码
+		ZigZag编码：将负数转换成整数然后进行编码
+	
+	
 
-新发现的一个介绍protobuf的网站
-	https://auth0.com/blog/beating-json-performance-with-protobuf/
+
+
+新发现
+	1、一个介绍protobuf的网站
+		https://auth0.com/blog/beating-json-performance-with-protobuf/
+	2、网站浏览看到的。
+		在proto中,message数据结构定义可能会越来越多，因此,针对同一个类型的request message，
+	尽量定义大而全，需要哪儿些字段就是直接赋值,用不到的就不用管(因为不赋值,在传输的过程中也不会有任何消费)
+bug:
+	1、今天我在实验更改包名的时候(使用 option go_package="packageName")
+		一直提示
+				$ protoc-gen-go: program not found or is not executable
+				$ --go_out: protoc-gen-go: Plugin failed with status code 1.
+		原因：这个"protoc-gen-go"是在$GOPATH/bin的目录下面,没有在path路径下面。
+	参考网址：
+	https://stackoverflow.com/questions/28099004/unable-to-build-protobuf-to-go-endpoint
+	
+
+
 
 protocol buffers定义---(来自官网)
 	protocol buffers是灵活的、高效、自动的机制来序列化结构化数据。和xml类似,但是币xml更加小巧、快速、简便。
 	您可以定义一次数据的结构，然后使用专门生成的源代码轻松地将结构化数据写入各种数据流，或使用各种语言读取结构化数据。
 	甚至可以更新旧的数据结构，而不会中断部署的“旧”格式的程序。
+	
+自己的理解：就是一个数据传输的格式，和xml、json类似，平台中立、语言中立，用来传输数据。但是由于它的编码方式,使得
+它传输数据、更快、更轻便、也更简洁。是grpc的重要组成部分。
 
 protocol buffers:是一种用于序列化结构化数据的一种语言中立，平台中立的可扩展机制。
 
@@ -33,6 +65,13 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 一、包下载地址
 	1、在github上下载需要的包,下载过之后，然后根据需要更改相应地包名
 	2、搜索方式  例如: grpc github
+	 在下载protocol buff的时候，下载适合自己机器的版本。
+	 https://github.com/google/protobuf/releases
+	 第一步： ./configure
+	 第二步： sudo make && sudo make install 
+	 第三步：export LD_LIBRARY_PATH=/usr/local/lib
+	参考代码：自己的github上的learning_techlogy/helloWorld
+		http://www.cnblogs.com/YaoDD/p/5504881.html
 
 二、参考的网址
 	bing.com 搜索protobuf
@@ -50,10 +89,13 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 		https://developers.google.com/protocol-buffers/docs/reference/go-generated
 	7、protocol buffers中文版的翻译
 		https://www.gitbook.com/book/skyao/learning-proto3/details
+		
+		
+		
 	
 	
 	在.proto包中用到的	
-		option go_package = "tomcat" // rename package name
+		option go_package = "tomcat" // rename package name  according to package defined in .proto file
 		option allow_alias= true // enum constants have same enum values
 	
 	
@@ -65,12 +107,19 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 	xml的优势：
 		xml是人们可以阅读的。
 		xml是基于标记语言构建模型的更好的选择。
+	protobuf的优势：
+		更容易产生数据
+		更快
+		定义明确,不模糊
+		
 		
 		
 四、Protobuf语法
 	注意:
 		gPRC推荐使用proto3
 		proto3不支持proto2中的required和optional声明
+		repeated 就是可重复的,在golang里面就是一个数组
+		
 1、Message定义
 	一个message类型定义描述了一个请求或对应的消息格式，可以包含多种类型字段。例如：
 	定义一个搜索请求的消息格式,每个请求包含查询字符串、页码、每页数目
@@ -186,7 +235,7 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 		foo.Open open=1;
 	}
 	注意：
-	Go 中：默认使用package名作为包名，除非指定了option go_package选项
+	Go 中：默认使用package名作为包名，除非指定了option go_package选项  
 3、定义服务
 	如果想要将消息类型用在RPC(远程方法调用)系统中，可以在.proto文件中定义一个RPC服务接口，protocol buffer编译器会根据所选择的不同语言生成服务接口代码。例如，想要定义一个RPC服务并具有一个方法，该方法接收SearchRequest并返回一个SearchResponse，此时可以在.proto文件中进行如下定义：
 
@@ -288,6 +337,13 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 		注意：在这里也可以重写默认的包名,通过使用option go_package = "new package name",如下所示。
 		package example.high_score;
 		option go_package = "hs";  // 没有这一行代码,产生的包的名字就是 examle_high_score,如果加上,那么新生成的包名就是hs。
+		
+		疑问：我在添加这一行代码进行测试的时候,会报错(包括下面的测试)
+			protoc-gen-go: program not found or is not executable
+			--go_out: protoc-gen-go: Plugin failed with status code 1.
+
+				
+		
 	如果在.proto文件里面没有包声明,那么新生成的代码将会使用文件名(去掉拓展名)作为新的Go的包名。和上面的一样,程序会首先将"."转化为"_"。
 		例如:一个.proto文件名是high.scorte.proto。这样新产生的包名就是 high_score
 2、字段。
@@ -432,6 +488,8 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 	1、在.proto中定义的枚举类型,在服务器端直接调用的时候,看着名字太长了
 	2、在定义服务的时候，可以定义很多行为，但是如果不同行为需要不同参数的时候，
 		这时候是不是就需要重新定义***Request和 ***Reply方法
+		
+		结论：每一个方法都应该有独立的***Request和***Reply(***Response)方法
 	3、在定义枚举的时候，必须定义一个常量来作为枚举字段的第一个元素，理由是：
 		参考网址：https://developers.google.com/protocol-buffers/docs/proto3#scalar
 		1、这里必须有一个零值,以至于我们可以用0作为数字类型的默认值

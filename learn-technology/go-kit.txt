@@ -23,6 +23,49 @@
 	comments:这里是request和response都是定义的Service层中的request and response structs	
 
 
+https://gist.github.com/posener/330c2b08aaefdea6f900ff0543773b2e
+go-kit的缺点：----从github上某个人的观点
+1、too verbose---太冗长
+	当使用go-kit的时候,在服务中添加一个api的代价是非常昂贵的。
+	serverce的借口,空struct的实现,对接口方法的编解码，对接口方法添加请求和响应的结构体，transport暴露给客户端
+2、hard to understand--(at least for author)
+	learn ServerHTTP function by heart to understand 
+		how service is expected to behave
+3、接口类型的API
+	当使用go-kit的时候,端点得到一个interface类型的参数,并且返回一个interface类型和error类型的变量。
+你需要明确地讲转换写入到你的实现函数中,而且你实现的endpoint方法就是下面实现的copy-paste。
+func makeUppercaseEndpoint(svc StringService)endPoint.Endpoint{
+	return func(ctx context.Context,request interface{})(interface{},error){
+		req:=request.(myRequest)
+		v,err:=svc.Function(myRequest)
+		if err!=nil{
+			return myResponse{v,err.Error()},nil
+		}
+		
+		return myResponse{v,""},nil
+	}
+}
+
+Transport logging
+	Any component that needs to log should treat the logger like a dependency, same as a database connection.
+	Middleware:一个中间件就是一个函数接收endpoint参数并且返回endpoint参数,类似如下结构。
+		type Middleware func(Endpoint)Endpoint
+	这个中间件可以做任何事情,下面是一个基础的ogging middleware方法
+
+func loggintMiddleware(logger log.Logger)Middleware{
+	return func(next endpoint.Endpoint)endpoint.Endpoint{
+		return func(ctx context.Context,request interface{})(interface{},error){
+			logger.Log("msg","calling endpoint")
+			defer logger.Log("msg","called endpoint")
+			return next(ctx,request)
+		}
+	}
+}
+	
+	
+
+
+
 go-kit:
 	go-kit:本身不是一个框架,而是一套微服务工具集，其设计思想是--分层设计，组件化，可扩展。
 	go-kit的架构分为三层结构：Transport层，Endpoint层，Service层。
