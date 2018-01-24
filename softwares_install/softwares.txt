@@ -10,10 +10,13 @@
 	http://blog.csdn.net/eightwhells/article/details/49474339
 3、如何从代码库下载代码---git库
 	将自己本地的 .ssh/id_rsa.pub通过网页导入到代码库中,和github是同样一个性质的
-4、oh-my-zsh---代码提示的好像
+4、oh-my-zsh---代码提示工具
 	1.22日：今天大概装了一下，不知道成功没
 	Ubuntu下的命令：
 		sudo wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+5、docker安装
+	就是按照官网，安装就好
+	就是重启Terminal，否则每次输入docker的时候就要输入sudo
 	
 	
 	

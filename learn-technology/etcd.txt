@@ -1,0 +1,65 @@
+## create at 2018.1.24
+## etcd
+
+一、相关网址
+	1、二进制下载网址
+		https://github.com/coreos/etcd/releases/
+	2、github地址
+		https://github.com/coreos/etcd/
+	3、docker中介绍到的etcd
+		https://yeasy.gitbooks.io/docker_practice/content/etcd/install.html
+二、随手笔记
+
+1、etch初识
+	etcd是基于Go语言实现的,在13年6月份发起的一个开源项目。它的目标是构建一个高可用的
+分布式键值(key-value)类型的数据库。
+	也就是一个key-value类型的数据库
+	etcd默认端口号是2379
+	最简单的实验方式：
+		1、从github上找到对应的二进制文件
+		2、将etcd*移动到/usr/local/bin目录下
+		3、开启一个窗口,作服务器  直接执行etcd。
+		4、再开启另外一个窗口,做客户端,(如果不清楚命令就是 etcdctl --help查看 或者 直接 etcdctl)
+			存储值:etcdctl set testkey "helloworld"  
+			获取值:ctcdctl get testkey
+	也可以从github上下载之后,然后进行编译
+	
+2、etcd的优点
+    简单：具有定义良好、面向用户的 API (gRPC)
+    安全：支持 HTTPS 方式的访问
+    快速：支持并发 10 k/s 的写操作
+    可靠：支持分布式结构，基于 Raft 的一致性算法
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

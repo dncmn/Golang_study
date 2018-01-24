@@ -13,9 +13,105 @@
 二、笔记
 	Consul包含多个组件,是基础架构中的
 	2.1、关键功能
-		服务发现：Consul client 可以提供服务，例如api或mysql，也可以使用Consul client来发现指定服务的提供者。 使用DNS或HTTP，应用程序可以轻松找到他们所依赖的服务。
-		健康检查：Consul client 可以提供任何数量的健康检查，或者与给定的服务（“Web服务器是否返回200 OK”），或与本地节点（“内存利用率是否低于90％”）相关联。 可以使用此信息来监控集群运行		状况，服务发现组件使用此信息将流量从有问题的主机中移除出去。
+		服务发现：Consul client 可以提供服务，例如api或mysql，也可以使用Consul client来发现指定服务的提供者。
+				使用DNS或HTTP，应用程序可以轻松找到他们所依赖的服务。
+		健康检查：Consul client 可以提供任何数量的健康检查，或者与给定的服务（“Web服务器是否返回200 OK”），或与本地节点（“内存利用率是否低于90％”）相关联。
+		可以使用此信息来监控集群运行		状况，服务发现组件使用此信息将流量从有问题的主机中移除出去。
 		KV Store：应用程序可以使用Consul的分层键/值存储，包括动态配置，功能标记，协调，leader选举等等。 简单的HTTP API使其易于使用。
 	多数据中心：Consul支持多个数据中心。 这意味着Consul的用户不必担心构建额外的抽象层以扩展到多个区域。
 	  Consul旨在对DevOps社区和应用程序开发人员友好，使其成为现代化，弹性基础架构的完美选择。
+	  
+Service and Tag Names with DNS
+	It is recommended to always use DNS-compliant service and tag naems because DNS-compliant service and tag names may
+contain any alpha-numeric characters as well as dashes.
+
+服务定义是注册服务的最常用的方式
+
+注册服务
+https://www.consul.io/intro/getting-started/services.html
+	注册服务的方式有两种,
+		第一种是提供一个服务的定义
+			参考网址：https://www.consul.io/docs/agent/services.html
+			第一步：为Consul创建一个配置目录。Consul会加载在这个配置目录里面的所有的配置文件。
+				通常的做法在Unix系统上这个目录的命名就就像/etc/consul.d(暗示了这个目录里面保存了一些列配置文件)
+			第二步:在这个目录中添加一个配置文件。
+				那么该如何添加呢。看官网的例子
+					echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' \
+    | 			sudo tee /etc/consul.d/web.json
+			第三步：根据这个配置文件来重启agent
+				consul agent -dev -config-dir=/etc/consul.d
+				成功的标志就是看到类似“[INFO] agent: Synced service 'web'”
+				注意：这里仅仅是定义了一个服务,如果是多个服务的话，依次卸载这个文件里面即可
+				
+		第二种是合适的HTTP API的调用
+			参考网址：https://www.consul.io/api/index.html
+			Consul的主要接口就是一个 RESTful API.这个 API可以执行基本的增删改查操作在
+		节点上、服务上,健康检查上，配置上等等
+			
+	
+第一种定义服务的方式：
+	{
+	  "service": {
+		"name": "redis",
+		"tags": ["primary"],
+		"address": "",
+		"port": 8000,
+		"enable_tag_override": false,
+		"checks": [
+		  {
+			"script": "/usr/local/bin/check_redis.py",
+			"interval": "10s"
+		  }
+		]
+	  }
+	}
+
+	
+查询服务：
+	一旦agent被开启了,这个服务就已经被同步了,我们可以使用DNS API、HTTP API来查询服务信息。
+DNS API
+	对于 DNS API，这个服务的DNS的名字就是 NAME.service.consul
+	默认情况下,所有的DNS的名称始终在Consul命名空间中(尽管这些是可配置的)
+	这个服务的子域名告诉Consul我们即将要查询的服务,并且 Name就是服务的名字
+	 dig @127.0.0.1 -p 8600 web.service.consul
+	
+对于我们注册的Web服务，这些约定和设置会生成web.service.consul的完全限定的域名
+
+HTTP API
+	curl http://localhost:8500/v1/catalog/service/web
+	目录API提供了托管给定服务的所有节点
+	curl http://localhost:8500/v1/catalog/service/web
+	
+更新服务
+	方式一：更改配置配置文件、给agent一个SIGHUP
+		这样就可以更新服务,而不会出现任何停机或无法提供服务查询的情况。
+	方式二：HTTP API
+		HTTP API 可以动态地用来增加、删除、更改服务
+	
+	
+	
+Consul Cluster
+
+	When a Consul agent is started, it begins without knowledge of any other node: it is an isolated cluster of one.
+	To learn about other cluster members, the agent must join an existing cluster.
+	To join an existing cluster, it only needs to know about a single existing member. 
+	After it joins, the agent will gossip with this member and quickly discover the other members in the cluster. 
+	A Consul agent can join any other agent, not just agents in server mode.
+	
+	
+	
+KV Store Endpoints
+	/kv访问Consule简单的键值存储区,用于存储服务配置或者其他元数据。
+	每个数据中心都有自己的kv store
+	
+https://www.consul.io/intro/getting-started/kv.html
+	
+注意
+Values in the KV strore cannot be larger than 512 kb
+	
+	
+	
+	
+	
+	
 

@@ -1,0 +1,71 @@
+## create at 2018.1.24
+## daily notes
+
+一、bug fix
+	1、代码如何解析csv的
+二、need to learn
+	2.1、安装docker
+三、project learning
+
+	1、看Makefile
+		看了
+			cmd/game 中的Makefilie
+				make devupdate:上传二进制到服务器上
+		    cmd/gdgen中的Makefile
+				make devcsv:
+							step-one:拉取最新的csv代码
+							step-two:将经过打表之后的代码,根据需要上传到consol上
+			cm/Makefile:采用make update，更新csv到consol，然后上传到服务器上
+						前两个Makefile的综合					
+						cmd/gdgen devcsv
+						cmd/game devupdate
+			
+	2、consol
+	3、flag
+		看了一下项目用到的
+		var outPath string
+		
+		flag.StringVar(&outPath,"c","localhost:8500","output game csv serialized data")  
+			将命令行参数解析的数据绑定到outPath
+			
+		最终结果：		
+		flag := &Flag{name, usage, value, value.String()}
+							f.form[name]=flag	
+							
+		// A Flag represents the state of a flag.
+		type Flag struct {
+			Name     string // name as it appears on command line
+			Usage    string // help message
+			Value    Value  // value as set
+			DefValue string // default value (as text); for usage message
+		}
+					
+		falg.Parse（）----接收命令行参数
+		
+四、generated question
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
