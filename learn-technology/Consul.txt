@@ -4,6 +4,10 @@
 一、学习网址
 	1、简书
 		https://www.jianshu.com/p/e0986abbfe48
+	2、Consol
+		https://www.jianshu.com/p/599cb5d499ba
+	3、微服务-consul
+		https://www.jianshu.com/p/f8746b81d65d
 
 
 如何安装Consul
@@ -11,26 +15,93 @@
 	因为本身都是二进制的文件,所以，根据操作系统的版本下载对应的Consul之后,再配置一下环境变量就可以了。这个很简单的
 
 二、笔记
-	Consul包含多个组件,是基础架构中的
+	Consul包含多个组件,是基础架构中的一款服务发现和配置的工具。
 	2.1、关键功能
 		服务发现：Consul client 可以提供服务，例如api或mysql，也可以使用Consul client来发现指定服务的提供者。
-				使用DNS或HTTP，应用程序可以轻松找到他们所依赖的服务。
+	使用DNS或HTTP，应用程序可以轻松找到他们所依赖的服务。
 		健康检查：Consul client 可以提供任何数量的健康检查，或者与给定的服务（“Web服务器是否返回200 OK”），或与本地节点（“内存利用率是否低于90％”）相关联。
-		可以使用此信息来监控集群运行		状况，服务发现组件使用此信息将流量从有问题的主机中移除出去。
+	可以使用此信息来监控集群运行状况，服务发现组件使用此信息将流量从有问题的主机中移除出去。
 		KV Store：应用程序可以使用Consul的分层键/值存储，包括动态配置，功能标记，协调，leader选举等等。 简单的HTTP API使其易于使用。
 	多数据中心：Consul支持多个数据中心。 这意味着Consul的用户不必担心构建额外的抽象层以扩展到多个区域。
-	  Consul旨在对DevOps社区和应用程序开发人员友好，使其成为现代化，弹性基础架构的完美选择。
-	  
+	Consul旨在对DevOps社区和应用程序开发人员友好，使其成为现代化，弹性基础架构的完美选择。
+		使用Raft算法保证一致性
+		支持http和dns协议接口。zookeeper的集成更为复杂,etod只支持http协议
+	3、Consul还可以使用dns接口。dns服务器只想为Consul agent的dns服务,端口默认为8600
+	
+	4、Consul常用命令
+	命令 			解释 								示例
+	agent 		运行一个consul agent 				 consul agent -dev
+	join 		将agent加入到consul集群 				consul join IP
+	members 	列出consul cluster集群中的members 	consul members
+	leave 		将节点移除所在集群 					  consul leave
+	5、安全停止
+	
+	Ctrl-C 可以让Consul平稳的退出，退出的时候该结点会通知集群中的其他节点它离开了。如果你粗暴的kill掉consul agent，集群中的其他节点会检查到该节点fail了。
+    当一个节点平稳退出：从它登记的服务和安全检查将从目录中移除。
+    当一个节点fail：它的健康状态被标记为critial，但是并不从目录中移除。consul会自动尝试重连fail的的节点，并且允许其恢复。
+	另外，当一个节点是服务节点时，平稳退出将可以有效的避免潜在问题 CONSENSUS PROTOCOL。
+
+三、Consul基本架构
+	 Consul 是一个分布式，高可用的系统。
+　 　向Consul提供服务的每个节点都运行一个Consul代理。 发现其他服务或获取/设置键/值数据不需要运行代理。 
+　 　代理负责健康检查节点上的服务以及节点本身。代理与一个或多个Consul服务器通信。
+    Consul 服务器是数据存储和复制的地方。 服务器自己选出一个 leader。
+  	虽然Consul可以在一台服务器上运行，但推荐使用3到5台来避免数据丢失的情况。 每个数据中心都建议使用一组Consul服务器。
+　　需要发现其他服务或节点的基础架构组件可以查询任何Consul服务器或任何Consul代理。 代理自动将查询转发到服务器。
+　　每个数据中心都运行Consul服务器集群。 当跨数据中心服务发现或配置请求时，本地Consul服务器将请求转发到远程数据中心并返回结果。
+
+疑问：
+	1、每一个节点的Consul代理的作用是什么？
+		代理负责健康检查节点上的服务以及节点本身。节点本身的什么(比如运行状态什么的？)
+		代理可以与一个或者多个Consul服务器(用来数据存储和复制)进行通信
+		
+	2、Consul服务器的作用？
+		用来数据存储和复制，高可用集群，在局域网内与本地客户端通讯，通过广域网与
+		其它数据中心通讯。
+	3、Consul集群?
+		一个数据中心推荐使用3到5台服务器，这样可以避免数据丢失。
+	4、Consul如何发现服务?
+		一个Consul代理可以连接一个或者多个Consul服务器。
+		当需要发现其它服务或节点的基础架构组件时,可以查询任何Consul服务器或者任何Consul代理。代理会自动把请求转发到服务器上。
+		
+	5、Consul中的一个节点是什么含义？由什么组成
+		不管是SERVER还是CLIENT,都是Consul的一个节点。所有的服务都可以注册到这些节点上
+		CLIENT:
+			CLIENT表示consul的client模式，就是客户端模式。
+			是consul节点的一种模式，这种模式下，所有注册到当前节点的服务会被转发到SERVER，
+			本身是不持久化这些信息。
+		SERVER:
+			SERVER表示consul的server模式，
+			表明这个consul是个server，这种模式下，功能和CLIENT都一样，唯一不同的是，
+			它会把所有的信息持久化的本地，这样遇到故障，信息是可以被保留的。
+		SERVER-LEADER:
+			中间那个SERVER下面有LEADER的字眼，表明这个SERVER是它们的老大，它和其它SERVER不一样的一点是，
+			它需要负责同步注册的信息给其它的SERVER，同时也要负责各个节点的健康监测。
+		
+	n、Consul 的使用场景
+    	docker 实例的注册与配置共享
+    	coreos 实例的注册与配置共享
+    	vitess 集群
+    	SaaS 应用的配置共享
+    	与 confd 服务集成，动态生成 nginx 和 haproxy 配置文件
+
+
+
+
 Service and Tag Names with DNS
 	It is recommended to always use DNS-compliant service and tag naems because DNS-compliant service and tag names may
 contain any alpha-numeric characters as well as dashes.
 
-服务定义是注册服务的最常用的方式
+
+Consul 集群
+	在单机环境下,可以利用docker来实现
+
+服务定义是注册服务(服务定义)的最常用的方式
 
 注册服务
 https://www.consul.io/intro/getting-started/services.html
 	注册服务的方式有两种,
-		第一种是提供一个服务的定义
+		第一种是提供一个服务的定义-----(将注册服务的信息写到配置信息里面)
 			参考网址：https://www.consul.io/docs/agent/services.html
 			第一步：为Consul创建一个配置目录。Consul会加载在这个配置目录里面的所有的配置文件。
 				通常的做法在Unix系统上这个目录的命名就就像/etc/consul.d(暗示了这个目录里面保存了一些列配置文件)
@@ -49,27 +120,40 @@ https://www.consul.io/intro/getting-started/services.html
 		节点上、服务上,健康检查上，配置上等等
 			
 	
-第一种定义服务的方式：
-	{
-	  "service": {
-		"name": "redis",
-		"tags": ["primary"],
-		"address": "",
-		"port": 8000,
-		"enable_tag_override": false,
-		"checks": [
-		  {
-			"script": "/usr/local/bin/check_redis.py",
-			"interval": "10s"
+	第一种定义服务的方式：
+		{
+		  "service": {
+			"name": "redis",
+			"tags": ["primary"],
+			"address": "",
+			"port": 8000,
+			"enable_tag_override": false,
+			"checks": [
+			  {
+				"script": "/usr/local/bin/check_redis.py",
+				"interval": "10s"
+			  }
+			]
 		  }
-		]
-	  }
-	}
+		}
+
+服务发现：
+	第一种：通过HTTP API来查看哪儿些服务。
+	第二种：通过Consul agent内置的DNS服务来实现。
+	
+	区别：第二种可以根据服务check的实时装来动态调整avaliable服务节点列表。
 
 	
-查询服务：
+查询服务(服务发现)：
 	一旦agent被开启了,这个服务就已经被同步了,我们可以使用DNS API、HTTP API来查询服务信息。
 DNS API
+
+	Consul 为服务编排的内置域名为“NAME.service.consul”
+	
+	在集群中的一台服务器上查询的时候,服务器n1没有部署某个服务，
+	但是其他服务器部署了，这时候，集群中服务的信息也会被同步到n1上
+	
+	
 	对于 DNS API，这个服务的DNS的名字就是 NAME.service.consul
 	默认情况下,所有的DNS的名称始终在Consul命名空间中(尽管这些是可配置的)
 	这个服务的子域名告诉Consul我们即将要查询的服务,并且 Name就是服务的名字
@@ -108,6 +192,33 @@ https://www.consul.io/intro/getting-started/kv.html
 	
 注意
 Values in the KV strore cannot be larger than 512 kb
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	
 	

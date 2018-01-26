@@ -1,0 +1,21 @@
+## create at 2018.1.26
+## Makefile
+
+一、学习网址
+	1、简书--简易用法--没有详细说明
+		https://www.jianshu.com/p/7e49071f9e11
+	2、CSDN中的Makefile经典教程
+		http://blog.csdn.net/ruglcc/article/details/7814546
+	3、GNU make 教程
+		https://www.gnu.org/software/make/manual/make.html#Using-Variables
+二、学习笔记
+1、Makefile的基本工作原理
+	其一，当我们执行 make xx 的时候，Makefile会自动执行xx这个目标下面的命令语句。
+	其二，当我们make xx的时候，是否执行命令是取决于依赖的。依赖如果成立就会执行命令，否则不执行。
+	其三，我们直接执行make 和make 第一个目标 效果是一样的。（第一个目标其实就是默认目标）。
+2、Makefile中定义和使用变量时的注意事项。
+	2.1、"="和":="的区别。。
+		 := 只能使用前面定义好的变量, = 可以使用后面定义的变量
+
+
+三、疑问

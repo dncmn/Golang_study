@@ -1,0 +1,69 @@
+## 1.26日
+## daily-notes
+
+
+一、need to do
+	1、gm重写upstep
+	
+	
+game_service.go里面
+	game.LoadCSVData:从 Consul 获取数据，然后对获取的数据转换成字符串进行加密。赋值给md5str
+	在这个方法的最后，解析一遍csv数据然后赋值给Data。就可以通过csv.Data.Item[]来调用了。
+	
+	在ParseData的方法里面调用了rebuildMetaCsv(gd),像是单独添加了CMeta
+	LoadCSVData和AttemptToUpdateCSV。都包含了一个currentMD5
+	
+疑问：
+	1、这个currentMD5的作用就是????
+			比较第一次加载csv数据，如果数据没有变的话，就不从Consul更新数据。
+	2、会不会更新和读写同时发生。不会的。有一个读写锁。
+	
+	
+	
+	
+	
+二、bug fix
+	1、史诗副本扫荡的时候，没有纳入到日常任务里面。
+三、need to learn
+	1、如何将解析过的csv数据更新到kv-store里面
+		因为在Consul里面的Value最大不会超过512KB。在写入数据的时候,会将写入的数据进行分割。
+		然后写入新数据的时候，也会少出旧的数据。从插入数据的下一行开始删除。在for循环中不停地删除
+		
+		在main.go里面,从kv-store里面循环地获取数据,将读取出来的数据先暂时存放到缓存里面
+		
+		
+		又引起一个新的问题：
+			在cmd/game/main.go里面才有一个goroutine进行每隔10秒，更新一次服务器端的csv数据
+			会不会出现读写冲突？
+			不会的，在把csv写入到kvStore的时候,会有一个读写锁。
+		
+	2、Consul和main.go的关系
+		在main.go中，每次启动一个服务器,都会从Consul里面获取一份数据。
+		在main.go里面会启用一个goroutine来每隔10s来更新服务器段的csv数据。
+	3、服务发现是个什么东西？
+		服务发现就以K-V的方式记录下，K一般是服务名，V就是IP:PORT
+	4、健康检查是个什么东西？
+		服务发现模块定时的“轮询”查看这些服务能不能访问的了。
+	
+
+	
+服务发现：
+	服务发现就以K-V的方式记录下，K一般是服务名，V就是IP:PORT。
+	服务发现的方式：
+	dns实现和http实现
+健康检查：
+	服务发现模块定时的“轮询”查看这些服务能不能访问的了。
+
+
+服务发现的常用框架有：
+	zookeeper
+	eureka
+	etcd
+	consul
+	
+	
+  docker run -d -e 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}' --name=node2 consul agent -server -bind=172.17.0.3  -join=172.17.0.2 -node-id=$(uuidgen | awk '{print tolower($0)}')  -node=node2
+  docker run -d -e 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}' --name=node3 consul agent -server -bind=172.17.0.4  -join=172.17.0.2 -node-id=$(uuidgen | awk '{print tolower($0)}')  -node=node3 -client=172.17.0.4
+  docker run -d -e 'CONSUL_LOCAL_CONFIG={"leave_on_terminate": true}' --name=node4 consul agent -bind=172.17.0.5 -retry-join=172.17.0.2 -node-id=$(uuidgen | awk '{print tolower($0)}')  -node=node4
+
+
