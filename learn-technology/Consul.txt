@@ -1,6 +1,23 @@
 ## create at 2018.1.18
 ## Consul
 
+
+Consul在项目中的运用。
+	主要用到了注册服务和kv-store
+	
+	kv-store:将原本每次启动服务起加载进内存的csv文件转换成保存到kv-store中。
+	这样做的好处：----(根据代码,这个可以想到的)
+		1、将csv的更新，和服务器的运行分开。
+			服务器可以每隔一定时间从Consul中更新一下本地的csv文件。
+		2、Consul提供的服务注册。
+		服务注册：服务名(服务id):(主机:端口号)
+	gmServer用gin编写的。
+		性能很高、自定义功能很方便。
+			
+		
+
+
+
 一、学习网址
 	1、简书
 		https://www.jianshu.com/p/e0986abbfe48

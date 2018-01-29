@@ -4,11 +4,144 @@
 一、学习网址
 	1、简书--简易用法--没有详细说明
 		https://www.jianshu.com/p/7e49071f9e11
-	2、CSDN中的Makefile经典教程
+	2、CSDN中的Makefile经典教程---(网上评价还可以--值得看看)
 		http://blog.csdn.net/ruglcc/article/details/7814546
 	3、GNU make 教程
 		https://www.gnu.org/software/make/manual/make.html#Using-Variables
-二、学习笔记
+		
+
+二、建议
+	0、Makefile中的第一个目标会被作为其默认目标oa
+	1、在Makefile中的命令,必须以Tab键开始
+	2、Makefile的文件名最好是“Makefile”,比较醒目。
+	3、Makefile规则中使用的通配符（和Unix的B-Shell相同）
+		Makefile支持三种通配符：“*”，“?”，“[...]”
+		"~"
+			波浪号（“~”）字符在文件名中也有比较特殊的用途。如果是“~/test”，这就表示当前用户的$HOME目录下的test目录。
+	4、$(subst output,,$@)
+		“$”符号表示执行一个Makefile的函数，函数名为subst 后面的是函数参数。
+		“$@”表示目标的集合，就像一个数组，“$@”依次取出目标，并执于命令。
+		
+		“?=”操作符
+		FOO ？= bar
+		如果FOO没有被定义过，那么变量FOO的值就是“bar”，如果FOO先前被定义过，那么这条语将什么也不做
+		
+5、变量中的变量
+	在定义变量的值时，我们可以使用其它变量来构造变量的值，
+5.1、在Makefile中有两种方式来在用变量定义变量的值。	
+	第一种方式：使用简单的“=”号
+		左侧是变量，右侧是变量的值。右侧变量的值可以在文件中的任何一处定义(也右侧的变量也可以使用后面定义的值)
+		优点：我们可以把变量的真实值推到后面来定义。
+			CFLAGS = $(include_dirs) -O
+			include_dirs = -Ifoo -Ibar
+		缺点：可能会出现递归定义。
+				A = $(B)
+				B = $(A)
+	第二种方式：使用“:=”操作符。
+		前面的变量不能使用后面的变量，只能使用前面已定义好了的变量。例如：
+		y := $(x) bar
+		x := foo
+		y的值是“bar”，而不是“foo bar”
+	5.2、变量高级的用法
+	第一种是变量值的替换。
+		其格式是“$(var:a=b)”或是“${var:a=b}”，其意思是，把变量“var”中所有以“a”字串“结尾”的“a”替换成“b”字串。
+		foo := a.o b.o c.o
+		bar := $(foo:.o=.c)
+
+		我们先定义了一个“$(foo)”变量，而第二行的意思是把“$(foo)”中所有以“.o”字串“结尾”全部替换成“.c”，所以我们的“$(bar)”的值就是“a.c b.c c.c”。
+	第二种高级用法是——“把变量的值再当成变量”。先看一个例子：
+		x = y
+		y = z
+		a := $($(x))
+
+	在这个例子中，$(x)的值是“y”，所以$($(x))就是$(y)，于是$(a)的值就是“z”。（注意，是“x=y”，而不是“x=$(y)”）
+
+	5.3、追加变量值
+	我们可以使用“+=”操作符给变量追加值，如：
+		objects = main.o foo.o bar.o utils.o
+		objects += another.o
+		$(objects)值变成：“main.o foo.o bar.o utils.o another.o”（another.o被追加进去了）	
+	5.4、override指示符
+		通过make的命令行参数设置的。语法格式如下：
+			override <variable>= <value>
+			override <variable>:= <value>
+
+	5.5、多行变量
+		对于多行的变量定义，我们用define指示符。
+	define 指示符后面跟的是变量的名字，而重起一行定义变量的值，定义是以endef关键字结束。其工作方式和“=”操作符一样。
+	变量的值可以包含函数、命令、文字，或是其它变量。因为命令需要以[Tab]键开头，所以如果你用define定义的命令变量中没有以[Tab]键开头，那么make就不会把其认为是命令。
+		define two-lines
+		echo foo
+		echo $(bar)
+		endef
+	5.6、环境变量
+		我们在环境变量中设置了“CFLAGS”环境变量，那么我们就可以在所有的Makefile中使用这个变量了。
+		如果Makefile中定义了CFLAGS，那么则会使用Makefile中的这个变量。
+6、if...else
+	<conditional-directive>
+	<text-if-true>
+	endif
+以及：
+	<conditional-directive>
+	<text-if-true>
+	else
+	<text-if-false>
+	endif	
+	
+	其中<conditional-directive>表示关键字，如"ifeq","ifneq","ifdef","ifnef"。
+	ifeq(<arg1>,<arg2>)
+		比较参数“arg1”和“arg2”的值是否相同。
+	ifneq (<arg1>, <arg2> )
+		比较参数“arg1”和“arg2”的值是否相同，如果不同，则为真。
+	ifdef <variable-name>
+	ifdef只是测试一个变量是否有值，其并不会把变量扩展到当前位置。
+	如果变量<variable-name>的值非空，那到表达式为真。否则，表达式为假。
+	在<conditional-directive>这一行上，多余的空格是被允许的，但是不能以[Tab]键做为开始。
+	
+7、函数调用
+	函数调用的格式：
+		$(<function> <arguments> )
+	或者
+		${<function> <arguments>}
+	<function>就是函数名，make支持的函数不多。
+	<arguments>是函数的参数，参数间以逗号“,”分隔，而函数名和参数之间以“空格”分隔。
+	函数调用以“$”开头，以圆括号或花括号把函数名和参数括起。	
+8、Makefile支持的函数
+	$(subst <from>,<to>,<text> )
+		名称：字符串替换函数——subst。
+		功能：把字串<text>中的<from>字符串替换成<to>。
+		返回：函数返回被替换过后的字符串。
+	$(patsubst <pattern>,<replacement>,<text> )
+		名称：模式字符串替换函数——patsubst。
+	$(strip <string> )
+		名称：去空格函数——strip。
+		功能：去掉<string>字串中开头和结尾的空字符。
+		返回：返回被去掉空格的字符串值。
+	$(findstring <find>,<in> )
+		名称：查找字符串函数——findstring。
+		功能：在字串<in>中查找<find>字串。
+		返回：如果找到，那么返回<find>，否则返回空字符串。
+call函数:
+	可以用来创建新的参数化的函数。你可以定义许多参数，然后你可以用call函数来向这个表达式传递参数。
+	
+	当 make执行这个函数时，<expression>参数中的变量，如$(1)，$(2)，$(3)等，会被参数<parm1>，<parm2>，<parm3>依次取代。
+	而<expression>的返回值就是 call函数的返回值。
+	
+	其语法是：
+		$(call <expression>,<parm1>,<parm2>,<parm3>...)
+		
+	reverse =$(1)$(2)
+	foo = $(call reverse,a,b)
+	foo的值就是"a b"
+shell函数:
+	shell函数把执行操作系统命令后的输出作为函数返回。它和反引号“`”是相同的功能。这就是说，shell函数把执行操作系统命令后的输出作为函数
+返回。
+	注意：这个函数会新生成一个Shell程序来执行命令，所以你要注意其运行性能。
+	UNAME_S=$(shell uname -s)	print the kernel name
+
+三、学习笔记
+
+	
 1、Makefile的基本工作原理
 	其一，当我们执行 make xx 的时候，Makefile会自动执行xx这个目标下面的命令语句。
 	其二，当我们make xx的时候，是否执行命令是取决于依赖的。依赖如果成立就会执行命令，否则不执行。
@@ -16,6 +149,34 @@
 2、Makefile中定义和使用变量时的注意事项。
 	2.1、"="和":="的区别。。
 		 := 只能使用前面定义好的变量, = 可以使用后面定义的变量
+	2.2、清空目标文件的规则
+		clean:从来都是放在文件的最后
+3、文件搜索
+	在搜索文件时，制定文件的路径，使用Makefile中的特殊变量VPATH。
+	如果没有指明这个变量,make只会在当前的目录中去寻找所依赖的文件和目标文件。
+	如果制定了这个特殊变量，就是在当前目录找不到的情况下,到指定目录中寻找文件。
+
+	VPATH = src:../headers
+		上面的的定义指定两个目录，“src”和“../headers”，make会按照这个顺序进行搜索。
+		目录由“冒号”分隔。（当然，当前目录永远是最高优先搜索的地方）
+4、伪目标
+
+	伪目标的特性：总是被执行
+	4.1、伪目标一般没有依赖文件,但是我们也可以为其指定所以来的文件。
+	4.2、伪目标同样可以作为“默认目标”，只要将其放在第一个。
+	all: prog1 prog2 prog3
+	.PHONY:all
+	
 
 
-三、疑问
+
+推荐的做法：
+.PHONY:clean
+clean:
+	-rm edit $(objects)
+	前面的减号表示：也许某些文件出现问题，忽略这些问题然后继续做后面的事情。
+
+
+
+	
+四、疑问
