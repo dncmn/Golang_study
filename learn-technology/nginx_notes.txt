@@ -1,3 +1,7 @@
 1、关闭nginx服务
 	sudo ./nginx -s stop
 	pkill -9 nginx (强行关闭)
+	
+二、学习网址
+	1、Nginx开发从入门到精通
+		http://tengine.taobao.org/book/

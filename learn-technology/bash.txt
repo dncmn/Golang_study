@@ -1,0 +1,76 @@
+## bash 脚本
+## create at 2018.1.30---最后一天加班
+
+
+一、学习bash的网址
+	1、gitbook
+		https://linuxstory.gitbooks.io/advanced-bash-scripting-guide-in-chinese/content/source/part1/02_1_invoking_the_script.html
+	2、
+	
+	
+二、学习bash笔记
+1、执行bash命令
+	新建一个bash文件夹、然后执行chmod 555 filename,接着就是./filename就可以
+	写完一个脚本以后，你可以通过sh scriptname1或bash scriptname来调用它（不推荐使用sh <scriptname调用脚本，因为这会禁用脚本从标准输入（stdin）读入数据）
+2、变量名只是一个引用，一枚指针，指向实际存储数据内存地址的指针。
+3、$variable 这种写法是 ${variable} 的简化形式。在某些特殊情况下，使用 $variable 写法会造成语法错误，使用完整形式会更好
+	
+	注意：
+		3.1、初始化变量时，赋值号 = 的两侧绝不允许有空格出现。(否则会包paramName not found)
+		3.2、 一个未被赋值或未初始化的变量拥有空值（null value）。注意：null值不等同于0。
+		3.3、一个未初始化的变量不含值(null)，但在算术运算中会被作为0处理。
+		3.4、在引用变量时,通常建议将变量包含在双引号中。
+			因为这样可以防止除 $，` （反引号）和\（转义符）之外的其他特殊字符被重新解释
+		 例如: 
+		 	List ="one two three"		List ="one two three"
+			  for a in $List 				for a in"$List"
+			  do							do
+				 echo $a						echo "$a"
+			  done     						done
+			  line1:one 							result: one two three
+			  line2:two
+			  line3:three
+			variable1="a variable containing five words"
+			COMMAND This is $variable1    # 带上7个参数执行COMMAND命令：
+			# "This" "is" "a" "variable" "containing" "five" "words"
+
+			COMMAND "This is $variable1"  # 带上1个参数执行COMMAND命令：
+			# "This is a variable containing five words"
+
+4、对变量进行赋值
+	4.1、“=”号
+	4.2、“let”赋值
+	4.3、for循环中化工隐式赋值
+		a=`ls -l`         # 将 'ls -l' 命令的结果赋值给 'a'
+		echo $a           # 不带引号引用，将会移除所有的制表符与分行符
+		echo
+		echo "$a"         # 引号引用变量将会保留空白符
+	4.5、$(...)进行赋值
+		例如：
+			 R=$(cat /etc/redhat-release)
+			 arch=$(uname -m)
+	4.6、位置参数
+	从命令行中传递给脚本的参数1：$0, $1, $2, $3 ... 即命令行参数。
+	$0 代表脚本名称，$1 代表第一个参数，$2 代表第二个，$3 代表第三个，以此类推2。在 $9 之后的参数必须被包含在大括号中，如 ${10}, ${11}, ${12}。
+	特殊变量 $* 与 $@ 代表所有位置参数。		 
+	4.7、shift命令
+	使用 shift 命令可以将全体位置参数向左移一位, 重新赋值。
+		$1 <--- $2, $2 <--- $3, $3 <--- $4，以此类推。
+	其中,shift命令也可以带一个参数用来指明一次移动多少位。
+	
+5、command > file 2>&1 
+   首先是command > file将标准输出重定向到file中， 2>&1 是标准错误拷贝了标准输出的行为，也就是同样被重定向到file中，最终结果就是标准输出和错误都被重定向到file中。 
+    command 2>&1 >file。 
+	http://www.cnblogs.com/caolisong/archive/2007/04/25/726896.html
+	
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 

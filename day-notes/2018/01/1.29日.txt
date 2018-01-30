@@ -1,0 +1,9 @@
+## 1,29日
+## daily-notes
+
+一、bug fix
+	1、获取数量不对应的问题0
+	2、新添加几个主线任务。普通副本累计星数、精英副本累计星数、最高战力什么的
+
+二、self learning
+	1、basic Makefile

@@ -3,3 +3,4 @@
 
 一、golang的闭包
 	https://www.ibm.com/developerworks/cn/linux/l-cn-closure/index.html
+	也就是函数和什么的结合使用
