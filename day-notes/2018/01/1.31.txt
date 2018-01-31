@@ -1,0 +1,21 @@
+## 1.31日
+## day-notes
+
+一、bug fix
+	1、战场开启宝箱panic
+		空的map。没有开辟空间就是直接使用。
+	2、复活时
+	
+	复活后，进入战斗的血量和布阵的血量不一致。
+	自动复活时，
+	
+	
+	
+复活后：布阵信息查看到的卡片的血量都是一半。
+
+
+
+
+
+handler/battleField_handler.go:49	cardId=1011,card.Mp=0,card.Hp=4459036,card.MaxHp=4459036
+handler/battleField_handler.go:49	cardId=1006,card.Mp=0,card.Hp=955223,card.MaxHp=955223

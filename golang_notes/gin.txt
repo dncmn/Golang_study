@@ -1,0 +1,157 @@
+## gin-learning
+## create at 2018.1.31
+
+一、学习网址
+	1、个人博客-----(---有一些过期和废气的方法比如解析前段页面传递过来的方法,BindWith:这个方法好像废弃了)
+		http://www.okyes.me/2016/05/03/go-gin.html
+	2、gin的有点介绍
+		https://gin-gonic.github.io/gin/
+	3、gin和Echo的比较
+		https://golangtc.com/t/56a38761b09ecc083100010c
+二、学习笔记
+
+1、讲requestBody中的数据解析到form中
+	方法一：使用Bind函数,默认使用form格式解析,  c.Bind(&form)==nil
+	方法二：使用ShouldBind函数。c.ShouldBind(&form).项目代码中用到的
+2、gin路由
+	2.1、使用 roter group
+		也就是多个router的组合,用来管理前缀相同的url组合。
+	   router group可以方便地管理前缀相同的URL
+	   例如：
+		 var e *gin.Engine
+		 e.POST（prefix +"/test1",handfuncName）
+		 e.GET(prefix+"/test2",handfuncName2)
+		或者：
+			router:=gin.DefaultRouter()
+			user:=router.Group("/user")
+			user.Get("/age"，funcHandlerName) // 大概是这个,不是太确定
+		 
+	2.2、如何写一个路由。
+		2.2.1、/user/:username/
+			测试案例：curl http://192.168.1.60:8080/user/dncmn	
+		:name:表示在参数中这个是必须要有的。可以通过c.Param("name")获取这个参数的值
+			也就是通过:name的形式来指定需要的参数的名字
+						
+		2.2.2、/user/:name/:age
+			测试案例：curl http://192.168.1.60/manan/18
+			
+			如果是 curl http://192.168.1.40/name=manan/age=18
+			那么获取到的name="name=manan"，age="age=18"
+				
+		2.2.3、/user/:name/*pwd
+			*pwd:表示这个参数就是可有可无的
+				测试案例：
+					curl http://192.168.1.60:8080/user/dncmn/123456
+					curl http://192.168.1.60:8080/user/dncmn/
+			其中:第二种和第三种有时候会有冲突
+			panic: path segment '*pwd' conflicts with existing wildcard ':age' in path '/user/:name/*pwd'
+		2.2.4、/user?name=manan&pwd=
+				curl http://192.168.1.60/user?name=manan&age=
+				这时候，可以通过c.Query("name")来查询
+		
+3、gin.H{}了解
+	type H map[string] interface{}
+	也就是一个map类型
+	
+	
+
+三、gin--method learning
+1、ShouldBind(obj interface{})error  和Bind(obj interface{})error
+  会根据Content-Type自动选择一个绑定的引擎
+     "application/json" --> JSON binding
+     "application/xml"  --> XML binding
+	 otherwise --> returns an error
+	It parses the request's body as JSON if Content-Type == "application/json" using JSON or XML as a JSON input.
+  注意：Bind和ShouldBind的异同点：
+  	相同点：都会根据Content-Type选择一个合适的绑定引擎
+		"application/json" --> JSON binding
+     	"application/xml"  --> XML binding
+		 otherwise --> returns an error
+		 It parses the request's body as JSON if Content-Type == "application/json" using JSON or XML as a JSON input.
+		 It decodes the json payload into the struct specified as a pointer.
+	不同点：
+	Bind:
+		It writes a 400 error and sets Content-Type header "text/plain" in the response if input is not valid
+	ShouldBind:
+		this method does not set the response status code to 400 and abort if the json is not valid	
+2、JSON方法
+	func(c *Context)JSON(code int,obj interface{}){
+		c.Render(code,render.JSON{Data:obj})
+	}	
+	type render.JSON struct{
+		Data interface{}
+	}
+	
+	JSON方法：将被提供的结构体序列化成JSON格式，然后添加到responseBody中。
+这个方法同样将Content-Type设置成"application/json"
+	类似的方法还有c.XML、c.YAML等等
+3、Param方法
+
+	获取根据制定的参数名获取请求的值。
+	这个是c.Params.ByName(key)的简单形式
+Param returns the value of the URL param
+func(c *Context)Param(key string)string{
+		return c.Params.ByName(key)	//找到的话就返回对应的结果，否则返回一个空的字符串。 
+	}
+	
+	例如：/user/:id 获取用户的id
+		c.Param("id")
+
+// Param is a single URL parameter,constiting of a key and a value
+	type Param struct{
+		Key string
+		Value string
+	}
+	type Params []Param
+这个Params由router返回，作为一个Param-slice.
+这个切片是有顺序的。在request url中的第一个参数就是这个切片的第一个值。
+因此，它是安全的，根据索引来获取值。
+func(ps Params)ByName(name string)(va string){
+	va,_=ps.Get(name) // 这里是直接忽略这个bool的返回值。
+	return
+}
+
+func(ps Params)Get(name string)(string,bool){
+	for _,entry:=range ps{
+		if entry.Value==name{
+			return entry.Value,trueIt is shortcut for `c.Request.URL.Query().Get(key)`
+				它的
+		}
+	}
+	return "",false
+}
+		
+4、Query方法	
+	返回带有键值对中的url的参数的值。
+	是c.Request.URL.Get("key")
+func (c *Context) Query(key string) string {
+	value, _ := c.GetQuery(key)
+	return value
+}
+     GET /path?id=1234&name=Manu&value=
+ 	 c.Query("id") == "1234"
+ 	 c.Query("name") == "Manu"
+	 c.Query("value") == ""
+ 	 c.Query("wtf") == ""
+	
+	It is shortcut for `c.Request.URL.Query().Get(key)`
+		它的内部方法调用有点复杂，所有就没有写了。
+四、系统库path包。
+1、path.Join方法
+	将任意多个元素放在一个单一的路径下面。如果某个字符串为空,则会被忽略。
+	Join joins any number of path elements into a single path, adding a
+separating slash if necessary. The result is Cleaned; in particular,
+all empty strings are ignored.
+	for i, e := range elem {
+		if e != "" {
+			return Clean(strings.Join(elem[i:], "/"))
+		}
+	}
+	return ""
+	
+	
+	
+	
+	
+	
+	
