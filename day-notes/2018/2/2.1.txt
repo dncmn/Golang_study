@@ -1,0 +1,31 @@
+##day-notes
+
+一、bug fix	
+	1、战场自动不能自动复活
+	2、自动复活后,进入战斗场景中,能量不是50
+	3、竞技场扫荡的判断条件去掉vip限制
+	4、竞技场扫荡,条件不足的提示,返回的消息号不对,我返回的是副本扫荡条件不足的messageid
+	5、千层塔,HardProgress和OnceProgress的初始化不同。导致一个新的账号在打了两层重置后，进行扫荡时，显示的“三星扫荡”和“一键扫荡”数字不同
+二、learning
+	1、gin解析方法学习。
+	2、bitset的深入学习。---(因为昨天要获取某一位上的值)
+		程序中判断奖励的领取。Test(uint(index))  true:表示这个奖励已经领取了。fase。
+		判断某一位是否是1：Test(uint(index))bool   
+		设置：Set(uint(index))
+		清空:ClearAll()  -----清空所有的BitSet
+		
+	
+type BitSet struct{
+	length uint
+	set []uint64
+}
+	
+	
+	
+对于player.BattleField.SelfCardsInfo   *[]data.TBattleFieldCardsInfo
+
+刚刚开始这个切片是空的。，在一场战斗结束以后，
+	将这些信息保存到里面
+	
+	
+可每次战斗结束的时候,都会向SelfCardsInfo中添加卡牌信息

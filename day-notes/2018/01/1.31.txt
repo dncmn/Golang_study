@@ -12,10 +12,3 @@
 	
 	
 复活后：布阵信息查看到的卡片的血量都是一半。
-
-
-
-
-
-handler/battleField_handler.go:49	cardId=1011,card.Mp=0,card.Hp=4459036,card.MaxHp=4459036
-handler/battleField_handler.go:49	cardId=1006,card.Mp=0,card.Hp=955223,card.MaxHp=955223
