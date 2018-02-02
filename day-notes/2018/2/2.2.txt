@@ -1,0 +1,94 @@
+##day-notes
+
+
+一、bug fix
+
+二、need to learn
+	
+1、位运算：原码、反码、补码(了解基本的定义：及如何转换)
+2、bitSet学习。----bitset:表示完全看不懂啊
+	log2WordSize:uint(6)
+	wordSize:uint(64)
+	
+2018-02-02T15:48:01.622+0800	DEBUG	handler/battleField_handler.go:409	randUser:cardId=====================1001
+2018-02-02T15:48:01.622+0800	DEBUG	handler/battleField_handler.go:409	randUser:cardId=====================1002
+
+2018-02-02T15:48:13.631+0800	INFO	handler/battleField_handler.go:33	embattle.TeamA===============================[1008 1009 0 0 0]
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:38	before:teamA:cardId=1008
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:38	before:teamA:cardId=1009
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:40	embattle.TeamB===============================[0 0 0 0 0]
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:47	embattle.TeamC===============================[0 0 0 0 0]
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:55	embattle.Helper=[0 0]
+
+
+2018-02-02T15:48:13.632+0800	DEBUG	data/pvp_data.go:272	Helper: cardId=0
+2018-02-02T15:48:13.632+0800	DEBUG	data/pvp_data.go:272	Helper: cardId=0
+2018-02-02T15:48:13.632+0800	INFO	data/pvp_data.go:274	embattle:Helper=[0 0]
+2018-02-02T15:48:13.632+0800	DEBUG	battleField/battlefield_mod.go:270	selfPVP.Embattle.TeamA=[1008 1009 0 0 0]
+2018-02-02T15:48:13.632+0800	DEBUG	battleField/battlefield_mod.go:271	selfPVP.Embattle.TeamA=[1008 1009 0 0 0]
+2018-02-02T15:48:13.632+0800	DEBUG	battleField/battlefield_mod.go:311	selfPVP.Embattle.Helper=[0 0]
+2018-02-02T15:48:13.632+0800	DEBUG	battleField/battlefield_mod.go:312	selfPVP.Embattle.Helper=[0 0]
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:79	self:cardId=1008, card.Mp=0,card.Hp=0
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:79	self:cardId=1009, card.Mp=0,card.Hp=0
+
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:87	target:cardId=1001, card.Mp=0,card.Hp=17032
+2018-02-02T15:48:13.632+0800	INFO	handler/battleField_handler.go:87	target:cardId=1002, card.Mp=0,card.Hp=4928
+
+
+for _, card := range pve.Self {
+		if card == nil {
+			continue
+		}
+		xlog.Infof("self:cardId=%v, card.Mp=%v,card.Hp=%v", card.Id, card.Mp, card.Hp)
+	}
+
+	for _, card := range pve.Target {
+
+		if card == nil {
+			continue
+		}
+		xlog.Infof("target:cardId=%v, card.Mp=%v,card.Hp=%v", card.Id, card.Mp, card.Hp)
+	}
+	for _, v := range embattle.TeamA {
+		if v == 0 {
+			continue
+		}
+		xlog.Infof("end:teamA:cardId=%v", v)
+	}
+	for _, v := range embattle.TeamB {
+		if v == 0 {
+			continue
+		}
+		xlog.Infof("end:teamB:cardId=%v", v)
+	}
+	for _, v := range embattle.TeamC {
+		if v == 0 {
+			continue
+		}
+		xlog.Infof("end:teamC:cardId=%v", v)
+	}
+	for _, v := range embattle.Helper {
+		if v == 0 {
+			continue
+		}
+		xlog.Infof("end:Helper:cardId=%v", v)
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

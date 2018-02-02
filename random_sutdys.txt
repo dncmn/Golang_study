@@ -105,7 +105,7 @@ ubuntu下golang环境配置参考
 9、Ubuntu的tar.gz包安装和解压
 	参考网址：
 		http://blog.csdn.net/mmllkkjj/article/details/6768294
-10、在位运算中，左移变大,右移变小。---bitset
+
 	
 	
 	
