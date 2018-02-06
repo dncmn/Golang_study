@@ -2,12 +2,15 @@
 ## create at 2018.1.31
 
 一、学习网址
-	1、个人博客-----(---有一些过期和废气的方法比如解析前段页面传递过来的方法,BindWith:这个方法好像废弃了)
+	1、个人博客-----(---有一些过期和废弃的方法比如解析前段页面传递过来的方法,BindWith:这个方法好像废弃了)
 		http://www.okyes.me/2016/05/03/go-gin.html
 	2、gin的有点介绍
 		https://gin-gonic.github.io/gin/
 	3、gin和Echo的比较
 		https://golangtc.com/t/56a38761b09ecc083100010c
+	4、gin的中文小文档
+		https://github.com/ningskyer/gin-doc-cn
+		https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin
 二、学习笔记
 
 	gin的速度是Maritin的30到40倍
@@ -59,6 +62,34 @@
 		2.2.4、/user?name=manan&pwd=
 				curl http://192.168.1.60/user?name=manan&age=
 				这时候，可以通过c.Query("name")来查询
+总结：
+	参数获取：
+		api参数通过Context的Param方法来获取
+		URL 参数通过 DefaultQuery 或 Query 方法获取
+		表单参数通过 PostForm 方法获取
+	路由小结：
+		随着请求的增多,把每个功能的函数都写到一起，然后在main方法中调用这些方法。
+		
+		// router.go
+		package  main
+		
+		func initializeRouters(){
+			// handle the index route
+			router.GET("/",showIndwxPage)		
+		}
+		
+		// main.go
+		package main
+		func main(){
+			router:=gin.Default()
+			initializeRouters()
+			router.Run()
+		}
+		
+		
+	
+	
+
 		
 3、gin.H{}了解
 	type H map[string] interface{},也就是一个map类型。
@@ -67,6 +98,13 @@
 4、gin的middleware
 	看到这个中间件,突然想到java Spring中的切面什么的。
 	什么性能追踪什么的。
+5、 在gin中如何处理一个request
+Request -> Route Parser -> [Optional Middleware] -> Route Handler -> [Optional Middleware] -> Response
+
+当一个请求过来的时候,gin首先会按照(路由树)定义的顺序调用路由
+处理从程序和另个或者多个中间件
+	
+	
 官网上的中间件：
 	r:=gin.New() // 创建一个不带中间件的router
 	
@@ -78,7 +116,14 @@ gin.Logger:
 By default gin.DefaultWriter = os.Stdout
 gin.Recovery:
 	Recovery middleware recovers from any panics and writes a 500 if there was one
-	
+
+这个方法就是为router绑定一个中间件,这个将会应用在每一个独立的请求。
+例如在这个方法中可以应该用日志或者错误处理。
+
+func(engine *Engine)Use(middleward ...HandlerFunc)IRouter{
+
+}
+
 
 三、gin--method learning
 1、ShouldBind(obj interface{})error  和Bind(obj interface{})error
@@ -188,6 +233,11 @@ When using the Bind-method, Gin tries to infer the binder depending on the Conte
 
 
 
+
+// gin中返回运行时方法的名字的方法
+func nameOfFunction(f interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
+}
 	
 	
 	
