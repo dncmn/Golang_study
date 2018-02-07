@@ -11,34 +11,45 @@
 三、随手笔记
 1、定义一个新类型
 
-type routerHandler  func(v ...interface{})interface{}
+	type routerHandler  func(v ...interface{})interface{}
 
 
-这样可以实现多态
+	这样可以实现多态
 
-type User struct{
-	admin string
-}
+	type User struct{
+		admin string
+	}
 
-func (u *User)Do(pkg string,handler routerHandler){
-	res:=handler(pkg)
-	return res
-}
-
-
-
-func Test_newType(T *testing.T){
-	u:=&User{User:"tomecat"}
-	u.Do(u.admin,)	
-}
+	func (u *User)Do(pkg string,handler routerHandler){
+		res:=handler(pkg)
+		return res
+	}
 
 
-//对于不同的处理,调用不同的函数。在项目里面就是这么用的，之前没有见过这样用。这样基本上算是多态吧。
-func DoSport(sportName string)interface{
-	return fmt.Sprintf("I like playing ",name)
-}
+
+	func Test_newType(T *testing.T){
+		u:=&User{User:"tomecat"}
+		u.Do(u.admin,)	
+	}
 
 
+	//对于不同的处理,调用不同的函数。在项目里面就是这么用的，之前没有见过这样用。这样基本上算是多态吧。
+	func DoSport(sportName string)interface{
+		return fmt.Sprintf("I like playing ",name)
+	}
+
+2、get function name
+	func foo() {
+	}
+
+	func GetFunctionName(i interface{}) string {
+		return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+	}
+
+	func main() {
+		// 输出 "name: main.foo"
+		fmt.Println("name:", GetFunctionName(foo))
+	}
 
 
 
