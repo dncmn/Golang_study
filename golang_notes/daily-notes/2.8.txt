@@ -1,0 +1,48 @@
+##golang-notes
+1、
+	https://github.com/julienschmidt/httprouter
+	gin是基于httprouter的，所有在路由上和httprouter很像
+
+bug fix:
+	1、要塞排行榜
+
+
+
+一、daily-target
+	1、golang 锁  
+		1.1、哪里会用到锁
+		1.2、怎么使用锁
+	2、ngingx 实验
+	3、golang channel   
+二、random-notes
+1、标签的使用。
+	知道有这么一个概念的存在，但是之前写过的代码里面不常用到。
+在xorm中有大量用到这个。
+	疑问：1、这个用法
+	
+三、primary-notes
+
+golang锁:
+	case1:通常在并发的时候,会用到锁。为保证数据的安全。
+		比如在项目中,将csv写入到consul的时候,
+			在写入数据的时候,开启读写锁。这时候就不能读取csv中的内容。
+			当写完数据的时候,关闭读写锁。这时候可以继续读取程序中解析csv的内容。
+		
+	case2:因为map不是并发读写安全的，所以实现一个读写安全的map可以新建把这个map包裹起来，然后使用锁。
+		比如： 
+			type User struct{
+				Reward map[int32]string
+				sync.Mutux
+			}
+	case3:
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

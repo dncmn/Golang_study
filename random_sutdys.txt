@@ -105,6 +105,8 @@ ubuntu下golang环境配置参考
 9、Ubuntu的tar.gz包安装和解压
 	参考网址：
 		http://blog.csdn.net/mmllkkjj/article/details/6768294
+10、golang的在线运行网址
+	https://play.golang.org/
 
 	
 	

@@ -15,6 +15,12 @@
 
 	gin的速度是Maritin的30到40倍
 		理由是：gin---->httprouter(Radix tree)
+		
+			/user/*pid
+			/user/:pid
+			
+		就是路由性能比较高通过Radix tree方法
+			
 
 1、讲requestBody中的数据解析到form中
 	方法一：使用Bind函数,默认使用form格式解析,  c.Bind(&form)==nil

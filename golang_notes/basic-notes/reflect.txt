@@ -1,0 +1,122 @@
+##golang-daily-notes
+##create at 2018.2.7
+
+
+一、web url
+	1、xorm上的github
+		http://xorm.io/
+	2、CSDN上的参考网址
+		http://blog.csdn.net/pmlpml/article/details/78850516
+二、study notes
+
+1、通过xorm来学习反射。
+		在解析csv的时候就是用到反射。但是理解不够深入。
+	学习途径：
+		看到出现了reflect的地方就是深入看源代码，看看这个方法代表的含义。
+		
+2、有时候,接口里面定义了一大堆的方法,但是在不同的文件里面,不同的结构体实现了这些方法(在不同的文件中)。
+	比如在xorm中，Engine中的dialkect中定义的SupportInsertMany方法，在dialect_mysql.go里面实现的。
+在遇到的项目里面也有类似的写法。在interface.go里面定义所有的接口。然后在不同的方法里面实现。
+
+3、reflect 的method学习
+	reflect.ValueOf(&v).Kind
+		返回v's Kind
+		i:=2
+		vv:=reflect.ValueOf(i)
+
+	func(v Value) Elem()Value{}
+		vv.Elem():返回了借口v包含或者这个指针v指向的值,如果这个v 是nil返回一个零值
+		如果v不是指针或者接口,Elem()方法就会报panic
+	func(v Value)MapKeys()[]Value{}
+		MapKeys返回一个map中所有key组成的切片，这个map是没有顺序的。
+		如果这个v.Kind不是一个map,那么它就会报panic.
+		如果map为nil，那么直接返回一个empty slice
+	func(v Value)MapIndex(key Value)Value{}
+		MapIndex返回值在map中某个key的值
+		如果这个v' Kind不是一个map,就会panic
+		它返回一个零值,如果这个key在map中找不到或者value为nil
+		在go里面键的值必须分配给对应的键类型
+	func PtrTo(t Type)Type{
+		return t.(*rtype).PtrTo()
+	}
+		返回元素t的指针类型。
+4、reflect的应用场景
+	1、遍历结构体字段名(避免代码的硬编码)
+	2、调用结构体的方法(自动映射)---orm映射用到的，比如xorm，beego的orm
+	3、调用结构体的tag标记的值(json/xml的转换)-----struct-tag
+	
+	
+具体用到的场景：
+	1、比如解析csv的时候用到的
+
+
+
+		
+
+
+
+
+三、疑问。
+	2、reflect.KindOf()和reflect.ValueOf().Kind()的区别
+	1、gin中包含有Engine在xorm中也包含有Engine
+	
+四、杂记
+1、单独建立一个go文件,用来记录错误信息。
+	比如在xorm中error.go
+		ErrNoMapPointer =errors.New("mp should be a map's pointer")
+	或者
+		定义一个结构体
+			type ErrorOfGame struct{
+				Id int  // 这个id代表错误的id
+			}
+
+			E_VIP_LIMIT=&ErrorOfGame{Id:1}  
+	然后用到的时候直接引用就可以了，packageName.ErrNoMapPointer
+
+
+2、在xorm中的convert.go中。比如line285,line307在格式话输出的时候,用的都是%v
+	哈哈，这样操作简单,不用考虑用的格式符号是否正确。例如：
+		fmt.Errorf("unsupported type: %v", v)
+
+	在类型转换的时候,对于转换的错误。直接返回就行。
+		例如：Str2Int(str string)(int,error){
+			v,err:=strconv.ParseInt(str,10,32)
+			return int(v),err
+		}
+3、Engine的比较
+gin中的Engine
+	Engine是一个框架的实例,它包含了互斥量、中间件和一个一些配置设置，创建一个引擎的实例可以通过New()或者Default()方法来创建。
+gorm中的Engine
+	Engine是xorm中的主要的结构体,它意味着数据库管理。通常情况下,一个应用只需要一个引擎。
+	type Engine struct {
+		db      *core.DB
+		dialect core.Dialect
+
+		ColumnMapper  core.IMapper
+		TableMapper   core.IMapper
+		TagIdentifier string
+		Tables        map[reflect.Type]*core.Table
+
+		mutex  *sync.RWMutex
+		Cacher core.Cacher
+
+		showSQL      bool
+		showExecTime bool
+
+		logger     core.ILogger
+		TZLocation *time.Location // The timezone of the application
+		DatabaseTZ *time.Location // The timezone of the database
+
+		disableGlobalCache bool
+
+		tagHandlers map[string]tagHandler
+
+		engineGroup *EngineGroup
+	}
+	
+	
+	
+	
+
+		
+	
