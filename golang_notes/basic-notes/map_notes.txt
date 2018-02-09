@@ -1,5 +1,25 @@
 Map---学习
+
+
+## golang1.9.4
+	go1.9之前的解决方案也是GO maps in actiion的一种简便的解决方案：
+		var counter = struct{
+			sync.RWMutex
+			m map[string]int
+		}{m:make(map[string]int)}
+	将这个map嵌入到结构体中,并且增加了一个读写锁。
 	
+读数据的时候:(读数据的时候可以很方便的加锁。)
+	counter.RLock()
+	n:=counter.m["some_key"]
+	counter.RUnlock()
+	fmt.Println("some_key=",n)
+写数据的时候：
+	counter.Lock()
+	counter.m["some_key"]++
+	counter.Unlock()
+
+
 参考网站：
 	https://blog.golang.org/go-maps-in-action
 	https://golang.org/doc/faq#atomic_maps
@@ -64,6 +84,7 @@ Map---学习
 
 	
 	
+
 	
 	
 	

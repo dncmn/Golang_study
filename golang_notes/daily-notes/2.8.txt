@@ -34,9 +34,6 @@ golang锁:
 				Reward map[int32]string
 				sync.Mutux
 			}
-	case3:
-	
-	
 	
 	
 	
