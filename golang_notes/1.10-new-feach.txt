@@ -1,0 +1,90 @@
+## golang-daily-notes
+## 2018.2.28
+
+一、go1.10新特性
+
+Go fmt
+	1、格式化了切片中三个空格
+		x[i+1 : j:k]     // Go 1.9
+		x[i+1 : j : k]   // Go 1.10
+	2、支持带有一个函数的内联接口
+	type Money interface {Fly()}
+	
+	1.9
+		type Money interface{
+			Fly()
+		}	
+	1.10
+		type Money interface{Fly()}
+net/url
+ResolveReference方法
+	base, _ := url.Parse("http://host//path//to/page1")
+	target, _ := url.Parse("page2")
+	fmt.Println(base.ResolveReference(target))	
+	1.9、
+		http://host/path//to/page2
+	1.10、
+		http://host//path//to/page2
+在url.go中的Userinfo
+	type Userinfo struct{
+		username string
+		password string
+		passwordSet bool
+	}
+	它是用户名和密码的详细信息不可变的封装。
+	Userinfo的指针方法Password(),String(),Username()
+	如果指针为nil，程序会报panic
+	在1.10的时候，程序则会返回zero value
+测试代码：
+ var test * url.Userinfo
+ password,isSet :=test.Password()
+ fmt.Println("Result of test.Password():", password, isSet)
+ fmt.Println("Result of test.String():", test.String())
+ fmt.Println("Result of test.Username():", test.Username())
+	
+在go1.10版本中新添加了一个strings.Builder类型
+它用来替代buffers.Buffer类型。
+type Builder struct{
+	addr *Builder
+	buf []bytes
+}
+有个基本的Reset()方法,就是清空这bytes类型的数组。
+新类型的文档说明
+		A Builder is used to efficiently build a string using Write methods.
+	It minimizes memory copying. The zero value is ready to use.
+	Do not copy a non-zero Builder.
+
+
+在1.10之前
+	var b buffers.Buffer
+1.10版本
+	var b strings.Builder
+	
+公共代码
+	for i:=3;i>=1;i {
+		fmt.Fprintf(&b,"%d....",i)
+	}
+	b.WriteString("ignition") // 将字符串一个一个展开,然后追加到这个byte类型的数组中
+	fmt.Println(b.String)// 将strings.Builder结构体中的字节数组转换成一个字符串并返回。
+
+	
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+		
+		
+		
+		
+		
+		
+	

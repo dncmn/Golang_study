@@ -6,8 +6,15 @@
 
 
 
+之前看到的都是gjson.Get(jsonStr,jsonField)。
+	这个方法是在这个jsonStr是已经格式化之后的json字符串。
+刚刚看到gjson中的Valid方法，对输入的json字符串进行校验。
+准备看解析
 
-
+gjson中的
+	Unmarshal to a map
+	根据github上的就是to unmarshal to a map[string]interface{}。
+	这里没法嵌套。如果value是一个数组的话,那么这个数组是没有分开显示的。 
 
 
 
@@ -51,9 +58,10 @@
 
 
 要查的单词
-	emphasis on
-	inline
+	emphasis on  强调
+	inline	一致
 	syntax
+	anonymous 匿名的
 
 
 
