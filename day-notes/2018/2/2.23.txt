@@ -4,9 +4,14 @@
 
 
 一、bug fix
-
+	1、经验条显示问题
+		前端获取分母的问题
+	2、ActivateSuper
+		战场合计技能不显示
+		
 二、self learning
-	1、用golang实现常见的排序算法
+	1、冒泡排序、二分查找、快速排序
+		快速排序进行到了一半
 	2、
 三、project learning
 	1、数据库连接池
