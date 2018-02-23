@@ -1,0 +1,16 @@
+##2018.02.23
+## daily-notes
+
+
+
+一、bug fix
+
+二、self learning
+	1、用golang实现常见的排序算法
+	2、
+三、project learning
+	1、数据库连接池
+		之前看过了一段时间的的gin.
+		了解了gin框架的路由的高性能。gin.H{}。还有gin一些常见的方法。例如将返回的消息转换成json、xml等写入到ResponseBody中
+		这些也仅仅是涉及到路由和消息转换，
+			具体到链接数据库采用连接池的时候，这一点“我没有深入研究,这点需要再看看”

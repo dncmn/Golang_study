@@ -3,6 +3,12 @@
 
 一、go1.10新特性
 
+
+参考网址：
+	1、这是go语言社区看到的一篇文章
+		https://mp.weixin.qq.com/s?__biz=MzIyNzM0MDk0Mg%3D%3D&mid=2247483993&idx=1&sn=d78f9bad8794613f99bc0dcba8e799c8&scene=45#wechat_redirect
+	
+
 Go fmt
 	1、格式化了切片中三个空格
 		x[i+1 : j:k]     // Go 1.9
