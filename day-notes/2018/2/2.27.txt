@@ -1,0 +1,55 @@
+## 2018.02.27
+## daily-notes
+
+一、bug fix
+	1、要塞胜利：不发送邮件
+		从数据库获取数据的时候,读错了表
+二、self learning
+	1、docker+nginx
+	2、实现希尔排序
+三、新添加新功能
+	1、坐骑召唤
+	缺少的两个变量是遗缺待补的
+		
+	
+三、已经实现的额
+	3.1、zset中zrange 默认是从小到大排序
+
+
+//// 坐骑召唤一次
+//func mountRollOne(player *data.TPlayer, reqURL string) bool {
+//	// 每日首次免費
+//	if player.DailyTimes.MountRoll < constant.RollMountDailyFreeTimes {
+//		player.DailyTimes.EnchantRoll++
+//
+//		player.InMsg(data.AckTimesAndCD(player.DailyCDS, player.DailyTimes, reqURL))
+//	} else {
+//		// pay diamond
+//
+//		needDiamond := constant.CardRollMountOnceCost
+//		if perr := mod.Item.CheckEnough(player, constant.ItemCurrencyDiamond, int64(needDiamond)); perr != nil {
+//			player.InMsg(protocol.NewGameError(perr, reqURL))
+//			return false
+//		}
+//		// take diamond from player
+//		mod.Item.Del(player, constant.ItemCurrencyDiamond, int64(needDiamond), reqURL)
+//		mod.Quest.UpdateNum(player, constant.QuestConsumeDiamond, needDiamond, 0, reqURL)
+//	}
+//
+//	return true
+//}
+//
+//// 坐骑召唤十次
+//func mountRollTen(player *data.TPlayer, reqURL string) bool {
+//	needDiamond := constant.CardRollMountTenCost
+//
+//	if perr := mod.Item.CheckEnough(player, constant.ItemCurrencyDiamond, int64(needDiamond)); perr != nil {
+//		player.InMsg(protocol.NewGameError(perr, reqURL))
+//		return false
+//	}
+//	// take diamond from player
+//	mod.Item.Del(player, constant.ItemCurrencyDiamond, int64(needDiamond), reqURL)
+//	mod.Quest.UpdateNum(player, constant.QuestConsumeDiamond, needDiamond, 0, reqURL)
+//
+//	return true
+//}

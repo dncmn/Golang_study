@@ -12,6 +12,13 @@
 		https://wizardforcel.gitbooks.io/nginx-doc/content/Text/1.2_nginxchswhyuseit.html
 	3、一个评价比较高的博客
 		http://www.cnblogs.com/jingmoxukong/p/5945200.html
+	4、讲nginx的一个博客
+		http://www.cnblogs.com/languoliang/archive/2013/04/01/nginx.html
+		nginx的日志文件位置:、/var/log/nginx
+		nginx的配置文件位置:/etc/nginx
+		nginx的启动文件位置:/usr/sbin/nginx
+			在/etc/init.d/下创建了启动脚本nginx
+		nginx的虚拟主机目位置：/usr/share/nginx/www
 	
 三、笔记
 1、nginx性能高的原因和其架构是分不开的。
