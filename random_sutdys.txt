@@ -34,6 +34,9 @@ ubuntu下golang环境配置参考
 		scp gameData.dat@192.168.1.27:/root/develop/dnf_realm
 	2.4、ubuntu下的vim中使用screen不显示窗口名称
 		blog.csdn.net/xocoder/article/details/9173845
+		在/etc/screenrc下添加
+			caption always "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%H %Y/%m/%d "
+		然后关闭重新开启一个新的小黑框就行。
 	2.5、在vim中显示行号
 	sudo vim /etc/vimrc
 	set nu!
