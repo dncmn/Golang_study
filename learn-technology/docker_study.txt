@@ -81,8 +81,23 @@ ARG和ENV的区别
     ${variable:-word} 代表，如果variable有給值，則以variable設定的文字為主，如未設定，則以word字串為主。
     ${variable:+word} 代表，如果variable有給值，則值為word；如果variable未給值，則最後結果為空字串(empty)。
 
-
-
+*****************************************
+************2018年***********************
+*****************************************
+02.18日学习笔记
+1、在Docker的ubuntu镜像安装的容器上使用ping和ifconfig命令的方法
+	apt-get update
+	apt-get upgrade
+	apt-get install net-tools // 安装ifconfig命令
+	apt-get install iputils-ping // 安装ping命令
+2、在Docker的ubuntu镜像安装的容器上安装history命令的方法
+	chsh -s /bin/bash(log out and relog in)
+	apt-get installk bash
+	(因为history这个命令是bash的一个特征如果当前系统没法使用history命令,那么当前系统可能实在dash而不是bash,这时候应该切换到bash中)
+	docker run -it --name testHistory ubuntu  // 这个可以直接使用history命令--(但是如果按照国内screen命令后,在screen没法使用history命令)
+*****************************************
+************2017年***********************
+*****************************************
 12.15日学习笔记
 	golang模板语法
 	https://gohugo.io/templates/lookup-order/

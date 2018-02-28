@@ -1,80 +1,24 @@
-##2018.2.22
-## work-notes
+## 2018.02.28
+## daily-notes
 
 
 
+一、
+	查看要塞宝箱掉落的概率
+	//xlog.Infof("before:cardId=%v, fp=%v,suitFp=%v", card.Id, fp, card.Foster.FosterSuitFp)
 
+// 在团队等级升级的时候,应该更新这个结构体的字段
+	升级的时候,判断有没有showLeve等于新的团队等级的
+	如果存在,就更新。否则，程序没有变化
 
+type  ItemStatus struct{
+	Id int32 //道具id
+	NeedDiamond int32 // 消耗钻石数量
+	InitDiscountValue int32 // 首次折扣的值
+	CurrentDiscountValue int32 // 当前折扣的值
+	RemainTimes int32 // 剩余购买次数
+	DailyLimit int32 // 当日限购次数
+}
 
-之前看到的都是gjson.Get(jsonStr,jsonField)。
-	这个方法是在这个jsonStr是已经格式化之后的json字符串。
-刚刚看到gjson中的Valid方法，对输入的json字符串进行校验。
-准备看解析
-
-gjson中的
-	Unmarshal to a map
-	根据github上的就是to unmarshal to a map[string]interface{}。
-	这里没法嵌套。如果value是一个数组的话,那么这个数组是没有分开显示的。 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-要查的单词
-	emphasis on  强调
-	inline	一致
-	syntax
-	anonymous 匿名的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ShopMall   map [int32]ItemStatus  
 
