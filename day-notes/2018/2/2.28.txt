@@ -3,10 +3,12 @@
 
 
 
-一、
-	查看要塞宝箱掉落的概率
-	//xlog.Infof("before:cardId=%v, fp=%v,suitFp=%v", card.Id, fp, card.Foster.FosterSuitFp)
-
+一、bug fix
+	1、查看要塞宝箱掉落的概率
+		//xlog.Infof("before:cardId=%v, fp=%v,suitFp=%v", card.Id, fp, card.Foster.FosterSuitFp)
+	2、英雄培养大师
+		左边的值变化，右边的没有变。而且培养等级没有发生变化。
+		这个原因，表配置错了。
 // 在团队等级升级的时候,应该更新这个结构体的字段
 	升级的时候,判断有没有showLeve等于新的团队等级的
 	如果存在,就更新。否则，程序没有变化
@@ -21,4 +23,105 @@ type  ItemStatus struct{
 }
 
 ShopMall   map [int32]ItemStatus  
+
+
+
+
+3 7 4 0 5
+
+插入排序（内部排序--稳定排序）
+	假设前面都是已经拍好顺序的,从后面依次取出来元素和前面的对比。
+		如果比前面的元素大,就原地不动
+		否则,就继续和前面的元素进行对比。
+
+
+func Test_Array_Sort(T *testing.T){
+	data:=[]int{3,7,4,0,5}
+	data=insert_sort(data,len(data))
+	fmt.Println("after-sort:",data)
+}
+/*
+	array []int:待排序的数组
+	n int:待排序数组的长度
+*/
+func insert_sort(array []int,n int)[]int{
+	
+	for i:=1;i<n;i++{
+		key:=array[i]
+		index=i-1
+		for  index>=0 && array[index]>key{
+			array[index+1]=array[index]
+			index--
+		}
+		array[index+1]=key
+	}
+	
+	return array
+}
+
+
+希尔排序
+	就是插入排序的升级版。
+
+// 错误的希尔排序
+func shell_sort(array []int){
+	
+	step:=len(data)/2
+	
+	for i:=0;i<step;i++{ // 分为四组
+		
+		for j=i+step;j<n;j+=step{
+			
+			key:=array[j]
+			k:=j
+			for  k>=0 && array[j-step]>key{
+				array[k]=array[j-step]
+				k-=step
+			}
+			array[k+step]=key
+		}
+	}
+	
+}
+
+// 正确的希尔排序
+func shellSort2(array []int, n int) []int {
+	var j, step int
+
+	for step = n / 2; step > 0; step /= 2 {
+		for j = step; j < n; j++ {
+			tmp := array[j]
+			k := j - step
+			for k >= 0 && array[k] > tmp {
+				array[k+step] = array[k]
+				k -= step
+			}
+			array[k+step] = tmp
+		}
+	}
+
+	return array
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
