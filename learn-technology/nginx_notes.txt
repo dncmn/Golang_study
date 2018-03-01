@@ -1,9 +1,27 @@
 ## nginx-notes
 ## create at 2018.1.2
 
+
+在ubuntu下开启nginx服务：必须用sudo ，不然只能在前台运行
+在nginx中,nginx默认将其主进程的pid写入到 /usr/local/nginx/nginx/pid。
+	保存主进程号,方便对nginx进行操作。例如更新配置文件,关闭nginx服务
+
+
+sudo /usr/local/nginx/nginx
+
 1、关闭nginx服务
 	sudo ./nginx -s stop
 	pkill -9 nginx (强行关闭)
+	
+	
+	从容关闭:
+		ps -ef | grep nginx  // 找到nginx的主进程号
+		kill -QUIT (nginx的主进程号)
+		
+	如果不想先查找进程号的话,可以直接使用命令
+	 kill -QUIT ` cat /run/nginx.pid`（后面的是从保存nginx的主进程号的文件中读取数据）
+	 启动nginx的时候保存到制定目录
+	 当关闭nginx的时候,再从指定目录读取文件
 	
 二、学习网址
 	1、Nginx开发从入门到精通
@@ -19,6 +37,21 @@
 		nginx的启动文件位置:/usr/sbin/nginx
 			在/etc/init.d/下创建了启动脚本nginx
 		nginx的虚拟主机目位置：/usr/share/nginx/www
+	5、gitbook上的nginx中文官方文档
+		https://wizardforcel.gitbooks.io/nginx-doc/content/
+	
+upstream big_server_com{
+	server 127.0.0.1:8000 weight=5;
+	server 127.0.0.1:8002 weight=3;
+}
+
+server{
+	listen 80;
+	server_name big.server.com;
+	location /{
+		proxy_pass http://big_server_com
+	}
+}
 	
 三、笔记
 1、nginx性能高的原因和其架构是分不开的。

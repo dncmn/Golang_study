@@ -38,9 +38,13 @@ ubuntu下golang环境配置参考
 			caption always "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%H %Y/%m/%d "
 		然后关闭重新开启一个新的小黑框就行。
 	2.5、在vim中显示行号
-	sudo vim /etc/vimrc
-	set nu!
-	http://blog.csdn.net/chuanj1985/article/details/6873830
+		sudo vim /etc/vimrc
+		set nu!
+		http://blog.csdn.net/chuanj1985/article/details/6873830
+	2.6、 ps aux 详解
+			USER PID %CPU% %MEM% VSZ RSS TTY STAT TIME COMMAND
+	2.7、查看指定端口号有没有被占用
+		netstat -ano | grep targetPort(80)
 
 
 3、pika数据数
