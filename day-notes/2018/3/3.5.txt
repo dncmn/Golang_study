@@ -1,0 +1,19 @@
+## 2018.3.5
+## day-notes
+
+
+一、bug fix
+二、self learning
+	1、基本的排序方法
+		冒泡、选择、归并、插入
+	2、nginx---load balancer
+		nginx的负载均衡还有反向代理
+	3、
+	
+	
+gin/beego
+
+mysql/redis/pika
+
+protobuf consul grpc
+go kit

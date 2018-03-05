@@ -7,6 +7,17 @@
 	保存主进程号,方便对nginx进行操作。例如更新配置文件,关闭nginx服务
 
 
+用 ～ 来表示locatiion开启正则匹配（匹配.php结尾的文件s）
+location ~ \.php${
+	fastcgi_pass 127.0.0.1.9000;
+	fastcgi_index index.php;
+	include fascgi.conf;
+}
+limit_req_zone $binary_remote_addr zone=one 10m rate=15r/s
+名称为zone，大小为10m，平均处理的请求频率不超过每秒15次。
+速度可以设置为每秒处理请求书和每分钟处理请求数。
+
+
 sudo /usr/local/nginx/nginx
 
 1、关闭nginx服务
@@ -22,6 +33,7 @@ sudo /usr/local/nginx/nginx
 	 kill -QUIT ` cat /run/nginx.pid`（后面的是从保存nginx的主进程号的文件中读取数据）
 	 启动nginx的时候保存到制定目录
 	 当关闭nginx的时候,再从指定目录读取文件
+	 
 	
 二、学习网址
 	1、Nginx开发从入门到精通
@@ -39,6 +51,9 @@ sudo /usr/local/nginx/nginx
 		nginx的虚拟主机目位置：/usr/share/nginx/www
 	5、gitbook上的nginx中文官方文档
 		https://wizardforcel.gitbooks.io/nginx-doc/content/
+	6、wiki nginx 
+	7、简书
+		https://www.jianshu.com/p/bed000e1830b
 	
 upstream big_server_com{
 	server 127.0.0.1:8000 weight=5;
@@ -117,14 +132,121 @@ mail:	实现email相关的SMTP/IMAP/POP3代理时，共享的一些配置项（�
 四、疑问
 	1、如何实现公平竞争？
 
-
-
-五、nginx的配置项
-
-六、杂记
+五、杂记
 	1、nginx使用基于事件的模型和依赖于操作系统的机制来高效地在工作进程间分配请求
 	2、Geo模块
 		这个模块产生变量，这个变量的值依据客户端的ip地址来进行创建
+六、nginx日志
+1、选择一个负载均衡的方法
+	1.1、IP Hash
+		这个方法确保了来自相同的ip的请求都可以请求到相同的服务器地址除非这个服务器不可用。
+		upstream backend{
+			ip_hash;
+			server backend1.example.com
+			server backend2.example.com
+			server backernd3.example.com down // 表示这个服务器地址暂时不可用,如果有客户端的ip经过hash之后请求到这里
+											  // ,那么这个请求会自动分派到这个服务器组中的下一个服务器上。
+		}
+	1.2、Round Robin(权重)
+		根据权重的大小来分配请求(默认的权重是1)
+		upstream backend{
+			server backend1.example.com  // 这个是默认的权重 weight=1
+			server backend2.example.com	 weight=5; // 分配指定权重 
+			server 172.168.1.1 backup; // 表示只有当其它服务器都不可达的时候,请求才会到这个服务器上。
+			
+		}
+	1.3、Least Connections
+		请求将会被分发到连接数量最少的服务器上(将权重考虑在内)
+		A request is sent to the server with the least the number of active aconnections with server weights taken into consideration
+		upstream backend{
+			least_conn;
+			server backend1.example.com;
+			server backend2.example.com;
+			
+		}
+	1.4、Generic Hash
+		哪儿个服务器接收什么请求取决于用于自定义的key(可以是一个字符串、变量、或者组合)
+		例如：这个key可能是一对,客户端的ip和对暗扣或者URI
+		upstream backend{
+			hash $request_uri constant;
+			server backend1.example.com;
+			server backend2.example.com;
+		}
+		
+		这个constant变量确保使用ketama的一致哈希负载均衡。根据用户自定义的散列键值,将请求均匀分布在所有upstream内的服务器列表中。
+		。如果向upstream中增加服务器或者从upstream组中删除服务起,这样就会哟啊重新映射几个密码，这样。在
+		在负载均衡高速缓存服务器或者其他累计状态的应用程序的情况下，将减少未命中降低到最低。
+	1.5、Least Time(NGINX Plus only)
+			对于每一个请求,nginx plus 选择具有最低平均延迟和最低活动连接数的服务器。其中最低平均延迟时间是根据包括minimun_time计算得到的
+			upstream backend{
+				least_time header;  
+				server backend1.example.com;
+				server backend2.example.com;
+			}
+			header:Time to receive the first byte from the server
+			last_byte:Time to receive the full response from the server
+2、balance loader
+	2.1、max_conns(限制连接的数量)
+		通过使用nginx plus，可以限定连接到某个服务器的连接数量，通过max_conns。如果超过了最大链接，这些链接就会被添加到一个队列中。
+		同时，可以在这个队列中指定超时时间(表明在这个时间段内，该请求没有被处理,如果超时,客户端会收到一个error)。
+		upstream backend{
+			server backend1.example.com;
+			server backend2.example.com max_conns=3;
+			queue 100 timeout=70;
+			server backend3.example.com down; 
+			server backend4.example.com max_fails=4 fail_timeout=30s;
+		}
+	down，表示当前的server暂时不参与负载均衡。
+	backup，预留的备份机器。当其他所有的非backup机器出现故障或者忙的时候，才会请求backup机器，因此这台机器的压力最轻。
+	max_fails，允许请求失败的次数，默认为1。当超过最大次数时，返回proxy_next_upstream 模块定义的错误。
+	fail_timeout，在经历了max_fails次失败后，暂停服务的时间。max_fails可以和fail_timeout一起使用。
+
+
+3、Reverse proxy(反向代理)
+
+3.1、定义
+	指以代理服务器来接受internet上的连接请求，然后将请求转发给内部网络上的服务器，
+并将从服务器上得到的结果返回给internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器。
+3.2、优点
+	3.2.1、保护了真实的web服务器。(外网只能访问代理服务器，而反向代理服务器上没有真实的数据）
+	3.2.2、节省了有点的ip地址资源
+	3.2.3、减少web服务器压力,提高相应速度
+			反向代理就是通常所说的web服务器加速，它是一种通过在繁忙的web服务器和外部网络之间增加一个高速的web缓冲服务器来降低实际的web服务器的负载的一种技术。
+		反向代理是针对web服务器提高加速功能，作为代理缓存，它并不是针对浏览器用户，而针对一台或多台特定的web服务器，它可以代理外部网络对内部网络的访问请求。
+	3.2.4、区分动态和静态可缓存内容；
+	3.2.5、实现负载均衡，内部可以采用多台服务器来组成服务器集群，外部还是可以采用一个地址访问；
+	3.2.6、解决Ajax跨域问题；
+	3.2.7、作为真实服务器的缓冲，解决瞬间负载量大的问题；
+3.3、
+location /{
+	root /users/yangyi/www;
+	index index.php index.html index.htm;
+}
+
+	location /: 表示匹配访问根目录。
+	root:指令用于指定访问根目录时，虚拟主机的web目录，这个目录可以是相对路径（相对路径是相对于nginx的安装目录）。也可以是绝对路径。
+	index:用于设定我们只输入域名后访问的默认首页地址，有个先后顺序：index.php index.html index.htm，
+			如果没有开启目录浏览权限，又找不到这些默认首页，就会报403错误。
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	
 	
 	
