@@ -10,10 +10,34 @@
 		nginx的负载均衡还有反向代理
 	3、
 	
+会的	
+	gin/beego
+
+	mysql/redis/pika
+
+	protobuf consul grpc
+	go kit
+练习代码：
+
+func binary_search(array []int, key index)int{
+	min:=0
+	max:=len(array)-1
+	for {
+		mid:=(min+max)/2
+		
+		if key<array[mid]{
+			max=mid-1
+		}else if key>array[mid]{
+			min=mid+1
+		}else{
+			return mid+1
+		}
+	}
 	
-gin/beego
+	return -1
+}
 
-mysql/redis/pika
 
-protobuf consul grpc
-go kit
+
+
+
