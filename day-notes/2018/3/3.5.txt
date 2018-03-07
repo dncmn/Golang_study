@@ -8,7 +8,7 @@
 		冒泡、选择、归并、插入
 	2、nginx---load balancer
 		nginx的负载均衡还有反向代理
-	3、
+	
 	
 会的	
 	gin/beego
