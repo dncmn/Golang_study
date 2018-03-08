@@ -1,0 +1,65 @@
+## 2018.3.8
+## day-notes
+
+
+一、self learning
+	1、练习--实现快速排序
+	
+
+
+
+
+二、练习代码
+
+func quick_sort(data []int, start,end int){
+
+	key:=data[start]
+	low:=start
+	high:=end
+	
+	for {
+		
+		// 找出比key小的数,然后放到右边
+		for low<high{
+			if data[high]<key{
+				data[low]=data[high]
+				break
+			}
+			high--
+		}
+		
+		// 找出比key大的数,然后放到了左边
+		for low<high{
+			if data[low]>key{
+				data[high]=data[low]
+				break
+			}
+			low++
+		}
+		
+		// 找到中间位置，然后填坑
+		if low>=high{
+			data[low]=key
+			break
+		}
+	}
+	
+	// 对左边的数重新进行快速排序
+	if low-1>start{
+		quick_sort(data,start,low-1)
+	}
+	
+	// 对右边的进行快速排序
+	if high+1<end{
+		quick_sort(data,hith+1,end)
+	}
+
+}
+
+
+
+
+
+
+
+
