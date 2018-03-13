@@ -1,0 +1,8 @@
+## 2018.3.9
+## day-notes
+
+一、
+	1、安装etcd
+		在使用etcdctl的时候,因为没有配置环境变量,所以在使用etcdctl put testkey "hello world"的时候会出现
+		"No helper topic for 'put'"
+	2、
