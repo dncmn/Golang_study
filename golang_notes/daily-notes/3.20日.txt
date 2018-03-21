@@ -1,0 +1,8 @@
+## 2018.3.20
+## golang-daily-notes
+
+1、os包的学习
+	os.Stat方法:返回了一个FileInfo结构体，里面包含了文件的相关信息
+		fileName/fileSize/fileMode/fileModTime/fileIsDir/fileSys
+	os.IsNotExist方法:对这个错误进行校验。如果这个文件不存在或者系统调用错误就是返回true
+	
