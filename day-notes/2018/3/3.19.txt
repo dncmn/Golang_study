@@ -2,5 +2,15 @@
 ## day-notes
 
 一、bug fix
-
+	
 二、self learning
+	1、冒泡、选择、插入、归并、希尔、快速排序的练习
+	
+	
+	
+
+
+
+
+
+

@@ -2,7 +2,116 @@
 ## golang-daily-notes
 
 1、os包的学习
-	os.Stat方法:返回了一个FileInfo结构体，里面包含了文件的相关信息
+	1.1、os.Stat方法:返回了一个FileInfo结构体，里面包含了文件的相关信息
 		fileName/fileSize/fileMode/fileModTime/fileIsDir/fileSys
-	os.IsNotExist方法:对这个错误进行校验。如果这个文件不存在或者系统调用错误就是返回true
+	1.2、os.IsNotExist方法:对这个错误进行校验。如果这个文件不存在或者系统调用错误就是返回true
+	1.3、flag.Int(name string,value int, usage string)*int{}
+		Int defines an int flag with specified name,default value,and usage string.
+		It return value is address of an int variable that stores the value of the flag
+	1.4、errors包的了解	
+		type error interface{
+			Error() string
+		}
+
+		type errorString struct{
+			s string // 定义的错误消息内容
+		}
+
+		// 这个errorString实现了error接口,返回了对应结构提的s 参数
+		func(e *errorString)Error()string{
+			return e.s
+		}
+1.5、flag包的研究
+	利用flag进行绑定参数。
+	方式一：
+		var username string
+		flag.StringVar(&username,"root","HelloKitty","default administrator root name")	
+	方式二：
+		username:=flag.String("root","HelloKitty","default administrator root name")
+		fmt.Println(*username) // 因为这个时候,flag.String返回的是一个指针
+	然后使用flag.Parse()以后,就可以使用username这个变量了。
+	
+疑问：在flag包中的FlagSet结构体
+type FlagSet struct{
+	Usage 		f	unc()
+	name	 		string
+	parsed 			bool
+	actual 			map[string]*Flag          ----都是用map来保存声明的参数和值
+	formal 			map[string]*Flag         // 这两个字段的具体作用未知,继续研究
+	args 			[]string
+	errorHandling 	ErrorHandling
+	output 			io.Writer
+}
+
+type Flag struct{
+	Name 		string	// naem as it appears on command line
+	Usage 		string	// help message
+	Value 		value	// value as set
+	DefValue 	string  // default value(as text);fot usage message
+}
+
+
+2.临时想到的小总结
+	2.1、就是返回错误的类型。在项目里面是返回“error params”	
+		有点：减少了错误消息的类型。在定义错误消息的时候
+		缺点：如果同时返回多个的话,很难快速定义错误的位置	
+	2.2、在结构体中定义的字段,如果这个字段不想被外界调用，就用小写，
+	然后重新定义一个方法来获取这个参数。
+	2.3、flag包的想法
+		对于这个flag包，刚刚接触的时候就是命令行输入几个参数的问题。
+		如果 go bun  local.go -c config.json
+		这里的"-c"就是指定运行时制定的参数。
+		
+		在项目，或者其他开源项目中，用flag可以置顶一个参数名称，参数值、参数的用途
+	2.4、sort包定义的各种类型的切片，比如sort.IntSlice,sort.StringSlice,sort.BoolSlice，就是重新定了一个新的类型。
+	对于sort中定义的sort排序方法，里面应用了快速排序(内部不文稳定排序)来进行排序,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+2、 golang包学习遇到的笔记
+	1、TCPListener 
+		type TCPLister struct{
+			fd *netFD
+		}
+
+		TCPListter is a TCP listener.Clients should tyically use variables of type listener instend of assuming TCP
+
+		// TCPAddr represents the address of a TCP end point.
+		type TCPAddr struct {
+			IP   IP
+			Port int
+			Zone string // IPv6 scoped addressing zone
+		}
+	2、对于在golang中的字符串链接
+		方式一：在golang自带的包中见到一个一种链接方式直接用加号，真的是够通俗易懂
+		方式二：在项目的时候,也用到了用fmt.Sprint这种方式来组合
+	3、golang中返回一个新的error。
+		通过errors.New方法来是吸纳
 	
