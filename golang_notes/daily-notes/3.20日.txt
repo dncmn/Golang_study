@@ -29,7 +29,19 @@
 	方式二：
 		username:=flag.String("root","HelloKitty","default administrator root name")
 		fmt.Println(*username) // 因为这个时候,flag.String返回的是一个指针
-	然后使用flag.Parse()以后,就可以使用username这个变量了。
+	方式三：多个flag分享同一个变量。
+			var gopherType string
+			const (
+				defaultGopher = "pocket"
+				usage         = "the variety of gopher"
+			)
+
+			flag.StringVar(&gopherType, "topher_type", defaultGopher, usage)
+			flag.StringVar(&gopherType, "g", defaultGopher, usage+"( shorthand)")
+
+			flag.Parse()
+			fmt.Println(gopherType)
+	然后使用flag.Parse()(解析命令韩参数到定义的flag中)以后,就可以使用username这个变量了。
 	
 疑问：在flag包中的FlagSet结构体
 type FlagSet struct{
@@ -58,6 +70,8 @@ type Flag struct{
 	2.2、在结构体中定义的字段,如果这个字段不想被外界调用，就用小写，
 	然后重新定义一个方法来获取这个参数。
 	2.3、flag包的想法
+		
+		flag包提供了一些列解析命令行参数的功能接口
 		对于这个flag包，刚刚接触的时候就是命令行输入几个参数的问题。
 		如果 go bun  local.go -c config.json
 		这里的"-c"就是指定运行时制定的参数。
@@ -65,6 +79,8 @@ type Flag struct{
 		在项目，或者其他开源项目中，用flag可以置顶一个参数名称，参数值、参数的用途
 	2.4、sort包定义的各种类型的切片，比如sort.IntSlice,sort.StringSlice,sort.BoolSlice，就是重新定了一个新的类型。
 	对于sort中定义的sort排序方法，里面应用了快速排序(内部不文稳定排序)来进行排序,
+	2.5、定义结构体的方法
+		如果是在结构体内部使用，并且不希望被外界调用的，方法名用小写。
 
 
 
