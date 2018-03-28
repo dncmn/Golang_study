@@ -4,3 +4,5 @@
 一、golang
 	1、golang study（某位大牛的博客）
 		http://www.chairis.cn/blog 
+	2、2017年golang的年终总结的一个网站，总结的挺全面的，可以慢慢看
+		http://colobu.com/2017/12/28/top-golang-articles-of-2017/
