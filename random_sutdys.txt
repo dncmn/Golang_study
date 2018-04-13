@@ -1,11 +1,5 @@
 https://github.com/google
 
-
-
-
-
-
-
 goland的过期时的注册服务器 参考网址
 	http://mamicode.com/info-detail-2138069.html
 	这个暂时是可以用的：http://idea.wrbug.com/

@@ -1,10 +1,15 @@
 ## 2018.4.12
 ## daily-notes
 
+一、需要做的
+	1.安装搜狗输入法
+	2.配置golang的环境变量
+	3.按照vim/screen/git等常用指令
+	4.产生新的ss-key
+	5.下载golang.org的包--sys/net/text等
+	6.下载项目的包(参考公司账号信息)
+	7.配置翻墙用的账号和密码
 
-1.sougou shurufa 
-2.ssk
-3.know about project code
 
 
 

@@ -1,0 +1,83 @@
+## 2018.4.13
+## dayily-notes
+
+熟悉项目代码
+	gin和gorm
+
+一、安装的东西
+	1.翻墙
+	2.glide(包管理工具)
+二、需要学习的东西
+	1.gin(也就是路由和对返回信息的封装)
+	2.gorm(在查询数据的时候,注意返回信息的转换。还有就是如何给客户端返回消息)
+	3.docker(容器、卷、镜像、仓库等的基本概念)
+	
+
+gin:
+	
+	
+	
+沟通：
+	1.在controllers里面定义的结构体,每个go文件里面都有....
+			感觉：看着Controller里面有点乱,
+			操作：将这些结构体都记录再同一个go文件里面 
+	2.再defer this.SendJSON()方法里面，如果出现Marshal失败的情况,没有日志记录
+	3.方法的注释(介绍方法作用的时候,单行注释后面空一格。。。)
+疑问:
+	1.因为用的是gin。
+		自定义的结构体，可能就是再解析参数、从数据库查询数据返回数据的还是，可以自定义
+		对于map。也是比较通用的。map的存和获取的时间复杂度都是常数阶
+	channel/map/slice/lock
+	
+备注：这里如果改掉的话，那就是需要大改了
+status 	 bool  			// 代表http请求是否成功-----可有可无
+Code	 int  			// 代表这次请求的状态码  http.StatusOK  // 或者自定义错误类型。
+Message  string 		// 代表错误信息的内容  -----可有可无
+Data 	 interface{} 	// 代表要发送的消息的内容
+	
+结论：
+	虽然发送的消息不是很多，如果将int代替string来发送消息,感觉这个string都是可有可无。
+	有的话，可能增加发送消息的量
+	删掉的话，将错误信息写到配置表中，客户端可以从这个表获取数据。
+	
+	
+	
+代码风格
+	BindJSON:接收请求过来的参数,然后将数据绑定到指定的参数上	
+	GetTargetParams:从请求的方法中获取指定参数
+		疑问：
+			涉及到方法名首字母大小写
+			将所有获取某个参数的方法提取出来
+
+
+func GetOssHeader(c *gin.Context){
+	key:=c.Query("key")
+	bucket:=c.Query("bucket")
+	
+	// 判断字符串是否为空
+	两种判断方式
+}
+
+			
+func startFightHandler(player *data.TPlayer,p url.Values,reqURL string){
+	// logic code
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
