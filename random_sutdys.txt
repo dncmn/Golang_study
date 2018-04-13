@@ -115,9 +115,17 @@ ubuntu下golang环境配置参考
 	https://play.golang.org/
 
 	
-	
-	
-	
+11、ubuntu下格式化u盘操作
+	参考网址:https://www.2cto.com/os/201204/129637.html
+	1.首先，先卸载u盘
+		sudo umount /media/disk(代表那个文件系统df -Th)
+	2.格式化u盘
+		sudo mkfs.vfat /dev/sdb
+12、ubuntu和goland的快捷键冲突。
+ 	在goland中 (ctrl +alt  + 向左的箭头)表示回退
+			   (ctrl +alt  + 向右的箭头)表示前进
+	这两个再unbuntu中与切换工作区发生冲突，改掉ubuntu上的就可以了。
+		系统设置---->键盘--->快捷键
 	
 	
 

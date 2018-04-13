@@ -3,9 +3,26 @@
 
 1.gin
 	看看之前有关gin的笔记(项目中的有关于gin的基本上看了一下流程)
+	1.1、路由组和路由的编写
+		/user/getUserInfo/:id   举例 /user/getUserInfo/1
+		/user/modifyUserInfo/:id/*name 带星号表示可有可无。 /user/modifyUserInfo/1/tom 或者 /user/modifyUserInfo/1
+	1.2、在controllers中参数的获取方式
+		func userOpeController(c *gin.Context){
+			c.Get("param Name") // 可以判断这个参数存不存在
+			c.Query() // 剩下的这两个和路由定义的时候规则有关
+			c.Param()
+		}
+		将参数转换为各种形式---可以通过中间参数[]byte来实现
+	1.3、在返回的时候，之前用到了gin.H{},用它来构建
+			可以c.JSON和c.H{}结合使用
+			c.JSON(http.StatusOK,c.H{})
+			c.JSON(code int,obj interface{})
+			code:表示状态码
+			obj:表示经过json化的，并且添加到response body中的数据
 	
 2.docker
-4.linux--要么是linux私房菜或者去gitbook上找到一本合适的书看看--脚本
+4.linux--要么是linux私房菜或者去gitbook上找到一本合适的书看看--脚本 6.脚本
 3.gorm
 5.nginx
-6.脚本
+7.游戏数据库postal
+8.分布式锁

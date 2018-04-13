@@ -4,7 +4,7 @@
 一、学习网址
 	1、个人博客-----(---有一些过期和废弃的方法比如解析前段页面传递过来的方法,BindWith:这个方法好像废弃了)
 		http://www.okyes.me/2016/05/03/go-gin.html
-	2、gin的有点介绍
+	2、gin的优点介绍--主要介绍gin框架的各个方面做一个简单的介绍。对gin有一个大致的了解
 		https://gin-gonic.github.io/gin/
 	3、gin和Echo的比较
 		https://golangtc.com/t/56a38761b09ecc083100010c

@@ -19,15 +19,21 @@ gin:
 	
 沟通：
 	1.在controllers里面定义的结构体,每个go文件里面都有....
-			感觉：看着Controller里面有点乱,
+			感觉：看着Controller里面有点乱,    ------有很多是一次性的，也就是仅仅在这个文件中在某个请求里面用到了。
 			操作：将这些结构体都记录再同一个go文件里面 
 	2.再defer this.SendJSON()方法里面，如果出现Marshal失败的情况,没有日志记录
-	3.方法的注释(介绍方法作用的时候,单行注释后面空一格。。。)
+	3.方法的注释(介绍方法作用的时候,单行注释后面空一格。。。)---game-server:是第一个版本,所以存在代码不规范的地方。(各种注释后面都会要空一行。)
 疑问:
 	1.因为用的是gin。
 		自定义的结构体，可能就是再解析参数、从数据库查询数据返回数据的还是，可以自定义
 		对于map。也是比较通用的。map的存和获取的时间复杂度都是常数阶
 	channel/map/slice/lock
+	
+	
+	看到的一些DAO操作。就是将查到的数据直接解析到某个结构体上了。(没有看到一些参数类型转换的问题)
+	个人感觉：对于一个sql操作。直接的sql操作比使用封装过的要好的多。
+	
+	
 	
 备注：这里如果改掉的话，那就是需要大改了
 status 	 bool  			// 代表http请求是否成功-----可有可无
@@ -62,6 +68,45 @@ func GetOssHeader(c *gin.Context){
 func startFightHandler(player *data.TPlayer,p url.Values,reqURL string){
 	// logic code
 }
+	
+	
+简单的试了一下将map[string]string转换为对应的结构体。实现方式 byte array
+
+type Student struct{
+	Name string
+	Sex string
+}
+
+map:=data[string]string
+data["Name]="tom"
+data["Sex"]="male"
+
+byteArray,err:=json.Marshal(data)
+stu:=&Student{}
+err=json.UnMarshal(byteArray,stu)
+fmt.Println(stu.Name,stu.Sex)
+
+
+	
+method-one:也就是有些请求就是直接查本地数据库
+method-two:有些请求是需要转发http请求
+
+用户注册的时候	:就是将消息进行了转发。
+	 
+
+file structure
+
+interfaces.go		定义各种接口
+
+arena_const.go		存放定义的常量
+arena_mod.go		被arena_handler.go调用，和调用arena_db.go
+arena_db.go			存放数据库操作相关function
+arena_handler.go	接收http请求及其返回
+arena_data.go		存放arena相关结构体
+
+
+
+arena_csv.go		解析csv文件
 	
 	
 	
