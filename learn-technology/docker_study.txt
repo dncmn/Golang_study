@@ -3,6 +3,11 @@ https://yeasy.gitbooks.io/docker_practice/content/
 学习docker(台湾)
 https://peihsinsu.gitbooks.io/docker-note-book/content/dockerfile-env-vs-arg.html
 
+docker 免sudo登录
+	https://blog.csdn.net/baidu_36342103/article/details/69357438
+	(也就是四步操作,最后一步是必须要有的)
+	这样，我重新打开一个Terminal又出现了同样的问题。reboot一下
+
 官网搜索镜像的网址
 	https://hub.docker.com/_/docker/
 
@@ -16,7 +21,7 @@ earily notes
 https://www.cnblogs.com/q4486233/p/6482711.html
 
 
-避免使用sudo docker
+避免使用sudo docker-----（也可以安装docker的时候，参考gitbook上的操作）
 http://blog.csdn.net/baidu_36342103/article/details/69357438
 
 传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程；而容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。
@@ -57,9 +62,20 @@ docker pull ubuntu:16.04
 docker history [imageId or imageName]
 	用来查看镜像的历史
 
+docker system  df
+	查看镜像、容器、数据卷所占用的空间。
+	
+docker image ls ubuntu
+	列出部分镜像
+
 docker attach 和 docker  exec
 	前者如果从stdin中exit的话,容器会停止
 	docker exec从stdin中exec的话,容器不会停止
+	
+	
+docker image rm $(docker image ls -q redis)
+	删除所有仓库名为 redis 的镜像
+	$符号里面的就是找出redis的image id。外层直接删除
 	
 docker load 和docker import的区别
 	
@@ -234,7 +250,18 @@ ARG和ENV的区别
 		在/etc/default/docker中 配置DOCKER_OPTS=false来禁止它。
 		
 
-
+2018.4.14
+1、容器、镜像、仓库的基本了解
+	1.1、三者的关系
+	在仓库里面可以找到各种镜像。(可以去官网中找，也可以用docker search containerName来找)
+	镜像是容器的基础。可以在镜像的基础上制造很多容器。
+	感觉容器和镜像的关系，就是多态。一种镜像，多种容器。
+	
+	容器：容器的实质也是进程。但是它有属于自己的独立的命名空间。
+	镜像是一个特殊的文件系统(多层次的文件系统，每一层都是独立，互补影响，某一层发生变化,都不会影响别的层次)，除了提供容器运行时所需的程序、库、资源、配置等文件外，
+		还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。
+	
+	
 
 	
 	
