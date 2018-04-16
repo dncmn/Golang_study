@@ -13,100 +13,11 @@
 	3.docker(容器、卷、镜像、仓库等的基本概念)
 	
 
-gin:
-	
-	
-	
-沟通：
-	1.在controllers里面定义的结构体,每个go文件里面都有....
-			感觉：看着Controller里面有点乱,    ------有很多是一次性的，也就是仅仅在这个文件中在某个请求里面用到了。
-			操作：将这些结构体都记录再同一个go文件里面 
-	2.再defer this.SendJSON()方法里面，如果出现Marshal失败的情况,没有日志记录
-	3.方法的注释(介绍方法作用的时候,单行注释后面空一格。。。)---game-server:是第一个版本,所以存在代码不规范的地方。(各种注释后面都会要空一行。)
-疑问:
-	1.因为用的是gin。
-		自定义的结构体，可能就是再解析参数、从数据库查询数据返回数据的还是，可以自定义
-		对于map。也是比较通用的。map的存和获取的时间复杂度都是常数阶
-	channel/map/slice/lock
-	
-	
-	看到的一些DAO操作。就是将查到的数据直接解析到某个结构体上了。(没有看到一些参数类型转换的问题)
-	个人感觉：对于一个sql操作。直接的sql操作比使用封装过的要好的多。
-	
-	
-	
-备注：这里如果改掉的话，那就是需要大改了
-status 	 bool  			// 代表http请求是否成功-----可有可无
-Code	 int  			// 代表这次请求的状态码  http.StatusOK  // 或者自定义错误类型。
-Message  string 		// 代表错误信息的内容  -----可有可无
-Data 	 interface{} 	// 代表要发送的消息的内容
-	
-结论：
-	虽然发送的消息不是很多，如果将int代替string来发送消息,感觉这个string都是可有可无。
-	有的话，可能增加发送消息的量
-	删掉的话，将错误信息写到配置表中，客户端可以从这个表获取数据。
-	
-	
-	
-代码风格
-	BindJSON:接收请求过来的参数,然后将数据绑定到指定的参数上	
-	GetTargetParams:从请求的方法中获取指定参数
-		疑问：
-			涉及到方法名首字母大小写
-			将所有获取某个参数的方法提取出来
-
-
-func GetOssHeader(c *gin.Context){
-	key:=c.Query("key")
-	bucket:=c.Query("bucket")
-	
-	// 判断字符串是否为空
-	两种判断方式
-}
-
-			
-func startFightHandler(player *data.TPlayer,p url.Values,reqURL string){
-	// logic code
-}
-	
-	
-简单的试了一下将map[string]string转换为对应的结构体。实现方式 byte array
-
-type Student struct{
-	Name string
-	Sex string
-}
-
-map:=data[string]string
-data["Name]="tom"
-data["Sex"]="male"
-
-byteArray,err:=json.Marshal(data)
-stu:=&Student{}
-err=json.UnMarshal(byteArray,stu)
-fmt.Println(stu.Name,stu.Sex)
-
 
 	
-method-one:也就是有些请求就是直接查本地数据库
-method-two:有些请求是需要转发http请求
+	
+	
 
-用户注册的时候	:就是将消息进行了转发。
-	 
-
-file structure
-
-interfaces.go		定义各种接口
-
-arena_const.go		存放定义的常量
-arena_mod.go		被arena_handler.go调用，和调用arena_db.go
-arena_db.go			存放数据库操作相关function
-arena_handler.go	接收http请求及其返回
-arena_data.go		存放arena相关结构体
-
-
-
-arena_csv.go		解析csv文件
 	
 	
 	

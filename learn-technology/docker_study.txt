@@ -67,6 +67,9 @@ docker system  df
 	
 docker image ls ubuntu
 	列出部分镜像
+	
+docker container prune
+	清理掉所有处于终止状态的容器
 
 docker attach 和 docker  exec
 	前者如果从stdin中exit的话,容器会停止
@@ -162,6 +165,19 @@ ARG和ENV的区别
 	exec格式：CMD ["可执行文件","参数1","参数2"]  
 	
 	
+
+数据管理：
+	1、新添加卷容器、然后挂载到某个容器中
+	创建数据卷：docker volumn create mn
+	查看数据卷信息：docker volumn inspect mn
+	将数据卷挂载到容器上:
+		docker run -it --name web -v mn:/webapp ubuntu /bin/bash
+		（将数据卷挂载到web容器下的webapp目录下）
+	2、挂载本地文件到卷容器（-v volumn）
+		docker run -it --name mn -v $PWD:/notes ubuntu /bin/bash
+	
+	
+	
 数据卷：	
     数据卷 可以在容器之间共享和重用
     对 数据卷 的修改会立马生效
@@ -202,7 +218,25 @@ ARG和ENV的区别
 
 	当使用 -P 标记时，Docker 会随机映射一个 49000~49900 的端口到内部容器开放的网络端口。
 	
-	-p 则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort
+	-p 则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。
+	
+	支持的格式有 ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort
+
+
+
+docker run -it --name hello -p 127.0.0.1:8000:9000
+这里有三种形式,
+	ip:hostPort:containerPort
+	ip::containerPort    			// 本地的端口号由随机分配一个
+	hostPort:containerPort			// 指定本地端口和容器端口
+	
+	
+容器互联：
+	简单地说，对于两个容器如果要实现网络上的联通的话,应该把这两个容器添加到自定义的网络上。
+	第一步：新建一个网络 docker network create -d bridge my-net
+	第二步：启动容器,连接到新建的网络上
+	docker run -it --rm --name busybox1 --network my-net busybox sh
+	docker run -it --rm --name busybox2 --network my-net busybox sh
 	
 
 12.21日学习笔记
@@ -248,6 +282,7 @@ ARG和ENV的区别
 		2.2、本地系统的防火墙软件  --iptables是否通过。
 	默认情况下,不同容器之间是允许网路胡同的。但是为了安全考虑
 		在/etc/default/docker中 配置DOCKER_OPTS=false来禁止它。
+3、Docker 默认不允许非 HTTPS 方式推送镜像。
 		
 
 2018.4.14
@@ -258,9 +293,11 @@ ARG和ENV的区别
 	感觉容器和镜像的关系，就是多态。一种镜像，多种容器。
 	
 	容器：容器的实质也是进程。但是它有属于自己的独立的命名空间。
+		容器是独立运行的一个或一组应用，以及它们的运行态环境。
 	镜像是一个特殊的文件系统(多层次的文件系统，每一层都是独立，互补影响，某一层发生变化,都不会影响别的层次)，除了提供容器运行时所需的程序、库、资源、配置等文件外，
 		还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。
-	
+	仓库：是集中存放镜像的地方
+	实际上注册服务器是管理仓库的具体服务器，每个服务器上可以有多个仓库，而每个仓库下面有多个镜像。
 	
 
 	
