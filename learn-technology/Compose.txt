@@ -23,3 +23,75 @@ Compose 的默认管理对象是项目，通过子命令对项目中的一组容
 Compose 项目由 Python 编写，实现上调用了 Docker 服务提供的 API 来对容器进行管理。
 因此，只要所操作的平台支持 Docker API，就可以在其上利用 Compose 来进行编排管理。
 
+在docker中进行容器互联的时候，尽量少使用--link，在解析ip的适合可能会出现问题,具体可以参考
+	https://zhuanlan.zhihu.com/p/26855941
+
+
+
+1、在docker-compose.yml文件中,如果需要一些环境变量,项目里面是怎么处理的？
+		1、使用env_file
+		2、使用environment
+2、docker-compse启动问题
+		比如在启动相关服务比如web服务的时候,有的可能会依赖数据库服务。
+		但是虽然服务库这个服务启动了，但是启动是需要消耗时间的，如果这时候mysql还没有完全启动，但是web服务启动启动了
+		这时候,web服务就会报错。
+		参考网址：
+			http://blog.terminus.io/pampas-docker-startup-order/
+			
+		虽然这个问题，目前还没有遇到，但是记录下来还是可以的
+			
+	
+
+
+
+我想到的方法：
+	1.如果用到的不多的话,不涉及隐私的话,那就可以直接添加进去，使用environment
+		如果从安全角度来考虑，可以只写环境变量的名字,启动服务的时候会自己从host主机中搜索
+		environment:(设置环境变量。你可以使用数组或字典两种格式)
+		  RACK_ENV: development
+		  SESSION_SECRET:
+	2.将所有的环境变量信息配置在某个具体的文件中，使用env_file
+		2.1.env_file: .env
+		2.2.env_file:
+		  - ./common.env
+		  - ./apps/web.env
+		  - /opt/secrets.env
+		  
+		  
+
+
+
+nginx就是一堆配置文件
+docker-compse也是一堆配置文件
+
+感觉好像就是组装一堆的docker-compse命令来组合不同的容器，来启动服务的
+
+
+version: "3"
+services:
+
+  db:
+    image: postgres
+
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+			(覆盖容器启动后默认执行的命令)
+    volumes:  (数据卷挂在路径)
+      - .:/code
+    ports:(暴露端口信息,使用宿主端口:容器端口,也可以加一个限制)
+      - "8000:8000"
+	  // 或者 - "3000"  // 仅仅制定容器的端口,宿主将会随机分配一个端口
+    links:（再网页上看到,有的说不推荐使用该命令,但是仍然会用到这个）
+      - db
+
+
+
+
+
+
+
+
+
+
+
