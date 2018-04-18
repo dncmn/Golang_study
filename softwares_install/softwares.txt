@@ -21,6 +21,19 @@
 	http://shawnelee88.github.io/2015/07/10/proxychains-shadowsocks%E7%A5%9E%E5%99%A8/
 	大概可以参考一下这个网址：安装这个软件其实是很简单的。
 	配置代理服务器的话，可以用ss也可以用蓝灯
+7、搜狗输入法安装
+	https://blog.csdn.net/ljheee/article/details/52966456
+	正常情况下应该是这样的
+	
+8、ubuntu安装mysql数据库
+	正常安装的流程应该是这样的
+	https://blog.csdn.net/fighter_yy/article/details/40753889
+	也可以用docker安装一个,同样是开启一个进程
+9、ubuntu上安装navicat出现乱码(这个文件是从官网下载的。)
+	https://blog.csdn.net/u010856630/article/details/52575581
+	方法：
+	打开start_navicat文件，会看到 export LANG="en_US.UTF-8"
+	将这句话改为 export LANG="zh_CN.UTF-8"。
 	
 	
 	

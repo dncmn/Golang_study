@@ -31,6 +31,8 @@ ubuntu下golang环境配置参考
 	2.3、scp上传文件的命令(将代码上传到测试服务器)
 		scp  game root@192.168.1.27:/root/develop/dnf_realm
 		scp gameData.dat@192.168.1.27:/root/develop/dnf_realm
+		
+		
 	2.4、ubuntu下的vim中使用screen不显示窗口名称
 		blog.csdn.net/xocoder/article/details/9173845
 		在/etc/screenrc下添加
@@ -40,6 +42,8 @@ ubuntu下golang环境配置参考
 		sudo vim /etc/vimrc
 		set nu!
 		http://blog.csdn.net/chuanj1985/article/details/6873830
+		
+		
 	2.6、 ps aux 详解
 			USER PID %CPU% %MEM% VSZ RSS TTY STAT TIME COMMAND
 	2.7、查看指定端口号有没有被占用

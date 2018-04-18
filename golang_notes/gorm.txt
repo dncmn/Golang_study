@@ -1,0 +1,46 @@
+##2018.4.18
+##gorm
+
+
+问题一、连接池的使用（之前我在写后台管理系统的时候,没有写）
+	在配置数据库的一些基本信息的时候,比如设置最小连接数量、最大连接数量、每次连接时的最长连接时间
+	可以在 func init(){}方法中完成，然后单独写一个方法来获取一条连接。
+	之前我在写后台管理系统的时候,我虽然用到了gorm,也设置了最小连接、最大连接数量等一些参数，
+	但是我在真正使用的时候,都是随用随取。相当于说是根本没有用到连接池。
+问题二、结构体名和数据库表明的映射。
+	type User struct {} // 默认表名是`users`
+
+	// 设置User的表名为`profiles`
+	func (User) TableName() string {
+	  return "mn.profiles"
+	}
+	
+	// 这里是设置成数据库名为mn下的profiles表
+	
+	
+看gorm源代码的时候,学习到了实现一个读写安全的map
+
+就是添加了一个读写锁,再添加数据和获取数据的时候进行加锁操作
+
+type safeMap struct {
+	m map[string]string
+	l *sync.RWMutex
+}
+
+func (s *safeMap) Set(key string, value string) {
+	s.l.Lock()
+	defer s.l.Unlock()
+	s.m[key] = value
+}
+
+func (s *safeMap) Get(key string) string {
+	s.l.RLock()
+	defer s.l.RUnlock()
+	return s.m[key]
+}
+
+func newSafeMap() *safeMap {
+	return &safeMap{l: new(sync.RWMutex), m: make(map[string]string)}
+}
+
+var smap = newSafeMap()

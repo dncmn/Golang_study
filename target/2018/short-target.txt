@@ -20,9 +20,11 @@
 			code:表示状态码
 			obj:表示经过json化的，并且添加到response body中的数据
 	
-2.docker
-	在gitbook上学习了一下docker的文档还有docker-compose
-	基本可以看懂Dockerfile和docker-compose.yml的配置
+2.
+	2.1、docker
+		在gitbook上学习了一下docker的文档还有docker-compose
+		基本可以看懂Dockerfile和docker-compose.yml的配置
+	2.1、docker-compose
 4.linux--要么是linux私房菜或者去gitbook上找到一本合适的书看看--脚本 6.脚本
 3.gorm
 5.nginx

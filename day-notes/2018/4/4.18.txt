@@ -1,0 +1,23 @@
+##2017.4.18
+##daily-notes
+
+
+
+1、更改了常量的命名和常量的分类
+2、在项目里面,有很多引用了countryId==0(0代表中国),改成countryId==constants.DefaultCountryId
+
+
+
+在使用配置信息的时候 
+	1、将配置信息添加到yml，或者xml文件中进行解析  ioutil.ReadFild()  ([]byte,error)  json.UnMarshal进行解析转换
+	2、在启动服务器的时候，通州的时候,是把配置文件保存在服务器上,而不是跟随golang项目
+	
+数据库连接池
+	最大链接数量、最小链接数量、最长连接时间
+	连接池、从
+	
+
+	
+	
+
+
