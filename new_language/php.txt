@@ -1,0 +1,95 @@
+##2018.4.19
+##php学习
+备注：今天开始学习php为了将项目从php该进成golang
+
+
+ide:phpStorm
+注册服务器地址:http://idea.wrbug.com/ 通用的
+
+在php中
+	每行代码的最后要加上分号";"结束。
+	PHP 没有声明变量的命令。
+	PHP 会根据变量的值，自动把变量转换为正确的数据类型。---所以在使用变量的时候,没有必要强调变量的类型。
+
+
+一、学习笔记
+	1、变量的定义使用“$”符号   $a=5;
+		PHP 变量规则：
+			变量以 $ 符号开始，后面跟着变量的名称
+			变量名必须以字母或者下划线字符开始
+			变量名只能包含字母数字字符以及下划线（A-z、0-9 和 _ ）
+			变量名不能包含空格
+			变量名是区分大小写的（$y 和 $Y 是两个不同的变量）
+	2、变量作用域
+		local/global/satic/parameter
+		函数内定义的变量都是局部变量
+		函数之外的变量是全局变量
+		
+			如果想在函数内使用全局变量，需要在函数内使用global 声明一下变量
+			如果想在函数调用之后,仍想使用函数内的局部变量,需要在函数内使用static .比如 static $x =0
+
+		PHP 将所有全局变量存储在一个名为 $GLOBALS[index] 的数组中。 index 保存变量的名称。
+			$x=5
+			echo $GLOBALS[x]  // 5
+	3、echo 和 print语句的区别
+		3.1、echo 可以输出一个或多个字符串；
+		3.2、print 只允许输出一个字符串，返回值总为 1；
+		3.3、echo 输出的速度比 print 快；
+		3.4、echo 没有返回值，print 有返回值 1；
+	4、PHP EOF(heredoc) 使用说明
+		具体可以看看菜鸟教程或者直接百度。感觉不写php，代码应该用不到
+	5、php中的数据类型
+		String（字符串）, 
+		Integer（整型）,
+		Float（浮点型）, 
+		Boolean（布尔型）,
+		Array（数组）, 
+		Object（对象）,
+		NULL（空值）
+		
+		php中   浮点数之间可以进行加减运算       $x=true  $y=false echo $x+$y  // 1
+				浮点数和整数之间也可以进行运算   $x=true  $y=2 echo $x+$y  // 3
+				true:1
+				false:0
+	6、定义常量(使用define()函数)----常量是全局的
+		bool define(string $name,mixed $value ,true ) // true表示使用时,不区分大小写
+		例如:
+			define("GREETING","欢迎到此一游");
+			echo GREETING;
+	7、关联数组是使用自己分配给数组的制定的键的数组。比如:
+			$age=array("Peter"=>"35","Ben"=>"37","Joe"=>"43");
+		or:
+			$age['Peter']="35";
+			$age['Ben']="37";
+			$age['Joe']="43"; 
+
+
+二、和其他语言的对比
+2.1、字符串链接
+	php中使用“,”或者"."连接。
+	golang中使用"+"连接
+2.2、php中的数据类型
+	php中没有map/Slice/channel/struct
+		只用String/Integer/Float/Boolean/Array/Object/Null
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
