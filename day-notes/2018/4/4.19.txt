@@ -1,0 +1,85 @@
+##2018.4.19和2018.4.20
+##daily-notes
+
+
+
+需要解决的问题：
+	1、不需要开代理，能连接到代码库----解决了(更改了全局代理变量http_proxy和https_proxy)
+	2、设置aligas
+	
+2、工作
+	2.1、区分是url还是文件流
+	2.2、给google cloud 发送请求
+	2.3、处理请求
+	
+	
+
+解决：
+	1.更改秘钥文件的位置(证明和文件的位置和命名没有关系)
+		在更改文件位置的同时,也需要更改环境变量
+	
+	
+对于url:给定一个url,然后从指定路径下,下载文件
+给定一个文件流,区分文件的格式,wav,pcm,mp3
+	
+
+
+https://cloud.google.com/speech-to-text/docs/reference/libraries#client-libraries-install-go
+
+
+任务:
+	http://bug.snaplingo.net/browse/PD-210
+
+
+export http_proxy=http://10.81.1.114:1087;
+export https_proxy=http://10.81.1.114:1087;
+
+proxy.snaplingo.com
+8389 
+aes-256-cfb
+密码 
+Snap@123
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+project-learning
+	1.继续看看api-snaplingo-com
+	昨天看了大概看了一下，登录和注册。优化了一些代码
+
+
+获取聊天记录
+
+
+录制视频的时候
+	
+	开始的时候,由自己发送http请求,但是后来的话,会在mns的消息队列中接收"录制结束"的要求
+	
+	
+	
+	
+批量发送的消息,转换成json,然后发送
+
+
+
+
+
+
+self-learning
+	1.学习php,基本目标,可以看懂基本的php操作
+	2.学习gorm,慢慢看底层实现的代码

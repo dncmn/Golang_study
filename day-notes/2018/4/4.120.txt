@@ -1,0 +1,35 @@
+##2018.4.20
+##daily-notes
+
+
+
+
+1、区分url还是文件流
+  var sourceTpe  int32
+2、转码mp3	To Wav
+3、秘钥文件的位置和环境变量对应的关系
+
+
+http://static.test.snaplingo.com/msg/audio/71384_201803041207385504671.mp3
+转码
+
+一、url
+
+	var location string
+	var out bytes.Buffer
+	
+	1.1、检查url是否合法
+		location=http://www.baidu.com/teamA/hello.wav
+		location=http://www.baidu.com/teamB/hello.mp3
+	1.2、exec.Command下载指定文件
+		cmd:=exec.Command("wget",location)
+	1.3、获取下载到的文件
+		err:=cmd.Run()
+		cmd.Stdout=&out
+		
+		
+		targetFile:=out.Bytes()
+	1.4、发送到谷歌服务器
+	
+	
+

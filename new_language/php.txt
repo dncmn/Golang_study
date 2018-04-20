@@ -4,7 +4,12 @@
 
 
 ide:phpStorm
-注册服务器地址:http://idea.wrbug.com/ 通用的
+
+
+php的内置函数参考
+http://www.runoob.com/php/php-ref-array.html
+	比如:求数组的长度,数组排序的方法什么的
+
 
 在php中
 	每行代码的最后要加上分号";"结束。
@@ -61,7 +66,39 @@ ide:phpStorm
 		or:
 			$age['Peter']="35";
 			$age['Ben']="37";
-			$age['Joe']="43"; 
+			$age['Joe']="43";
+	8、对php数组进行排序的时候
+		看到的有两种
+		
+		数值数组 
+				  升序排序
+				  降序排列
+		关联数组
+			根据关联数组的键进行升序和降序排序
+			根据关联数组的值进行升序和降序排序
+	9、定义函数 
+		function funcName(param1,param2){
+			function body
+		}
+
+		函数的返回值没有不用声明,如果函数需要返回,在function body中添加一个return就好
+
+		例如: function writeName($name,$age){
+			return "my name is".%name." I am ".$age
+		}
+	10、php中的魔鬼变量(它们的值随着它们在代码中的位置改变而改变)
+		_LINE_:文件中的当前行号
+		__FILE__:文件的完整路径和文件名。如果用在被包含文件中，则返回被包含的文件名。
+		__DIR__:文件所在的目录。它等价于 dirname(__FILE__)。除非是根目录，否则目录中名不包括末尾的斜杠。
+		__FUNCTION__:函数名称（函数名的大小写和版本有关系）
+		__CLASS__:类的名称
+		__TRAIT__:(这个有点复杂,暂时没看懂)
+		__METHOD__:类的方法名,返回该方法定义时的方法名(区分大小写)
+		__NAMESPACE__:当前命名空间的名称（区分大小写）
+	11、命名空间
+		太多、太乱。看不懂。。。。(明天早上再看。。。。。)
+		
+			
 
 
 二、和其他语言的对比
@@ -71,6 +108,11 @@ ide:phpStorm
 2.2、php中的数据类型
 	php中没有map/Slice/channel/struct
 		只用String/Integer/Float/Boolean/Array/Object/Null
+2.3、对于循环
+	golang中没有while，do..while循环和foreach循环(foreach就是遍历数组的时候)
+	php中有while和for循环
+	
+	在循环的时候,大括号的位置和小括号也得加进去
 
 
 

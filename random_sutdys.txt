@@ -10,6 +10,40 @@ ubuntu下golang环境配置参考
 	export PATH=$GOROOT/bin:$PATH
 	export GOPATH=$HOME/workspace/Go
 	
+ubuntu下翻墙
+	
+1、cow（可以通过命令下载包）
+	一、参考网址:https://github.com/cyfdecyf/cow  ReadMe.md
+	
+	1.curl -L git.io/cow | bash
+	2.设置环境变量 /etc/profile
+		export COW_INSTALLDIR=$HOME
+	3.更改配置文件vim ./cow/rc
+	添加两行配置信息
+		 proxy = ss://encrypt_method-auth:password@1.2.3.4:8388
+	浏览器的话，可以在配置一下代理
+		
+ 	下载包举例：
+		https_proxy=127.0.0.1:7777 http_proxy=127.0.0.1:7777  go get github.com/golang/snappy
+	alias给命令设置别名
+	alias proxy='https_proxy=127.0.0.1:7777 http_proxy=127.0.0.1:7777  '
+
+exec.Command()
+在加参数的时候,不能有空格
+	
+ubuntu 开启shadowsocks的时候出现请求被重置的情况，
+	有一个原因，我设置了一个全局的网络代理,http_proxy和https_proxy
+	但是我后来注释掉了，echo $http_proxy的时候,居然又有了，
+	导致的结果是我不开代理,本地机器都上不去网。
+	后来又在/etc/profile中将两个变量设置为"",然后reboot了一下，后来又好了。
+	
+	想不明白：
+		1、因为这两个变量我也只有在/etc/profile里面设置了，
+			后来我注释掉了,
+			为什么我在source /etc/profile之后,居然还能输出值？？？？
+		2、设置git代理和删除git代理。目前还不知道有没有其他影响。
+	
+	
 
 1、screen常用操作
 		screen -S screenName
