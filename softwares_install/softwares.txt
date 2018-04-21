@@ -15,7 +15,7 @@
 	Ubuntu下的命令：
 		sudo wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
 5、docker安装
-	就是按照官网，安装就好
+	就是按照官网，安装就好(最后还有去掉sudo 的)
 	就是重启Terminal，否则每次输入docker的时候就要输入sudo
 6、proxychain4--vim代理工作。在下载golang包的时候，可以用到
 	http://shawnelee88.github.io/2015/07/10/proxychains-shadowsocks%E7%A5%9E%E5%99%A8/

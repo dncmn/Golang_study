@@ -3,10 +3,58 @@
 
 
 
+path.Base   :文件名
+path.Ext   ：后缀名
+path.Join  ：拼接url
+
+对于url:
+ 可以根据path.Ext(src)来判断url的后缀名,从而判断是否需要解码
+ 然后下载文件:  wget -P /home/mn/notes/ http://www.baidu.com/hello1.wav
+ 格式转换:利用了ffmpeg对视频可是进行转换
+ 第三步：向google发送验证消息
+对于stream:也就是二进制数据
+
+
+
+StreamingRequest
+
+
+
+只是简单的url--wav。还没有做转码，也就是区分mp3和vav
+
+对于文件流?????这个还没有做
+  这个需要如何区分
+
+
+[]byte
+
+转码：
+  源码的文件地址，
+  新生成的文件位置，
+  字节数组
+
+
+
+ps -aux | grep main
+kill -9
+
+netstat  -apn | grep 8080
+kill -9
+
+研究
+  google cloud speech-to-text 
+    api
+
+
+测试url
+
+curl  http://localhost:8080/api/v1/tools/uploadAudio?sourceType=1&url=http://static.test.snaplingo.com/msg/audio/71384_201803041207385504671.mp3
 
 1、区分url还是文件流
   var sourceTpe  int32
-2、转码mp3	To Wav
+2、转码mp3	To Wav   ---已经有了，直接调用
+  已经写好了。直接使用ffmpeg,这是一套标准的视频转码
+
 3、秘钥文件的位置和环境变量对应的关系
 
 

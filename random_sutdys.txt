@@ -10,7 +10,8 @@ ubuntu下golang环境配置参考
 	export PATH=$GOROOT/bin:$PATH
 	export GOPATH=$HOME/workspace/Go
 	
-ubuntu下翻墙
+
+ubuntu下翻墙(cow其实也挺好的用的)
 	
 1、cow（可以通过命令下载包）
 	一、参考网址:https://github.com/cyfdecyf/cow  ReadMe.md
@@ -43,7 +44,10 @@ ubuntu 开启shadowsocks的时候出现请求被重置的情况，
 			为什么我在source /etc/profile之后,居然还能输出值？？？？
 		2、设置git代理和删除git代理。目前还不知道有没有其他影响。
 	
-	
+linux下进行视频转码的
+	ffmpeg
+	我在进行其他格式转wav的时候用到了
+
 
 1、screen常用操作
 		screen -S screenName
@@ -166,6 +170,9 @@ ubuntu 开启shadowsocks的时候出现请求被重置的情况，
 		系统设置---->键盘--->快捷键
 13、在ubuntu上查看系统信息
 	cat /etc/os-release
+	
+	
+	
 	
 	
 

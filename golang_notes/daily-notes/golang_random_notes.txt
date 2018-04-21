@@ -1,0 +1,22 @@
+##gloang_random_notes
+##crate_at2018.4.21
+
+1、path包的学习
+	1.path.Join()方法
+		拼接路径
+		path.Join("/home/mn","/notes/golang_notes")  
+		
+		// return  "/home/mn/notes/golang_notes"
+	2.path.Ext()方法
+		返回文件的后缀名 
+		path.Ext("hello.txt")
+		// return ".txt"
+	3.path.Base()方法
+		returns the last element of path
+		path.Base("http://www.baidu.com/team/helloWorld.wav")
+		// return "helloWorld.wav"
+		
+	4.文件的转码(mp3-wav)
+	
+	比如现实mp3 to  wav  利用了linux的工具ffmpeg
+	
