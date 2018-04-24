@@ -34,6 +34,11 @@
 	方法：
 	打开start_navicat文件，会看到 export LANG="en_US.UTF-8"
 	将这句话改为 export LANG="zh_CN.UTF-8"。
+10、ubuntu上安装微信
+	有发布的releases版本,可以直接下载
+	https://github.com/geeeeeeeeek/electronic-wechat/releases
+11、ubuntu上安装钉钉--release版本
+	https://github.com/nashaofu/dingtalk/releases/tag/v2.0.4
 	
 	
 	
