@@ -9,6 +9,8 @@ ide:phpStorm
 php的内置函数参考
 http://www.runoob.com/php/php-ref-array.html
 	比如:求数组的长度,数组排序的方法什么的
+php类
+	http://php.net/manual/zh/language.oop5.basic.php
 
 
 在php中
@@ -97,8 +99,17 @@ http://www.runoob.com/php/php-ref-array.html
 		__NAMESPACE__:当前命名空间的名称（区分大小写）
 	11、命名空间
 		太多、太乱。看不懂。。。。(明天早上再看。。。。。)
+	12、php中的基本运算符
+	    “::”这个叫范围解析操作符，又名域运算，可以用于访问静态成员，类常量，还可以用于覆盖类中的属性和方法。 
+		->:类似于golang中的.
+		=>:在定义关联数组的时候用到的
 		
-			
+	13、php中的成员变量修饰符感觉和java的很接近
+	public:表示在任意地方都可以访问到
+	private:私有，只有在定义的类型可以被访问到
+	protected:只有在当前类及其子类中可以被访问到
+	static:类名调用
+	
 
 
 二、和其他语言的对比
