@@ -1,0 +1,35 @@
+##2018.4.28
+##daily-notes
+
+重构语音识别代码
+	--更改方法的返回值
+--更改采样率(这个已经加进去了)
+--文件类型
+
+封装
+	1、download file
+	2、send google request
+
+
+下午编写测试代码
+写测试代码
+
+
+base64进行转码
+
+http://127.0.0.1:8080/api/v1/tools/googleRecognition?sourceType=1&urlLocation=
+http://static.test.snaplingo.com/msg/audio/71384_201803041207385504671.mp3
+
+ ffmpeg -i 71384_201803041207385504671.mp3 -acodec pcm_u8 -ar 22050 song.wav
+ 
+ 
+
+一、是否转码成功
+二、是否向谷歌服务器发送验证,并且返回结果
+
+
+都没有问题,代码没有报错
+谷歌验证wav，
+单独转码
+ 
+ 

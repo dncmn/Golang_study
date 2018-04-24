@@ -1,20 +1,48 @@
 ##gloang_random_notes
 ##crate_at2018.4.21
 
+
+3、项目中的包管理工具下载
+	govendor
+	
+	对于环境变量的设置，golang在1.5会自动开启
+	
+	1、安装参考github
+	
+	参考教程
+		go get -u -v github.com/kardianos/govendor
+	将项目使用(项目已经有了这个包，可能这个包之前在gopath下面,没有在项目的目录下,使用下面这个命令)
+	govendor add +external
+
+2、golang--test包
+	2.1、功能测试函数必须以Test开头,可选的后缀名称必须以大写字母开头
+	2.2、go test -v -run="TestFunctionName" // 只运行匹配的给定模式的函数
+	2.3、
+		白盒测试:感觉就是程序内部的测试
+		黑盒测试:通过公开的api和文档来进行测试,黑盒测试更加健壮
+
 1、path包的学习
-	1.path.Join()方法
+	1.1、path.Join()方法
 		拼接路径
 		path.Join("/home/mn","/notes/golang_notes")  
 		
 		// return  "/home/mn/notes/golang_notes"
-	2.path.Ext()方法
+	1.2、path.Ext()方法
 		返回文件的后缀名 
 		path.Ext("hello.txt")
 		// return ".txt"
-	3.path.Base()方法
+	1.3、path.Base()方法
+		
 		returns the last element of path
 		path.Base("http://www.baidu.com/team/helloWorld.wav")
 		// return "helloWorld.wav"
+		
+		感觉和path.Split(str string) // 测试了一下,
+	1.4、path.Split底层也是通过strings.LastIndex（str,"/"）来实现的
+		path.Clean(str) // 去掉重复的分割符号
+		src:="//home//mn"
+	1.5、path.Clean(src)  "/home/mn"
+	1.6、path.Dir  // 找到最后一个"/",但是返回之前的路径,也是对path.Split的进一步封装
 		
 	4.文件的转码(mp3-wav)
 	
