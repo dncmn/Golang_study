@@ -1,0 +1,145 @@
+##2018.5.1
+## daily-notes
+
+1、配置mac上的工作环境
+2、接口的设计、数据库的设计、工作进度的制定
+
+
+
+
+
+// 返回
+称号{
+	id // 称号id
+	userID  json:"-"
+	progress // 进度
+	status // 状态
+}
+
+// 返回
+课程(
+	courseId // 课程id
+	progress // 进度(关卡进度)
+	status // 付费什么的
+	danceData map[int]string  key:levelId value:danceData 
+)
+
+关卡
+	courseId	int
+	id  int   // 关卡id
+	dance string //舞蹈数据
+	status bool // 解锁状态 //
+
+
+要增加的接口
+	1、更新课程(包括每个舞蹈的数据)
+	2、更新称号
+	3、获取玩家称号
+	4、获取课程
+	5、玩家购买课程
+	6、苹果内购
+
+1、关卡	
+2、舞蹈
+3、iap
+
+// iap
+url:
+	/api/game_app/v2/anonymous/users/check_iap
+request param:
+	TransactionID int32 `json:"TransactionID"`// 订单id
+	UserId 		  int32 `json:"userId"`// 用户id
+	Content 	  string  `json:"receipt"` // 订单内容  		base64.StdEncoding.Encode(str)
+response :
+	TransactionID int32 `json:TransactionID`
+	Status bool `json:status`
+	
+
+iap  // 剩下的内容
+	1、给苹果验证
+	2、验证之后的处理
+
+
+
+
+
+
+
+用户称号表
+
+id 		 int 	 // 序列id
+NickId 	 int	 // 称号id
+UserId	 int	 // 用户id
+Progress int	 // 称号进度
+Status	 int     // 称号状态--是否穿戴
+
+
+用户课程表
+id			int  // 序列id
+CourseId 	int	// 课程id
+UID			string  // 玩家id
+Status		bool // 是否解锁
+Progress	int // 关卡进度
+time		time.Time // 操作时间
+
+
+
+用户关卡表
+id			string  // 序列id
+CourseID 	int 	// 课程id
+LevelID		int 	// 关卡id
+UID			string  // 用户id
+dance       string 	// 舞蹈数据
+time		time.Time // 操作时间
+
+
+
+
+
+
+关卡表
+id			int	 // 序列id 
+courseId	int  // 课程id
+levelId		int  //关卡id
+status 		bool  // 是否需要购买
+
+课程表
+id			int  // 序列id
+courseId 	int // 课程id
+
+称号表
+id 			int // 序列id
+nickId 		int // 称号id
+nickName 	string // 称号名称
+
+
+
+iap交易记录表
+id			int  		// 序列id
+userId		int			// 用户id
+orderId		int			// 订单id
+content		string 		// 订单内容
+time		tiem.Time 	// 下单时间
+status      bool		// 订单状态
+
+
+iap交易失败表
+id			int 		// 序列id
+orderId		int			// 订单id
+time		time.Tiem	// 失败时间
+
+
+
+iap商品表{
+	id int // 
+	
+}
+
+
+
+
+
+
+
+
+

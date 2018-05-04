@@ -2,6 +2,20 @@
 ##crate_at2018.4.21
 
 
+// 换电脑需要做的
+	1、配置golang环境
+		下载golang/goland  govendor
+	2、配置cow(翻墙)
+	3、License server address：
+		http://idea.youbbs.org
+
+
+4、sort包的学习
+	sort.IntsAreSorted(a []int) // 检查这个数组是否指正向排序
+	sort.Ints(a []int) // 利用golang自带的包对数组进行排序
+	利用sort包进行排序的时候,可以直接用sort.Ints进行排序
+	也可以将对待排序数组进行类型转换,然后重新进行排序
+
 3、项目中的包管理工具下载
 	govendor
 	
