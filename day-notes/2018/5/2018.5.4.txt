@@ -1,0 +1,73 @@
+##2018.5.4
+##daily-notes
+
+
+
+1、更改关卡数据时，是否合法
+	case1:关卡有没有出现跳跃
+	case2:关卡数字是否合法(是否在课程里面)
+	case3：关卡是否解锁
+
+
+
+新建接口
+
+
+
+一、插入数据
+二、添加接口
+	1、获取商品列表(已经实现)
+	2、商品验证
+三、实现逻辑
+四、
+	4.1、记录日志
+	4.2、更改课程
+
+
+
+task
+	一、bug fix
+		1、称号的更新
+		2、课程的更新
+		3、获取称号时,去掉舞蹈数据
+		4、更新接口文档
+	二、建立iap表
+	
+
+1、建立数据库表的Model
+
+iap
+
+iap交易记录表
+id			int  		// 序列id
+userId		int			// 用户id
+orderId		int			// 订单id
+price		int			// 商品成交价格
+content		string 		// 订单内容
+time		tiem.Time 	// 下单时间
+status      bool		// 订单状态
+
+
+iap交易失败表
+id			int  		// 序列id
+userId		int			// 用户id
+orderId		int			// 订单id
+price		int			// 商品成交价格
+content		string 		// 订单内容
+time		tiem.Time 	// 下单时间
+status      bool		// 订单状态
+
+
+需要解决的问题：
+	1、如何向苹果验证
+	2、如何获取验证结果
+	3、处理验证结果
+		
+		共同点:不管验证成功还是失败,都需要记录日志
+	
+	
+		验证成功:
+				更改用户的课程表的付费状态
+		验证失败:
+				需要做什么呢？？？？
+		

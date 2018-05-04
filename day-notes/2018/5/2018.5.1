@@ -113,27 +113,41 @@ nickId 		int // 称号id
 nickName 	string // 称号名称
 
 
+沙盒账号
+super@snaplingo.com
+Snaplingo1
 
-iap交易记录表
-id			int  		// 序列id
-userId		int			// 用户id
-orderId		int			// 订单id
+
+
+iap	订单状态表
+id			sring  		// 序列id
+uid			string			// 用户id
+orderId		uint64			// 订单id
+price		uint64			// 商品成交价格
 content		string 		// 订单内容
 time		tiem.Time 	// 下单时间
-status      bool		// 订单状态
+status      uint64		// 订单状态  0: 未验证 1：验证成功 2：验证失败 3：验证异常
 
 
-iap交易失败表
-id			int 		// 序列id
-orderId		int			// 订单id
-time		time.Tiem	// 失败时间
-
-
-
-iap商品表{
-	id int // 
-	
+iap商品表{	
+	id 			string 		// 序列id
+	//appleGoodsId	string	// 苹果商店id
+	type		uint64		// 商品种类		0：课程
+	channel		uint64 		// 渠道id      0：苹果 1：安卓
+	goodsItemId	uint64 		// 商品id
+	price		uint64		// 商品价格
+	IsSale		uint64		// 是否上架 0:未上架 1:正在销售 2:已经下架
+	desc		string 		// 商品描述
 }
+
+
+课程和商品id的对应关系
+{
+	id 			string 		// 序列id
+	courseId	uint64		// 课程id
+	goodsItemId	uint64 		// 商品id
+}
+
 
 
 
