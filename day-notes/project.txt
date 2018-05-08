@@ -1,0 +1,220 @@
+##2018.4.18
+##项目架构认识
+
+需要做的
+	// 获取称号的时候,有一个初始化称号的过程
+
+
+
+接口交付计划：
+今天 周三
+1 提交称号进度穿戴状态，
+2 获取称号，
+
+	bug 总结:
+		1、结构体字段的规范命名(userId 改成UID类似的，还有就是nickName改成userTitle)
+		2、结构体字段类型错误(int 改成uint，ID 的int 改成String)在数据库建表时的字段名称和字段类型(不添加类型)
+		3、多个判断值判断的问题(ok bool,err error)
+		4、get和post获取值的方式不对(路由，包括请求参数的获取)
+		5、变量的声明的时候的不规范
+		6、defer的位置  defer SendJSON(c,retData)
+		7、在更新或者保存称号的时候,返回的message冗余("更新成功","保存成功")
+	疑问:
+		db.Model和db.Where的区别
+
+
+明天 周四
+	3 提交关卡进度
+	4 获取课程进度(包含舞蹈数据)
+		初始化
+		正常
+	5 更新舞蹈数据
+
+周五 - 周一
+5 验证购买状态，解锁课程（IAP内购部分）
+
+
+
+// 用户称号表
+
+
+
+tyep GetUserCourseResp strutct {
+	courseId int
+	progress int 
+	IsPay  bool
+	dance map[int]string
+}
+
+
+// 对课程初始化
+
+
+type GameCourseSave struct {
+	UserID   string `json:"userID"`
+	CourseID uint64 `json:"courseID"`
+	LevelID  uint64 `json:"levelID"`
+	Progress uint64 `json:"progress"`
+}
+
+
+	CourseID uint64            `json:"courseID"` // 课程id
+	Progress uint64            `json:"progress"` // 课程进度
+	IsPay    bool              `json:"isPay"`    // 课程是否付费
+	Dance    map[uint64]string `json:"dancData"` // 每个关卡对应的舞蹈数据
+
+
+一、建表
+二、添加测试数据
+
+
+
+
+对于同一个账号,多人登录问题
+	lasst project:多人可以同时登录,但是当对重要数据进行访问的时候,会进行加锁处理。
+	current project：同一个账号，同时只可能有一个玩家登录,如果有玩家在其他设备上登录了,上一个玩家就会被踢掉,并发送相对应的消息。
+	
+
+
+利用gorm进行批量插入的时候 类似与[]User ,将User插入到User表中
+db.Exec(sql)  这个是gorm封装的批量插入的方法,被插入的数据会添加到一个slice中。到时候用的时候,再展开就好了
+
+
+
+
+用户表：
+	注册表 data1.user_register
+	用户表 data.user表
+	
+	
+	
+发生error的时候,对于errInfo信息记录的问题
+	根据需要吧，这个不是强制要求的
+
+
+
+用户头像是想哪里发送请求
+
+
+
+疑问:
+	1、SendMsgToClient(act constants.MsgAct, userId string, msg interface{})error
+		constant.MsgAct string
+		接收字符串作为参数
+			如果发送消息的时候,用发送消息代码来代替字符串
+	2、StartNewTestProgress(uid uint64)(err error)方法里面获取从map中获取数据
+		没有对数据进行校验。如果这个结构体为空,到时候引用的时候,可能会panic
+	3、比如用户注册的时候，判断用户名是否已经存在
+		代码里面对error做了两层判断,(已经都有日志来记录了。。。。)
+				3.1、err==gorm.ErrRecordNotFound  // 表示该用户不存在 ---正常情况
+				3.2、err!=nil 表示其他类型的错误
+				
+		这样写,不能写，代码思路挺清晰的,在找错的时候也很容易判断
+	4、TeacherSli   map[string]interface{}  // 这个是干嘛用的  ----和任务类型有关系
+	5、CheckUserName:检查用户名的时候，为什么会要生成两个备用名字
+
+
+
+
+
+tools.snaplingo.com:运营
+tutor.snaplingo.com:外教
+app.snaplingo.com:学生、教师
+webapp.snapligno.com:网页--学生、老师
+
+
+http://gitlab.oss.snaplingo.com/server-team/api.snaplingo.net.git
+
+
+
+2018.4.27
+
+	上课模式：
+		一节课30分钟。外教负责讲授正课内容,小明星负责对讲授的内容进行回顾。
+		
+	学生是如何约课的：
+		家长联系进行预约,然后提前两天发送通知。
+		还有个就是根据消耗课时是否超过5个课时来判断是否发送通知。
+		
+		约课的时候,约得老师还有限制：
+			上的demo课,后来付费了，这时候其他人约这个老师，就约不上，哪儿怕没有人约
+			
+			约课的行为是一次性的,这次约得是下周一,那么以后都是每周一才会上课。
+			
+	上课的分类:demo课程和正式课程
+	
+	学时的扣除:24h之前的不扣除课时,24h因为的要扣除一个课时
+	老师工资的扣除:也是24h为准。
+	判断老师迟到：上课开始前三分钟验证一次。
+	判断学生和老师是否在线:每隔五分钟验证一次。
+	
+	看老师是否正在讲课：就是老师开始上课的时候,在redis添加一个key(添加有效期),然后到时候判断老师是否抢课了
+	
+	
+	一些标签:
+	
+		转化率：
+		高销售：
+		上课的黄金时间：
+		
+
+
+
+可是是30分钟:
+	1、会不会存在，上了30分钟课之后,然后，
+		录屏结束的标志是程序控制的？只能够录30分钟???
+	2、一开始约得是周四的课,后来提前24h请假，上课时间改成周五了，以后也就是周五开始上课了？？？
+	3、学生约完课后的系统对学生还有外教的提醒规则都有哪儿些？？？？？？
+		比如:会以什么渠道通知,什么频率来通知等
+	4、老师上课迟到是如何定义的?
+		系统多长时间向老师发请求验证，每隔多久验证一次。
+		系统如何验证当前老师或者学生是否已经迟到了???
+			根据之前的约课时间,还有系统登录的时间的差值,然后来判断是否迟到。
+	5、教师请假,
+		请假的时间点和请假的次数,对他本人有什么影响。
+		
+		比如:
+			老师请假了：(根据请假时间)
+			
+				这节课该怎么处理。
+				程序会怎么处理。
+						
+			学生请假了:(根据请假时间)
+				系统会对老师怎么处理
+	6、我看到在注册的时候,邀请码注册有什么不一样的吗？？？？
+		对学生有什么影响吗？？？？
+				
+			
+			
+	
+学生迟到、老师迟到、学生请
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

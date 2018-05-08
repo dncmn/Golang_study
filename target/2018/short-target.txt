@@ -32,7 +32,7 @@ content-type
 4.linux--要么是linux私房菜或者去gitbook上找到一本合适的书看看--脚本 6.脚本
 3.gorm
 5.nginx
-7.游戏数据库postal
+7.游戏数据库postal---因为使用了orm,所以也就是对于gorm的熟悉了
 8.分布式锁
 9.php
 protobuf

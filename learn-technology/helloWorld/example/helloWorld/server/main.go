@@ -108,24 +108,6 @@ func main(){
 
 	// 注册一个WeekDoService服务
 	pb.RegisterWeekDoServer(server,WeekDoService)
-
 	log.Println("server is Listening :",Address)
-
 	server.Serve(listen)
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

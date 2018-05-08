@@ -36,26 +36,36 @@ task
 
 1、建立数据库表的Model
 
-iap
-
-iap交易记录表
-id			int  		// 序列id
-userId		int			// 用户id
-orderId		int			// 订单id
-price		int			// 商品成交价格
-content		string 		// 订单内容
-time		tiem.Time 	// 下单时间
-status      bool		// 订单状态
 
 
-iap交易失败表
-id			int  		// 序列id
-userId		int			// 用户id
-orderId		int			// 订单id
-price		int			// 商品成交价格
-content		string 		// 订单内容
-time		tiem.Time 	// 下单时间
-status      bool		// 订单状态
+
+
+iap交易记录表(IapLogTransactionSuccess)
+id			string  					// 序列id
+uid		string							// 用户id
+TransactionId		string				// 交易id
+content		string 						// 订单内容
+status      constants.IapOrderStatus	// 订单状态
+crateAt		tiem.Time 					// 下单时间
+UpdateAt	time.Time					// 修改时间
+DeleteAt	*time.Time					//	删除时间
+
+
+iap交易失败表(IapLogTransactionFail)
+id			string  					// 序列id
+userId		string						// 用户id
+orderId		string						// 订单id
+content		string 						// 订单内容
+status      constants.IapOrderStatus	// 订单状态   本地异常(比如数据库连接异常)，本地失败(比如本地的货物不存在)，苹果失败(订单验证失败)
+num			uint64						// 已经验证的次数
+crateAt		tiem.Time 					// 下单时间
+UpdateAt	time.Time					// 修改时间
+DeleteAt	*time.Time					//	删除时间		
+
+
+
+
+
 
 
 需要解决的问题：

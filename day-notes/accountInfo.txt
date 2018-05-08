@@ -1,0 +1,40 @@
+##2017.4.13
+##accountInfo
+
+
+用到的技术
+	docker golang gorm gin 
+
+
+webapp上的个人登录网址
+	https://webapp.snaplingo.net/
+
+
+jenkins
+	http://jenkins.oss.snaplingo.com
+gitlab----代码库
+	http://gitlab.oss.snaplingo.com
+jira---- bug管理
+	http://bug.snaplingo.net
+teambition---(没有账号,暂时没法登录)
+	https://www.teambition.com
+wiki--------(管理各种文档)
+	http://wiki.snaplingo.net/
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

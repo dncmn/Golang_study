@@ -1,6 +1,12 @@
 # create at 2018.01.15
 ## learnging protobuf
 
+
+学习protobuf的疑问
+	1、在定义的.pb文件生成golang代码后,如果自定义方法。
+	2、客户端如何调用服务器定义的方法。
+
+
 随手笔记：
 	1、protobuf的下载、安装、配置
 	2、protobuf的基本语法(package/message/enum/service)
@@ -318,7 +324,7 @@ protoc -I . --go_out=plugins=grpc:. ./helloWorld.proto
 		
 		
 		
-4、Service和rpc方法名同意采用驼峰式命名
+4、Service和rpc方法名tongyang采用驼峰式命名
 	message对应golang的struct,编译生成go代码后,字段会转换为驼峰式。
 	
 	service EasyToDo{
