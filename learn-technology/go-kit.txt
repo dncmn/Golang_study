@@ -9,6 +9,8 @@
 	3、go-kit service  sample
 		https://gokit.io/examples/stringsvc.html#requests-and-responses
 		http://www.ru-rocker.com/2017/02/24/micro-services-using-go-kit-grpc-endpoint/
+	demo网址：
+		https://github.com/ru-rocker/gokit-playground/tree/master/lorem-grpc
 	4、介绍go kit的一个网址
 		http://peter.bourgon.org/go-kit/
 	5、系列介绍的一个网址,不是太详细
